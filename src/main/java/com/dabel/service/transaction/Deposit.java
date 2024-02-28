@@ -1,0 +1,61 @@
+package com.dabel.service.transaction;
+
+import com.dabel.app.Checker;
+import com.dabel.app.CurrencyExchanger;
+import com.dabel.constant.Status;
+import com.dabel.constant.TransactionType;
+import com.dabel.dto.AccountDto;
+import com.dabel.dto.TransactionDto;
+import com.dabel.exception.IllegalOperationException;
+import com.dabel.service.account.AccountOperationService;
+import com.dabel.service.account.AccountService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class Deposit extends Transaction {
+
+    public Deposit(TransactionService transactionService, AccountService accountService, AccountOperationService accountOperationService) {
+        super(transactionService, accountService, accountOperationService);
+    }
+
+    @Override
+    public void init(TransactionDto transactionDto) {
+
+        if(Checker.isInactiveAccount(transactionDto.getInitiatorAccount()))
+            throw new IllegalOperationException("Account must be active");
+
+        //TODO: for deposit, initiator account is the beneficiary account so we interchange initiator as the vault and beneficiary as receiver
+        AccountDto initiatorAccount = accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
+        AccountDto receiverAccount = transactionDto.getInitiatorAccount();
+
+        //TODO: we update transaction details
+        transactionDto.setInitiatorAccount(initiatorAccount);
+        transactionDto.setReceiverAccount(receiverAccount);
+        transactionDto.setStatus(Status.PENDING.code());
+        transactionService.save(transactionDto);
+    }
+
+    @Override
+    public void approve(TransactionDto transactionDto) {
+
+        if(!transactionDto.getStatus().equals(Status.PENDING.code()))
+            return;
+
+        //TODO: exchange amount in given currency
+        double creditAmount = CurrencyExchanger.exchange(transactionDto.getCurrency(), transactionDto.getReceiverAccount().getCurrency(), transactionDto.getAmount());
+
+        accountOperationService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
+        accountOperationService.credit(transactionDto.getReceiverAccount(), creditAmount);
+
+        //TODO: update transactionDto info and save it
+        transactionDto.setStatus(Status.APPROVED.code());
+        //we'll set updatedBy later...
+
+        transactionService.save(transactionDto);
+    }
+
+    @Override
+    public TransactionType getType() {
+        return TransactionType.DEPOSIT;
+    }
+}
