@@ -81,4 +81,16 @@ public class AccountService {
                 .map(AccountMapper::toDto)
                 .toList();
     }
+
+    public List<AccountDto> findAllVault(BranchDto branchDto) {
+        return accountRepository.findAllByBranchAndIsVault(BranchMapper.toModel(branchDto), 1).stream()
+                .map(AccountMapper::toDto)
+                .toList();
+    }
+
+    public List<LedgerDto> findAllLedger(BranchDto branchDto) {
+        return ledgerRepository.findAllByBranch(BranchMapper.toModel(branchDto)).stream()
+                .map(LedgerMapper::toDto)
+                .toList();
+    }
 }

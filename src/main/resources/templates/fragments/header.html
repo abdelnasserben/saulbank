@@ -244,11 +244,11 @@
 						<div id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false"
 							class="flex-column-fluid menu menu-sub-indention menu-column menu-rounded menu-active-bg mb-7">
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'General' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-triangle fs-1">
+										<i class="ki-duotone ki-triangle fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 											<span class="path3"></span>
@@ -264,7 +264,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link active" href="../dist/index.html">
+										<a class="menu-link" th:href="@{/}" th:classappend="${currentPage == 'Dashboard' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -330,7 +330,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-user fs-1">
+										<i class="ki-duotone ki-user fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -386,7 +386,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-chart-line-star fs-1">
+										<i class="ki-duotone ki-chart-line-star fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 											<span class="path3"></span>
@@ -491,7 +491,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-rescue fs-1">
+										<i class="ki-duotone ki-rescue fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -543,7 +543,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-credit-cart fs-1">
+										<i class="ki-duotone ki-credit-cart fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -595,7 +595,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-delivery-3 fs-1">
+										<i class="ki-duotone ki-delivery-3 fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -647,7 +647,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-book-open fs-1">
+										<i class="ki-duotone ki-book-open fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -699,7 +699,7 @@
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-abstract-26 fs-1">
+										<i class="ki-duotone ki-abstract-26 fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -763,11 +763,11 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Bank' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<i class="ki-duotone ki-bank fs-1">
+										<i class="ki-duotone ki-bank fs-2">
 											<span class="path1"></span>
 											<span class="path2"></span>
 										</i>
@@ -779,7 +779,7 @@
 								<!--begin:Menu sub-->
 								<div class="menu-sub menu-sub-accordion">
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentSubMenu == 'Branches' ? 'show' : ''}">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-bullet">
@@ -794,7 +794,7 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" th:href="@{/branches}">
+												<a class="menu-link" th:classappend="${currentPage == 'Branches List' ? 'active' : ''}" th:href="@{/branches}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -806,11 +806,11 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="../dist/apps/projects/list.html">
+												<a class="menu-link" th:classappend="${currentPage == 'Branch Accounts' ? 'active' : ''}" th:href="@{/branches/accounts}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Vaults Mgt</span>
+													<span class="menu-title">Branch Accounts</span>
 												</a>
 												<!--end:Menu link-->
 											</div>
@@ -911,7 +911,7 @@
 										<ul class="breadcrumb breadcrumb-separatorless fw-semibold mb-6">
 											<!--begin::Item-->
 											<li class="breadcrumb-item text-gray-700 fw-bold lh-1">
-												<a href="../dist/index.html" class="text-gray-500">
+												<a th:href="@{/}" class="text-gray-500">
 													<i class="ki-duotone ki-home fs-3 text-gray-400 me-n1"></i>
 												</a>
 											</li>
@@ -922,7 +922,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-gray-700 fw-bold lh-1">Dashboards</li>
+											<li class="breadcrumb-item text-gray-700 fw-bold lh-1" th:text="${currentMenu}">Dashboards</li>
 											<!--end::Item-->
 											<!--begin::Item-->
 											<li class="breadcrumb-item">
@@ -930,14 +930,12 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-gray-700">Default</li>
+											<li class="breadcrumb-item text-gray-700" th:text="${currentSubMenu}">Default</li>
 											<!--end::Item-->
 										</ul>
 										<!--end::Breadcrumb-->
 										<!--begin::Title-->
-										<h1
-											class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 lh-0">
-											Dashboard</h1>
+										<h1 class="page-heading d-flex flex-column justify-content-center text-dark fw-bolder fs-1 lh-0" th:text="${currentPage}">Dashboard</h1>
 										<!--end::Title-->
 									</div>
 									<!--end::Page title-->

@@ -1,0 +1,8 @@
+<div th:unless="${successMessage} == null" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${successMessage}">Successfully done !</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<div th:unless="${errorMessage} == null" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span th:text="${errorMessage}">Something be wrong !</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

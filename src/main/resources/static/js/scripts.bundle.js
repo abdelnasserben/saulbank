@@ -8146,25 +8146,12 @@ KTUtil.onDOMContentLoaded(function () {
 	KTDatatable.init();
 });
 
-//Class definition
-var KTDropzone = function () {
-    // Define shared variables
+// Custom script
 
-    // Private functions
-    var initDropzone = function () {
-        new Dropzone("#kt_ecommerce_add_product_media")
+$("#selectBranchCode").change(function() {
+    var selectedValue = $(this).val();
+
+    if(selectedValue > 0) {
+        location.replace('http://localhost:8080/branches/accounts?code=' + selectedValue);
     }
-
-
-    // Public methods
-    return {
-        init: function () {
-
-            initDropzone();
-        }
-    }
-}();
-KTUtil.onDOMContentLoaded(function () {
-	KTDropzone.init();
-});
-
+})

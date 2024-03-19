@@ -38,7 +38,7 @@ class BranchFacadeServiceTest {
         branchFacadeService.create(BranchDto.builder()
                 .branchName("HQ")
                 .branchAddress("London")
-                .build());
+                .build(), new double[3]);
 
         //when
         List<AccountDto> expected = accountService.findAll();
@@ -56,7 +56,7 @@ class BranchFacadeServiceTest {
         branchFacadeService.create(BranchDto.builder()
                 .branchName("HQ")
                 .branchAddress("London")
-                .build());
+                .build(),  new double[3]);
 
         //then
         List<BranchDto> expected = branchFacadeService.findAll();
@@ -72,7 +72,7 @@ class BranchFacadeServiceTest {
         branchFacadeService.create(BranchDto.builder()
                 .branchName("HQ")
                 .branchAddress("London")
-                .build());
+                .build(),  new double[3]);
 
         //when
         BranchDto expected = branchFacadeService.findById(1L);

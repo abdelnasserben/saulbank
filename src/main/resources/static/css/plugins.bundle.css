@@ -49307,3 +49307,12 @@ body {
   font-size: 1rem;
   color: var(--bs-text-muted);
 }
+
+/** CUSTOM STYLES **/
+.text-capitalize-first {
+  text-transform: lowercase !important;
+}
+
+.text-capitalize-first:first-letter {
+  text-transform: uppercase !important;
+}
