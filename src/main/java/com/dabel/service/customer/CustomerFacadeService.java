@@ -2,8 +2,8 @@ package com.dabel.service.customer;
 
 import com.dabel.app.Generator;
 import com.dabel.constant.AccountProfile;
-import com.dabel.constant.AccountType;
 import com.dabel.constant.Currency;
+import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
@@ -23,26 +23,27 @@ public class CustomerFacadeService {
         this.accountService = accountService;
     }
 
-    public void create(CustomerDto customerDTO) {
+    public void create(CustomerDto customerDTO, String accountType) {
 
-        if (customerDTO.getCustomerId() == null) {
-            CustomerDto savedCustomer = customerService.save(customerDTO);
+        if (customerDTO.getCustomerId() != null)
+            return;
 
-            //TODO: create trunk kmf
-            accountService.save(TrunkDto.builder()
-                    .customer(savedCustomer)
-                    .account(AccountDto.builder()
-                            .accountName(String.format("%s %s", savedCustomer.getFirstName(), savedCustomer.getLastName()))
-                            .accountNumber(Generator.generateAccountNumber())
-                            .accountType(AccountType.CURRENT.name())
-                            .accountProfile(AccountProfile.PERSONAL.name())
-                            .currency(Currency.KMF.name())
-                            .branch(savedCustomer.getBranch())
-                            .status(savedCustomer.getStatus())
-                            .build())
-                    .build());
+        customerDTO.setStatus(Status.PENDING.code());
+        CustomerDto savedCustomer = customerService.save(customerDTO);
 
-        } else customerService.save(customerDTO);
+        //TODO: create trunk kmf
+        accountService.save(TrunkDto.builder()
+                .customer(savedCustomer)
+                .account(AccountDto.builder()
+                        .accountName(String.format("%s %s", savedCustomer.getFirstName(), savedCustomer.getLastName()))
+                        .accountNumber(Generator.generateAccountNumber())
+                        .accountType(accountType)
+                        .accountProfile(AccountProfile.PERSONAL.name())
+                        .currency(Currency.KMF.name())
+                        .branch(savedCustomer.getBranch())
+                        .status(savedCustomer.getStatus())
+                        .build())
+                .build());
     }
 
     public List<CustomerDto> findAll() {

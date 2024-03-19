@@ -45,7 +45,7 @@ class AccountServiceTest {
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency(Currency.KMF.name())
-                .accountType(AccountType.CURRENT.name())
+                .accountType(AccountType.SAVING.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .status(Status.ACTIVE.code())
                 .branch(savedBranch)

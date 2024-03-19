@@ -1,8 +1,11 @@
 package com.dabel.component;
 
+import com.dabel.constant.Country;
+import com.dabel.constant.Currency;
 import com.dabel.constant.Status;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -16,7 +19,15 @@ public class AppSpEL {
         return List.of(Status.ACTIVE.name(), Status.APPROVED.name()).contains(status) ? "success" : "danger";
     }
 
-    public String accountStatusColorByHisBalance(double balance) {
-        return balance < 0 ? "danger" : (balance > 0 ? "success" : "warning");
+    public Object[] countries() {
+        return Arrays.stream(Country.values())
+                .map(Country::getName)
+                .toArray();
+    }
+
+    public Object[] currencies() {
+        return Arrays.stream(Currency.values())
+                .map(Enum::name)
+                .toArray();
     }
 }

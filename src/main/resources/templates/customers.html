@@ -1,0 +1,92 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+		<!--begin::Card-->
+		<div class="card">
+			<!--begin::Card header-->
+			<div class="card-header border-0 pt-6">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<!--begin::Search-->
+					<div class="d-flex align-items-center position-relative my-1">
+						<i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+							<span class="path1"></span>
+							<span class="path2"></span>
+						</i>
+						<input type="text" data-kt-datatable-table-filter="search"
+							class="form-control form-control-solid w-250px ps-12" placeholder="Search Customers" />
+					</div>
+					<!--end::Search-->
+				</div>
+				<!--begin::Card title-->
+				<!--begin::Card toolbar-->
+				<div class="card-toolbar">
+					<!--begin::Toolbar-->
+					<div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+						<!--begin::Add customer-->
+						<a th:href="@{/customers/add}" class="btn btn-primary">
+							<i class="ki-duotone ki-message-add fs-1">
+								<span class="path1"></span>
+								<span class="path2"></span>
+								<span class="path3"></span>
+							</i>
+							Add Customer
+						</a>
+						<!--end::Add customer-->
+					</div>
+					<!--end::Toolbar-->
+				</div>
+				<!--end::Card toolbar-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0">
+				<!--begin::Table-->
+				<table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_datatable_table">
+					<thead>
+						<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+							<th class="min-w-125px">Customer Name</th>
+							<th class="min-w-125px">Identity Number</th>
+							<th class="min-w-125px">Nationality</th>
+							<th class="min-w-125px">Mobile Number</th>
+							<th class="min-w-125px">Address</th>
+							<th class="min-w-50px">Status</th>
+							<th class="min-w-125px">Created Date</th>
+						</tr>
+					</thead>
+					<tbody class="fw-semibold text-gray-600">
+						<tr th:each="customer: ${customers}">
+							<td>
+								<a th:href="@{/customers/{id}(id=${customer.customerId})}"
+									th:text="${customer.firstName + ' ' + customer.lastName}"
+									class="text-hover-primary text-gray-600 mb-1">John Doe</a>
+							</td>
+							<td>
+								<a th:href="@{/customers/{id}(id=${customer.customerId})}"
+									th:text="${customer.identityNumber}" class="text-hover-primary text-gray-600 mb-1">NBE5482212</a>
+							</td>
+							<td th:text="${customer.nationality}">Comoros</td>
+							<td th:text="${customer.phone}">+2694561212</td>
+							<td th:text="${customer.address}">Ndzaouze Mitsamiouli</td>
+							<td><span th:text="${customer.status}"
+									th:class="${'badge badge-light-' + @appSpEL.statusColor(customer.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+							</td>
+							<td th:text="${#temporals.format(customer.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25 08:55
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!--end::Table-->
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<div th:replace="~{fragments/footer}"></div>

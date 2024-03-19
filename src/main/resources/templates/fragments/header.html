@@ -276,7 +276,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" href="#" data-kt-page="pro">
+										<a class="menu-link" th:href="@{/customers/add}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -326,7 +326,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Customers' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -344,7 +344,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" href="../dist/pages/user-profile/overview.html">
+										<a class="menu-link" th:href="@{/customers}" th:classappend="${currentPage == 'All Customers' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -356,7 +356,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" href="../dist/pages/user-profile/overview.html">
+										<a class="menu-link" th:href="@{/customers/add}" th:classappend="${currentPage == 'New Customer' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -925,12 +925,12 @@
 											<li class="breadcrumb-item text-gray-700 fw-bold lh-1" th:text="${currentMenu}">Dashboards</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item">
+											<li th:unless="${currentSubMenu == null}" class="breadcrumb-item">
 												<i class="ki-duotone ki-right fs-4 text-gray-700 mx-n1"></i>
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-gray-700" th:text="${currentSubMenu}">Default</li>
+											<li th:unless="${currentSubMenu == null}" class="breadcrumb-item text-gray-700" th:text="${currentSubMenu}">Default</li>
 											<!--end::Item-->
 										</ul>
 										<!--end::Breadcrumb-->

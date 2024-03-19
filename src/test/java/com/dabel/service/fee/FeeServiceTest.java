@@ -47,7 +47,7 @@ class FeeServiceTest {
                 .accountNumber("123456789")
                 .currency(Currency.KMF.name())
                 .balance(5000)
-                .accountType(AccountType.CURRENT.name())
+                .accountType(AccountType.SAVING.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .status(Status.ACTIVE.code())
                 .branch(savedBranch)

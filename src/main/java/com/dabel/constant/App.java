@@ -4,12 +4,18 @@ public class App {
     public interface Endpoint {
         String BRANCH_LIST = "/branches";
         String BRANCH_ACCOUNTS = BRANCH_LIST + "/accounts";
+
+        String CUSTOMER_LIST = "/customers";
+        String CUSTOMER_ADD = CUSTOMER_LIST + "/add";
     }
 
     public interface View {
         String BRANCH_LIST = "branches";
         String BRANCH_ACCOUNTS = "branches-accounts";
         String DASHBOARD = "dashboard";
+
+        String CUSTOMER_LIST = "customers";
+        String CUSTOMER_ADD = "customers-add";
     }
 
     public interface MessageTag {
@@ -31,6 +37,12 @@ public class App {
         interface General {
             String MENU = "General";
             String DASHBOARD = "Dashboard";
+        }
+
+        interface Customer {
+            String MENU = "Customers";
+            String ADD = "New Customer";
+            String LIST = "All Customers";
         }
     }
 }

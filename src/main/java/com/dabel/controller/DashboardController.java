@@ -18,6 +18,6 @@ public class DashboardController implements PageTitleConfig {
 
     @Override
     public String[] getMenuAndSubMenu() {
-        return new String[]{App.Menu.General.MENU, App.Menu.General.DASHBOARD};
+        return new String[]{App.Menu.General.MENU, null};
     }
 }
