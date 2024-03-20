@@ -18,4 +18,8 @@ public class AccountFacadeService {
     public List<TrunkDto> findAllCustomerAccounts(CustomerDto customerDto) {
         return accountService.findAllTrunks(customerDto);
     }
+
+    public TrunkDto findCustomerAccountByNumber(String accountNumber) {
+        return accountService.findTrunkByNumber(accountNumber);
+    }
 }

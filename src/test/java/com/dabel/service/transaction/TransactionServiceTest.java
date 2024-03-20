@@ -80,7 +80,9 @@ class TransactionServiceTest {
                 .currency(Currency.KMF.name())
                 .amount(500)
                 .branch(savedBranch)
-                .customer(savedCustomer)
+                .customerIdentity(savedCustomer.getIdentityNumber())
+                .customerFullName(String.format("%s %s", savedCustomer.getFirstName(), savedCustomer.getLastName()))
+//                .customer(savedCustomer)
                 .reason("Just for test")
                 .build();
     }
@@ -95,7 +97,7 @@ class TransactionServiceTest {
         assertThat(expected.getTransactionId()).isGreaterThan(0);
         assertThat(expected.getInitiatorAccount().getAccountName()).isEqualTo("John Doe");
         assertThat(expected.getReceiverAccount().getAccountName()).isEqualTo("Sarah Hunt");
-        assertThat(expected.getCustomer().getIdentityNumber()).isEqualTo("NBE123456");
+        assertThat(expected.getCustomerIdentity()).isEqualTo("NBE123456");
     }
 
     @Test

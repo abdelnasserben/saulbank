@@ -31,7 +31,7 @@ public class Transfer extends Transaction{
         if(Checker.isInactiveAccount(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Initiator account must be active");
 
-        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + Bank.Fees.Transfer.ONLINE) {
+        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + Bank.Fees.TRANSFER) {
 
             transactionDto.setStatus(Status.FAILED.code());
             transactionDto.setFailureReason("Insufficient balance");
@@ -57,7 +57,7 @@ public class Transfer extends Transaction{
         accountOperationService.credit(transactionDto.getReceiverAccount(), creditAmount);
 
         //TODO: apply transfer fees
-        Fee fee = new Fee(transactionDto.getBranch(), Bank.Fees.Transfer.ONLINE, "Transfer");
+        Fee fee = new Fee(transactionDto.getBranch(), Bank.Fees.TRANSFER, "Transfer");
         feeService.apply(transactionDto.getInitiatorAccount(), LedgerType.TRANSFER, fee);
 
         //TODO: update transaction info and save it

@@ -2,20 +2,13 @@ package com.dabel.constant;
 
 public class Bank {
 
-    public static class Fees {
+    public interface Fees {
 
-        public interface Card {
-            double APPLICATION_REQUEST = 5000;
-        }
+        double CARD_APPLICATION_REQUEST = 5000;
 
-        public interface Transfer {
-            double ONLINE = 525;
-        }
+        double TRANSFER = 525;
 
-        public interface Withdraw {
-            double ONLINE = 200;
-            double ON_ATM = 300;
-        }
+        double WITHDRAW = 200;
     }
 
     public interface ExchangeCourse {

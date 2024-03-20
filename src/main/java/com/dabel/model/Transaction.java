@@ -33,9 +33,9 @@ public class Transaction {
 
     private String sourceValue;
 
-    @ManyToOne
-    @JoinColumn(name = "customerId")
-    private Customer customer;
+    private String customerIdentity;
+
+    private String customerFullName;
 
     private String reason;
 

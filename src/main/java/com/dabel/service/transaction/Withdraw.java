@@ -35,7 +35,7 @@ public class Withdraw extends Transaction {
         //TODO: set receiver account of transaction
         transactionDto.setReceiverAccount(receiverAccount);
 
-        if(transactionDto.getSourceType().equals(SourceType.ONLINE.name()) && transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + Bank.Fees.Withdraw.ONLINE) {
+        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + Bank.Fees.WITHDRAW) {
 
             transactionDto.setStatus(Status.FAILED.code());
             transactionDto.setFailureReason("Insufficient balance");
@@ -59,7 +59,7 @@ public class Withdraw extends Transaction {
         accountOperationService.credit(transactionDto.getReceiverAccount(), transactionDto.getAmount());
 
         //TODO: apply withdraw fees
-        Fee fee = new Fee(transactionDto.getBranch(), Bank.Fees.Withdraw.ONLINE, "Withdraw");
+        Fee fee = new Fee(transactionDto.getBranch(), Bank.Fees.WITHDRAW, "Withdraw");
         feeService.apply(transactionDto.getInitiatorAccount(), LedgerType.WITHDRAW, fee);
 
         //TODO: update transaction info and save it

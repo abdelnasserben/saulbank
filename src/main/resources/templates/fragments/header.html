@@ -288,7 +288,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" href="#" data-kt-page="pro">
+										<a class="menu-link" th:href="@{/transactions/init}" data-kt-page="pro">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -382,7 +382,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Transactions' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -399,7 +399,7 @@
 								<!--begin:Menu sub-->
 								<div class="menu-sub menu-sub-accordion">
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentSubMenu == 'Basics' ? 'show' : ''}">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-bullet">
@@ -414,7 +414,7 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="../dist/apps/projects/list.html">
+												<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'All Transactions' ? 'active' : ''}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -426,7 +426,7 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="#" data-kt-page="pro">
+												<a class="menu-link" th:href="@{/transactions/init}" th:classappend="${currentPage == 'Deposit/Withdraw' ? 'active' : ''}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>

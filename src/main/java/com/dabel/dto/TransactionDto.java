@@ -19,7 +19,8 @@ public class TransactionDto extends BasicDto {
     private String currency;
     private String sourceType;
     private String sourceValue;
-    private CustomerDto customer;
+    private String customerIdentity;
+    private String customerFullName;
     private String reason;
     private String failureReason;
 }

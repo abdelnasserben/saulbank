@@ -58,7 +58,7 @@ class FeeServiceTest {
     void shouldApplyWithdrawFee() {
         //given
         saveLedger(LedgerType.WITHDRAW);
-        Fee fee = new Fee(savedBranch, Bank.Fees.Withdraw.ONLINE, "Withdraw");
+        Fee fee = new Fee(savedBranch, Bank.Fees.WITHDRAW, "Withdraw");
 
         //when
         feeService.apply(accountDto, LedgerType.WITHDRAW, fee);
@@ -72,7 +72,7 @@ class FeeServiceTest {
     void shouldApplyTransferFee() {
         //given
         saveLedger(LedgerType.TRANSFER);
-        Fee fee = new Fee(savedBranch, Bank.Fees.Transfer.ONLINE, "Transfer");
+        Fee fee = new Fee(savedBranch, Bank.Fees.TRANSFER, "Transfer");
 
         //when
         feeService.apply(accountDto, LedgerType.TRANSFER, fee);

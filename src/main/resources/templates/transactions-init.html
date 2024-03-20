@@ -1,0 +1,157 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+		<form method="post" th:object="${transactionDto}" th:action="@{/transactions/init}">
+			<!--begin::Input group-->
+			<div class="mb-3 fv-row col-lg-2">
+				<!--begin::Label-->
+				<label class="required form-label">Transaction Type</label>
+				<!--end::Label-->
+
+				<!--begin::Input-->
+				<select th:field="*{transactionType}" class="form-select mb-3"
+					th:classappend="${#fields.hasErrors('transactionType')} ? 'is-invalid' : ''" data-control="select2"
+					data-hide-search="true" data-placeholder="Select an option">
+					<option value=""></option>
+					<option value="DEPOSIT">Deposit</option>
+					<option value="WITHDRAW">Withdraw</option>
+				</select>
+				<div class="invalid-feedback" th:errors="*{transactionType}">
+				</div>
+				<!--end::Input-->
+			</div>
+			<input type="hidden" th:field="*{sourceType}" value="ONLINE">
+			<!--end::Input group-->
+
+			<div class="separator separator-dashed mb-6"></div>
+
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label required fw-bold fs-6">Account</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" name="accountNumber" class="form-control mb-2"
+								placeholder="Account number" />
+						</div>
+						<div class="col-md-6">
+							<input type="text" name="accountFullName" class="form-control mb-2"
+								placeholder="Account name unkown" disabled />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label fw-bold fs-6">Avalaible
+					Balance</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-auto col-lg-2">
+							<select name="accountCurrency" class="form-select form-select-solid mb-3"
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option"
+								disabled>
+								<option value="KMF">KMF</option>
+							</select>
+						</div>
+						<div class="col col-lg-4">
+							<input type="number" name="avalaibleBalance" class="form-control mb-2" placeholder="0.00"
+								disabled />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label required fw-bold fs-6">Customer</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-md-6">
+							<input type="text" th:field="*{customerIdentity}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('customerIdentity')} ? 'is-invalid' : ''"
+								placeholder="Identity Number" />
+							<div class="invalid-feedback" th:errors="*{customerIdentity}"></div>
+						</div>
+						<div class="col-md-6">
+							<input type="text" th:field="*{customerFullName}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('customerFullName')} ? 'is-invalid' : ''"
+								placeholder="Full name" />
+							<div class="invalid-feedback" th:errors="*{customerFullName}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label required fw-bold fs-6">Amount</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-auto col-lg-2">
+							<select th:field="*{currency}" class="form-select mb-3"
+								th:classappend="${#fields.hasErrors('currency')} ? 'is-invalid' : ''"
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								<option value="KMF">KMF</option>
+								<option value="EUR">EUR</option>
+								<option value="USD">USD</option>
+							</select>
+							<div class="invalid-feedback" th:errors="*{currency}"></div>
+						</div>
+						<div class="col col-lg-4">
+							<input type="number" th:field="*{amount}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid' : ''" step=".01"
+								placeholder="0.00" />
+							<div class="invalid-feedback" th:errors="*{amount}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label fw-bold fs-6">Base Curr
+					Equiv</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-auto col-lg-2">
+							<select class="form-select form-select-solid mb-3" data-control="select2"
+								data-hide-search="true" data-placeholder="Select an option" disabled>
+								<option value="KMF">KMF</option>
+							</select>
+						</div>
+						<div class="col col-lg-4">
+							<input type="number" name="baseAmountEquivalent" class="form-control mb-2" step=".01"
+								placeholder="0.00" disabled />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-7 mb-4">
+				<label for="exampleFormControlTextarea1" class="form-label required fw-bold fs-6">Remarks</label>
+				<textarea th:field="*{reason}" class="form-control"
+					th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''" id="exampleFormControlTextarea1"
+					rows="4"></textarea>
+				<div class="invalid-feedback" th:errors="*{reason}"></div>
+			</div>
+
+			<button type="submit" id="kt_submit_button" class="btn btn-primary">
+				<span class="indicator-label">
+					Submit Transaction
+				</span>
+				<span class="indicator-progress">
+					Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+				</span>
+			</button>
+		</form>
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<div th:replace="~{fragments/footer}"></div>

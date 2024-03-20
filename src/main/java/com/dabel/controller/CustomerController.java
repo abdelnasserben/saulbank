@@ -110,7 +110,7 @@ public class CustomerController implements PageTitleConfig {
 //                .mapToDouble(LoanDTO::getTotalAmount)
 //                .sum();
 
-        configPageTitle(model, App.Menu.Customer.ROOT);
+        configPageTitle(model, "Customer Details");
         model.addAttribute("customer", StatedObjectFormatter.format(customerDto));
         model.addAttribute("trunks", customerAccounts);
         model.addAttribute("totalBalance", totalBalance);
@@ -122,7 +122,7 @@ public class CustomerController implements PageTitleConfig {
 //        model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
 //        model.addAttribute("totalLoan", totalLoan);
 
-        return "customers-details";
+        return App.View.CUSTOMER_DETAILS;
     }
 
     @Override
