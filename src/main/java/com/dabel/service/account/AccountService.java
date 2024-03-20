@@ -1,14 +1,8 @@
 package com.dabel.service.account;
 
-import com.dabel.dto.AccountDto;
-import com.dabel.dto.BranchDto;
-import com.dabel.dto.LedgerDto;
-import com.dabel.dto.TrunkDto;
+import com.dabel.dto.*;
 import com.dabel.exception.ResourceNotFoundException;
-import com.dabel.mapper.AccountMapper;
-import com.dabel.mapper.BranchMapper;
-import com.dabel.mapper.LedgerMapper;
-import com.dabel.mapper.TrunkMapper;
+import com.dabel.mapper.*;
 import com.dabel.model.Account;
 import com.dabel.repository.AccountRepository;
 import com.dabel.repository.LedgerRepository;
@@ -88,9 +82,15 @@ public class AccountService {
                 .toList();
     }
 
-    public List<LedgerDto> findAllLedger(BranchDto branchDto) {
+    public List<LedgerDto> findAllLedgers(BranchDto branchDto) {
         return ledgerRepository.findAllByBranch(BranchMapper.toModel(branchDto)).stream()
                 .map(LedgerMapper::toDto)
+                .toList();
+    }
+
+    public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
+        return trunkRepository.findAllByCustomer(CustomerMapper.toModel(customerDto)).stream()
+                .map(TrunkMapper::toDto)
                 .toList();
     }
 }

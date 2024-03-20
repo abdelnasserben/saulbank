@@ -31,14 +31,14 @@ public class BranchController implements PageTitleConfig {
         this.accountOperationService = accountOperationService;
     }
 
-    @GetMapping(value = App.Endpoint.BRANCH_LIST)
+    @GetMapping(value = App.Endpoint.BRANCH_ROOT)
     public String listBranches(Model model, BranchDto branchDTO) {
 
         listingAndConfigTitle(model);
         return App.View.BRANCH_LIST;
     }
 
-    @PostMapping(value = App.Endpoint.BRANCH_LIST)
+    @PostMapping(value = App.Endpoint.BRANCH_ROOT)
     public String addNewBranch(Model model, @Valid BranchDto branchDto, BindingResult binding,
                                @RequestParam(required = false, defaultValue = "0") double assetKMF,
                                @RequestParam(required = false, defaultValue = "0") double assetEUR,
@@ -120,7 +120,7 @@ public class BranchController implements PageTitleConfig {
     }
 
     private void listingAndConfigTitle(Model model) {
-        configPageTitle(model, App.Menu.Bank.Branches.LIST);
+        configPageTitle(model, App.Menu.Bank.Branches.ROOT);
         model.addAttribute("branches", StatedObjectFormatter.format(branchFacadeService.findAll()));
     }
 

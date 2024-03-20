@@ -2,11 +2,11 @@ package com.dabel.constant;
 
 public class App {
     public interface Endpoint {
-        String BRANCH_LIST = "/branches";
-        String BRANCH_ACCOUNTS = BRANCH_LIST + "/accounts";
+        String BRANCH_ROOT = "/branches";
+        String BRANCH_ACCOUNTS = BRANCH_ROOT + "/accounts";
 
-        String CUSTOMER_LIST = "/customers";
-        String CUSTOMER_ADD = CUSTOMER_LIST + "/add";
+        String CUSTOMER_ROOT = "/customers";
+        String CUSTOMER_ADD = CUSTOMER_ROOT + "/add";
     }
 
     public interface View {
@@ -16,6 +16,7 @@ public class App {
 
         String CUSTOMER_LIST = "customers";
         String CUSTOMER_ADD = "customers-add";
+        String CUSTOMER_DETAILS = "customers-details";
     }
 
     public interface MessageTag {
@@ -29,8 +30,8 @@ public class App {
 
             interface Branches {
                 String SUB_MENU = "Branches";
+                String ROOT = "Branches List";
                 String ACCOUNTS = "Branch Accounts";
-                String LIST = "Branches List";
             }
         }
 
@@ -41,8 +42,8 @@ public class App {
 
         interface Customer {
             String MENU = "Customers";
+            String ROOT = "All Customers";
             String ADD = "New Customer";
-            String LIST = "All Customers";
         }
     }
 }

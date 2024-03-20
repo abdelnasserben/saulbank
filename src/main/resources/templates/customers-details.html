@@ -1,0 +1,1934 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+		<!--begin::Navbar-->
+		<div class="card mb-5 mb-xl-10">
+			<div class="card-body pt-9 pb-0">
+				<!--begin::Details-->
+				<div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+					<!--begin: Pic-->
+					<div class="me-7 mb-4">
+						<div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+							<img th:src="@{/assets/avatars/300-2.jpg}" alt="image">
+						</div>
+					</div>
+					<!--end::Pic-->
+
+					<!--begin::Info-->
+					<div class="flex-grow-1">
+						<!--begin::Title-->
+						<div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+							<!--begin::User-->
+							<div class="d-flex flex-column">
+								<!--begin::Name-->
+								<div class="d-flex align-items-center mb-2">
+									<span class="text-gray-900 fs-2 fw-bold me-1"
+										th:text="${customer.firstName + ' ' + customer.lastName}">Max Smith</span>
+									<span class="svg-icon svg-icon-1 svg-icon-primary">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+											viewBox="0 0 24 24">
+											<path
+												d="M10.0813 3.7242C10.8849 2.16438 13.1151 2.16438 13.9187 3.7242V3.7242C14.4016 4.66147 15.4909 5.1127 16.4951 4.79139V4.79139C18.1663 4.25668 19.7433 5.83365 19.2086 7.50485V7.50485C18.8873 8.50905 19.3385 9.59842 20.2758 10.0813V10.0813C21.8356 10.8849 21.8356 13.1151 20.2758 13.9187V13.9187C19.3385 14.4016 18.8873 15.491 19.2086 16.4951V16.4951C19.7433 18.1663 18.1663 19.7433 16.4951 19.2086V19.2086C15.491 18.8873 14.4016 19.3385 13.9187 20.2758V20.2758C13.1151 21.8356 10.8849 21.8356 10.0813 20.2758V20.2758C9.59842 19.3385 8.50905 18.8873 7.50485 19.2086V19.2086C5.83365 19.7433 4.25668 18.1663 4.79139 16.4951V16.4951C5.1127 15.491 4.66147 14.4016 3.7242 13.9187V13.9187C2.16438 13.1151 2.16438 10.8849 3.7242 10.0813V10.0813C4.66147 9.59842 5.1127 8.50905 4.79139 7.50485V7.50485C4.25668 5.83365 5.83365 4.25668 7.50485 4.79139V4.79139C8.50905 5.1127 9.59842 4.66147 10.0813 3.7242V3.7242Z"
+												fill="#00A3FF"></path>
+											<path class="permanent"
+												d="M14.8563 9.1903C15.0606 8.94984 15.3771 8.9385 15.6175 9.14289C15.858 9.34728 15.8229 9.66433 15.6185 9.9048L11.863 14.6558C11.6554 14.9001 11.2876 14.9258 11.048 14.7128L8.47656 12.4271C8.24068 12.2174 8.21944 11.8563 8.42911 11.6204C8.63877 11.3845 8.99996 11.3633 9.23583 11.5729L11.3706 13.4705L14.8563 9.1903Z"
+												fill="white"></path>
+										</svg>
+									</span>
+									<!--end::Svg Icon-->
+								</div>
+								<!--end::Name-->
+
+								<!--begin::Info-->
+								<div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+									<span class="d-flex align-items-center text-gray-400 me-5 mb-2">
+										<!--begin::Svg Icon | path: icons/duotune/communication/com006.svg-->
+										<span class="svg-icon svg-icon-4 me-1"><svg xmlns="http://www.w3.org/2000/svg"
+												width="24" height="24" viewBox="0 0 24 24" fill="none">
+												<path opacity="0.3"
+													d="M22 12C22 17.5 17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12ZM12 7C10.3 7 9 8.3 9 10C9 11.7 10.3 13 12 13C13.7 13 15 11.7 15 10C15 8.3 13.7 7 12 7Z"
+													fill="currentColor"></path>
+												<path
+													d="M12 22C14.6 22 17 21 18.7 19.4C17.9 16.9 15.2 15 12 15C8.8 15 6.09999 16.9 5.29999 19.4C6.99999 21 9.4 22 12 22Z"
+													fill="currentColor"></path>
+											</svg>
+										</span>
+										<!--end::Svg Icon-->
+										<span th:text="${customer.identityNumber}">Developer</span>
+									</span>
+									<span class="d-flex align-items-center text-gray-400 me-5 mb-2">
+										<!--begin::Svg Icon | path: icons/duotune/general/gen018.svg-->
+										<span class="svg-icon svg-icon-4 me-1"><svg xmlns="http://www.w3.org/2000/svg"
+												width="24" height="24" viewBox="0 0 24 24" fill="none">
+												<path opacity="0.3"
+													d="M18.0624 15.3453L13.1624 20.7453C12.5624 21.4453 11.5624 21.4453 10.9624 20.7453L6.06242 15.3453C4.56242 13.6453 3.76242 11.4453 4.06242 8.94534C4.56242 5.34534 7.46242 2.44534 11.0624 2.04534C15.8624 1.54534 19.9624 5.24534 19.9624 9.94534C20.0624 12.0453 19.2624 13.9453 18.0624 15.3453Z"
+													fill="currentColor"></path>
+												<path
+													d="M12.0624 13.0453C13.7193 13.0453 15.0624 11.7022 15.0624 10.0453C15.0624 8.38849 13.7193 7.04535 12.0624 7.04535C10.4056 7.04535 9.06241 8.38849 9.06241 10.0453C9.06241 11.7022 10.4056 13.0453 12.0624 13.0453Z"
+													fill="currentColor"></path>
+											</svg></span>
+										<!--end::Svg Icon-->
+										<span th:text="${customer.residence + ', ' + customer.address}">SF, Bay Area</span>
+									</span>
+								</div>
+								<!--end::Info-->
+							</div>
+							<!--end::User-->
+
+							<!--begin::Actions-->
+							<div class="d-flex my-4">
+								<!--begin::Menu-->
+								<div class="me-0">
+									<button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary"
+										data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+										<i class="bi bi-three-dots fs-3"></i>
+									</button>
+
+									<!--begin::Menu 3-->
+									<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-200px py-3"
+										data-kt-menu="true">
+										<!--begin::Heading-->
+										<div class="menu-item px-3">
+											<div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">
+												Options
+											</div>
+										</div>
+										<!--end::Heading-->
+
+										<!--begin::Menu item-->
+										<div class="menu-item px-3">
+											<a href="#" class="menu-link px-3">
+												Create Invoice
+											</a>
+										</div>
+										<!--end::Menu item-->
+
+										<!--begin::Menu item-->
+										<div class="menu-item px-3">
+											<a href="#" class="menu-link flex-stack px-3">
+												Create Payment
+
+												<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
+													title=""
+													data-bs-original-title="Specify a target name for future usage and reference"
+													aria-label="Specify a target name for future usage and reference"></i>
+											</a>
+										</div>
+										<!--end::Menu item-->
+
+										<!--begin::Menu item-->
+										<div class="menu-item px-3">
+											<a href="#" class="menu-link px-3">
+												Generate Bill
+											</a>
+										</div>
+										<!--end::Menu item-->
+
+										<!--begin::Menu item-->
+										<div class="menu-item px-3 my-1">
+											<a href="#" class="menu-link px-3">
+												Settings
+											</a>
+										</div>
+										<!--end::Menu item-->
+									</div>
+									<!--end::Menu 3-->
+								</div>
+								<!--end::Menu-->
+							</div>
+							<!--end::Actions-->
+						</div>
+						<!--end::Title-->
+
+						<!--begin::Stats-->
+						<div class="d-flex flex-wrap flex-stack">
+							<!--begin::Wrapper-->
+							<div class="d-flex flex-column flex-grow-1 pe-8">
+								<!--begin::Stats-->
+								<div class="d-flex flex-wrap">
+									<!--begin::Stat-->
+									<div
+										class="border border-gray-300 border-dashed rounded min-w-225px text-center py-3 px-4 me-6 mb-3">
+										<!--begin::Number-->
+										<div class="d-flex align-items-center justify-content-center">
+											<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+											<span class="svg-icon svg-icon-3 svg-icon-success me-2"><svg
+													xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none">
+													<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1"
+														transform="rotate(90 13 6)" fill="currentColor"></rect>
+													<path
+														d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z"
+														fill="currentColor"></path>
+												</svg></span>
+											<!--end::Svg Icon-->
+											<div class="fs-2 fw-bolder" th:text="${totalBalance} + ' KMF'">175 600 KMF
+											</div>
+										</div>
+										<!--end::Number-->
+
+										<!--begin::Label-->
+										<div class="fw-bold fs-6 text-gray-400">Balance</div>
+										<!--end::Label-->
+									</div>
+									<!--end::Stat-->
+
+									<!--begin::Stat-->
+									<div
+										class="border border-gray-300 border-dashed rounded min-w-225px text-center py-3 px-4 me-6 mb-3">
+										<!--begin::Number-->
+										<div class="d-flex align-items-center justify-content-center">
+											<!--begin::Svg Icon | path: icons/duotune/arrows/arr065.svg-->
+											<span class="svg-icon svg-icon-3 svg-icon-danger me-2"><svg
+													xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none">
+													<rect opacity="0.5" x="11" y="18" width="13" height="2" rx="1"
+														transform="rotate(-90 11 18)" fill="currentColor"></rect>
+													<path
+														d="M11.4343 15.4343L7.25 11.25C6.83579 10.8358 6.16421 10.8358 5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75L11.2929 18.2929C11.6834 18.6834 12.3166 18.6834 12.7071 18.2929L18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25C17.8358 10.8358 17.1642 10.8358 16.75 11.25L12.5657 15.4343C12.2533 15.7467 11.7467 15.7467 11.4343 15.4343Z"
+														fill="currentColor"></path>
+												</svg></span>
+											<!--end::Svg Icon-->
+											<div class="fs-2 fw-bolder" th:text="${totalLoan} + ' KMF'">0 KMF</div>
+										</div>
+										<!--end::Number-->
+
+										<!--begin::Label-->
+										<div class="fw-bold fs-6 text-gray-400">Loans</div>
+										<!--end::Label-->
+									</div>
+									<!--end::Stat-->
+								</div>
+								<!--end::Stats-->
+							</div>
+							<!--end::Wrapper-->
+
+							<!--begin::Progress-->
+							<div class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3">
+								<div class="d-flex justify-content-between w-100 mt-auto mb-2">
+									<span class="fw-bold fs-6 text-gray-400">Profile Compleation</span>
+									<span class="fw-bolder fs-6">50%</span>
+								</div>
+
+								<div class="h-5px mx-3 w-100 bg-light mb-3">
+									<div class="bg-success rounded h-5px" role="progressbar" style="width: 50%;"
+										aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+								</div>
+							</div>
+							<!--end::Progress-->
+						</div>
+						<!--end::Stats-->
+					</div>
+					<!--end::Info-->
+				</div>
+				<!--end::Details-->
+
+				<!--begin::Tab links-->
+				<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 active me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_overview">Overview</span>
+					</li>
+					<!--end:::Tab item-->
+
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_accounts">Accounts</span>
+					</li>
+					<!--end:::Tab item-->
+
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_transactions">Transactions</span>
+					</li>
+					<!--end:::Tab item-->
+
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_payments">Payments</span>
+					</li>
+					<!--end:::Tab item-->
+
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_exchanges">Exchanges</span>
+					</li>
+					<!--end:::Tab item-->
+
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_loans">Loans</span>
+					</li>
+					<!--end:::Tab item-->
+
+					<!--begin:::Tab item-->
+					<li class="nav-item">
+						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
+							data-bs-target="#kt_customer_settings">Settings</span>
+					</li>
+					<!--end:::Tab item-->
+				</ul>
+				<!--end::Tab links-->
+			</div>
+		</div>
+		<!--end::Navbar-->
+
+		<!--begin::Tab content-->
+		<div class="tab-content" id="myTabContent">
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade active show" id="kt_customer_overview" role="tabpanel">
+
+				<!--begin::Card-->
+				<div class="card mb-5 mb-xl-10">
+					<!--begin::Card header-->
+					<div class="card-header card-header-stretch pb-0">
+						<!--begin::Title-->
+						<div class="card-title">
+							<h3 class="m-0">Informations</h3>
+						</div>
+						<!--end::Title-->
+
+						<!--begin::Toolbar-->
+						<div class="card-toolbar m-0">
+							<!--begin::Tab nav-->
+							<ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
+								<!--begin::Tab item-->
+								<li class="nav-item" role="presentation">
+									<a id="kt_customer_infos_general_tab" class="nav-link fs-5 fw-bolder me-5 active"
+										data-bs-toggle="tab" role="tab" data-bs-target="#kt_customer_infos_general"
+										type="button">
+										General
+									</a>
+								</li>
+								<!--end::Tab item-->
+
+								<!--begin::Tab item-->
+								<li class="nav-item" role="presentation">
+									<a id="kt_customer_infos_contact_tab" class="nav-link fs-5 fw-bolder"
+										data-bs-toggle="tab" role="tab" data-bs-target="#kt_customer_infos_contact"
+										type="button">
+										Address
+									</a>
+								</li>
+								<!--end::Tab item-->
+								<!--begin::Tab item-->
+								<li class="nav-item" role="presentation">
+									<a id="kt_customer_infos_documents_tab" class="nav-link fs-5 fw-bolder"
+										data-bs-toggle="tab" role="tab" data-bs-target="#kt_customer_infos_documents"
+										type="button">
+										Documents
+									</a>
+								</li>
+								<!--end::Tab item-->
+							</ul>
+							<!--end::Tab nav-->
+						</div>
+						<!--end::Toolbar-->
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Tab content-->
+					<div id="kt_customer_overview_tab_content" class="card-body tab-content">
+
+						<!--begin::Tab panel-->
+						<div id="kt_customer_infos_general" class="tab-pane fade show active" role="tabpanel">
+							<!--begin::Row-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Full Name</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8">
+									<span class="fw-bold fs-6 text-gray-800"
+										th:text="${customer.firstName + ' ' + customer.lastName}">Max Smith</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Row-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Gender</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6" th:text="${customer.gender}">Male</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Nationality</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6"
+										th:text="${customer.nationality}">Comoros</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Identity Type</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6"
+										th:text="${customer.identityType}">Passeport</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Identity Number</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6"
+										th:text="${customer.identityNumber}">NBE456789</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Identity Expires</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6"
+										th:text="${#temporals.format(customer.identityExpiration, 'yyyy-MM-dd')}">12 Aug
+										2027</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Identity Issue</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6" th:text="${customer.identityIssue}">Moroni,
+										Comores</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Birth Place</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6" th:text="${customer.birthPlace}">Maternité
+										Mitsamiouli</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Birth Date</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6"
+										th:text="${#temporals.format(customer.birthDate, 'yyyy-MM-dd')}">12 Sep
+										1995</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Status</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span th:text="${customer.status}"
+										th:class="${'badge badge-light-' + @appSpEL.statusColor(customer.status)}">Active</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+						</div>
+						<!--end::Tab panel-->
+
+						<!--begin::Tab panel-->
+						<div id="kt_customer_infos_contact" class="tab-pane fade" role="tabpanel"
+							aria-labelledby="kt_customer_infos_contact_tab">
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">
+									Residence
+									<i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip" title=""
+										data-bs-original-title="Country of residence"
+										aria-label="Country of residence"></i>
+								</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold fs-6 text-gray-800"
+										th:text="${customer.residence}">Comoros</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Address</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6" th:text="${customer.address}">Moroni
+										Zilimadjou</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Post Code</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6" th:text="${customer.postCode}">0000</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Profession</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6" th:text="${customer.profession}">Engineer
+										IT</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Email</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 d-flex align-items-center">
+									<span class="fw-bold fs-6 text-gray-800 me-2"
+										th:text="${customer.email}">marksmith@gmail.com</span>
+									<span class="badge badge-success">Verified</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Phone Number</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8">
+									<a href="#" class="fw-bold fs-6 text-gray-800 text-hover-primary"
+										th:text="${customer.phone}">+2694110025</a>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Registered date</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8">
+									<span class="fw-bold fs-6 text-gray-800"
+										th:text="${#temporals.format(customer.createdAt, 'yyyy-MM-dd HH:mm')}">15
+										January 2019</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Communication</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8">
+									<span class="fw-bold fs-6 text-gray-800">Email, Phone</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+						</div>
+						<!--end::Tab panel-->
+
+						<!--begin::Tab panel-->
+						<div id="kt_customer_infos_documents" class="tab-pane fade" role="tabpanel"
+							aria-labelledby="kt_customer_infos_documents_tab">
+							<!--begin::Avatar-->
+							<div class="row g-9 text-center align-items-end">
+								<div class="col-auto me-3">
+									<img alt="Logo" src="img/avatars/150-2.jpg" />
+									<!--begin::Hint-->
+									<div class="form-text">Identity picture</div>
+									<!--end::Hint-->
+								</div>
+								<div class="col-auto me-3">
+									<img alt="Logo" src="img/avatars/150-2.jpg" />
+									<!--begin::Hint-->
+									<div class="form-text">Signature</div>
+									<!--end::Hint-->
+								</div>
+								<div class="col-auto me-3">
+									<img alt="Logo" src="img/svg/files/doc.svg" />
+									<!--begin::Hint-->
+									<div class="form-text">Deal</div>
+									<!--end::Hint-->
+								</div>
+							</div>
+							<!--end::Avatar-->
+						</div>
+						<!--end::Tab panel-->
+					</div>
+					<!--end::Tab content-->
+
+					<!--begin::Notice-->
+					<div th:unless="${notifyNoActiveCreditCards} == true"
+						class="notice d-flex bg-light-warning rounded border-warning border border-dashed mx-7 mb-7 p-6">
+						<!--begin::Icon-->
+						<!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+						<span class="svg-icon svg-icon-2tx svg-icon-warning me-4"><svg
+								xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+								fill="none">
+								<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor">
+								</rect>
+								<rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)"
+									fill="currentColor">
+								</rect>
+								<rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)"
+									fill="currentColor">
+								</rect>
+							</svg></span>
+						<!--end::Svg Icon--> <!--end::Icon-->
+
+						<!--begin::Wrapper-->
+						<div class="d-flex flex-stack flex-grow-1 ">
+							<!--begin::Content-->
+							<div class=" fw-bold">
+								<h4 class="text-gray-900 fw-bolder">We need your attention!
+								</h4>
+
+								<div class="fs-6 text-gray-700 ">This user has no active credit card.
+									To start
+									using tools, please <a class="fw-bolder" type="button"
+										onclick="$('.nav-line-tabs span[data-bs-target=\'#kt_customer_accounts\']').tab('show')">Add
+										or Active Payment Method</a>.</div>
+							</div>
+							<!--end::Content-->
+
+						</div>
+						<!--end::Wrapper-->
+					</div>
+					<!--end::Notice-->
+				</div>
+				<!--end::Card-->
+			</div>
+			<!--end:::Tab pane-->
+
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade" id="kt_customer_accounts" role="tabpanel">
+				<!--begin:::Card accounts list-->
+				<div class="card mb-5 mb-lg-10">
+					<!--begin::Card header-->
+					<div class="card-header">
+						<div class="card-title">
+							<h3>Accounts</h3>
+						</div>
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Card body-->
+					<div class="card-body p-0">
+						<!--begin::Table wrapper-->
+						<div class="table-responsive">
+							<!--begin::Table-->
+							<table class="table align-middle table-row-dashed gy-4 gs-9">
+								<thead>
+									<tr class="text-start text-gray-700 fw-bolder fs-7 text-uppercase">
+										<th class="min-w-100px">Account Name</th>
+										<th class="min-w-100px">Account Number</th>
+										<th class="min-w-70px">Account Type</th>
+										<th class="min-w-70px">Balance</th>
+										<th class="min-w-70px">Profile</th>
+										<th class="min-w-100px">Membership</th>
+										<th class="min-w-70px">Status</th>
+									</tr>
+								</thead>
+								<tbody class="fw-6 fw-bold text-gray-600">
+									<tr th:each="trunk: ${trunks}">
+										<td th:text="${trunk.account.accountName}">Mark Smith</td>
+										<td th:text="${trunk.account.accountNumber}">54710015231</td>
+										<td th:text="${trunk.account.accountType}">Saving</td>
+										<td th:text="${trunk.account.balance + ' ' + trunk.account.currency}">3 000 KMF
+										</td>
+										<td th:text="${trunk.account.accountProfile}">Personal</td>
+										<td th:text="${trunk.membership}">Owner</td>
+										<td class="pe-0">
+											<div th:text="${trunk.account.status}"
+												th:class="${'badge badge-light-' + @appSpEL.statusColor(trunk.account.status)}">
+												Active</div>
+										</td>
+									</tr>
+								</tbody>
+								<!--end::Tbody-->
+							</table>
+							<!--end::Table-->
+						</div>
+						<!--end::Table wrapper-->
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end:::Card accounts list-->
+
+				<!--begin::Card payment methods-->
+				<div class="card pt-4 mb-6 mb-xl-9">
+					<!--begin::Card header-->
+					<div class="card-header border-0">
+						<!--begin::Card title-->
+						<div class="card-title">
+							<h2 class="fw-bolder mb-0">Payment Methods</h2>
+						</div>
+						<!--end::Card title-->
+
+						<!--begin::Card toolbar-->
+						<div class="card-toolbar">
+							<a type="button" class="btn btn-sm btn-flex btn-light-primary" data-bs-toggle="modal"
+								data-bs-target="#kt_modal_new_card">
+								<!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
+								<span class="svg-icon svg-icon-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+										height="24" viewBox="0 0 24 24" fill="none">
+										<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5"
+											fill="currentColor" />
+										<rect x="10.8891" y="17.8033" width="12" height="2" rx="1"
+											transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+										<rect x="6.01041" y="10.9247" width="12" height="2" rx="1"
+											fill="currentColor" />
+									</svg>
+								</span>
+								<!--end::Svg Icon--> Send Request
+							</a>
+						</div>
+						<!--end::Card toolbar-->
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Card body-->
+					<div id="kt_customer_view_payment_method" class="card-body pt-0">
+
+						<div th:each="card, iterStat: ${cards}">
+							<!--begin::Option-->
+							<div class="py-0" data-kt-customer-payment-method="row">
+								<!--begin::Header-->
+								<div class="py-3 d-flex flex-stack flex-wrap">
+									<!--begin::Toggle-->
+									<div class="d-flex align-items-center collapsible collapsed rotate"
+										data-bs-toggle="collapse"
+										th:attr="data-bs-target=${'#kt_customer_view_payment_method_' + card.cardId}"
+										role="button" aria-expanded="false"
+										aria-controls="kt_customer_view_payment_method_1">
+										<!--begin::Arrow-->
+										<div class="me-3 rotate-90">
+											<!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
+											<span class="svg-icon svg-icon-3"><svg xmlns="http://www.w3.org/2000/svg"
+													width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<path
+														d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z"
+														fill="currentColor" />
+												</svg></span>
+											<!--end::Svg Icon-->
+										</div>
+										<!--end::Arrow-->
+
+										<!--begin::Logo-->
+										<img th:src="${card.cardType} == 'Visa' ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
+											class="w-40px me-3" alt="" />
+										<!--end::Logo-->
+
+										<!--begin::Summary-->
+										<div class="me-3">
+											<div class="d-flex align-items-center">
+												<div th:text="${card.cardType}" class="text-gray-800 fw-bolder">
+													Mastercard </div>
+												<div th:text="${card.status}" class="ms-5"
+													th:classappend="${'badge badge-light-' + @appSpEL.statusColor(card.status)}">
+													Active</div>
+											</div>
+											<div th:text="${'Expires ' + #strings.capitalize(#temporals.format(card.expirationDate, 'MMM yyyy'))}"
+												class="text-muted">Expires Dec 2024</div>
+										</div>
+										<!--end::Summary-->
+									</div>
+									<!--end::Toggle-->
+
+									<!--begin::Toolbar-->
+									<div class="d-flex my-3 ms-9">
+
+										<!--begin::details-->
+										<a th:href="@{/cards/{id}(id=${card.cardId})}"
+											class="btn btn-icon btn-active-light-primary w-30px h-30px me-3"
+											data-bs-toggle="tooltip" title="More details"
+											data-kt-customer-payment-method="More details">
+											<!--begin::Svg Icon | path: icons/duotune/general/gen027.svg-->
+											<span class="svg-icon svg-icon-3">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none">
+													<path
+														d="M17.5 11H6.5C4 11 2 9 2 6.5C2 4 4 2 6.5 2H17.5C20 2 22 4 22 6.5C22 9 20 11 17.5 11ZM15 6.5C15 7.9 16.1 9 17.5 9C18.9 9 20 7.9 20 6.5C20 5.1 18.9 4 17.5 4C16.1 4 15 5.1 15 6.5Z"
+														fill="currentColor" />
+													<path opacity="0.3"
+														d="M17.5 22H6.5C4 22 2 20 2 17.5C2 15 4 13 6.5 13H17.5C20 13 22 15 22 17.5C22 20 20 22 17.5 22ZM4 17.5C4 18.9 5.1 20 6.5 20C7.9 20 9 18.9 9 17.5C9 16.1 7.9 15 6.5 15C5.1 15 4 16.1 4 17.5Z"
+														fill="currentColor" />
+												</svg>
+											</span>
+											<!--end::Svg Icon-->
+										</a>
+										<!--end::details-->
+									</div>
+									<!--end::Toolbar-->
+								</div>
+								<!--end::Header-->
+
+								<!--begin::Body-->
+								<div th:id="${'kt_customer_view_payment_method_' + card.cardId}"
+									class="collapse fs-6 ps-10" data-bs-parent="#kt_customer_view_payment_method">
+									<!--begin::Details-->
+									<div class="d-flex flex-wrap py-5">
+										<!--begin::Col-->
+										<div class="flex-equal me-5">
+											<table class="table table-flush fw-bold gy-1">
+												<tr>
+													<td class="text-muted min-w-125px w-125px">Name</td>
+													<td th:text="${card.cardName}" class="text-gray-800">Emma Smith</td>
+												</tr>
+												<tr>
+													<td class="text-muted min-w-125px w-125px">Number</td>
+													<td th:text="${card.cardNumber}" class="text-gray-800">**** 1537
+													</td>
+												</tr>
+												<tr>
+													<td class="text-muted min-w-125px w-125px">
+														Expires</td>
+													<td class="text-gray-800">12/2024</td>
+												</tr>
+												<tr>
+													<td class="text-muted min-w-125px w-125px">Type</td>
+													<td class="text-gray-800">
+														<span th:text="${card.cardType}">Mastercard</span> credit card
+													</td>
+												</tr>
+											</table>
+										</div>
+										<!--end::Col-->
+										<!--begin::Col-->
+										<div class="flex-equal ">
+											<table class="table table-flush fw-bold gy-1">
+												<tr>
+													<td class="text-muted min-w-125px w-125px">Account number</td>
+													<td th:text="${card.accountNumber}" class="text-gray-800">0071001997
+													</td>
+												</tr>
+												<tr>
+													<td class="text-muted min-w-125px w-125px">CVC
+														check</td>
+													<td class="text-gray-800">
+														<span
+															th:text="${card.cvcChecked} == 1 ? 'Passed' : 'Not passed'">Passed</span>
+														<!--begin::Svg Icon | path: icons/duotune/general/gen043.svg-->
+														<span class="svg-icon svg-icon-2"
+															th:classappend="${card.cvcChecked} == 1 ? 'svg-icon-success' : 'svg-icon-danger'">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24"
+																height="24" viewBox="0 0 24 24" fill="none">
+																<rect opacity="0.3" x="2" y="2" width="20" height="20"
+																	rx="10" fill="currentColor" />
+																<path
+																	d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z"
+																	fill="currentColor" />
+															</svg>
+														</span>
+														<!--end::Svg Icon-->
+													</td>
+												</tr>
+											</table>
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Details-->
+								</div>
+								<!--end::Body-->
+							</div>
+							<!--end::Option-->
+
+							<div th:unless="${iterStat.last}" class="separator separator-dashed"></div>
+						</div>
+
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end::Card payment methods-->
+			</div>
+			<!--end:::Tab pane-->
+
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade" id="kt_customer_transactions" role="tabpanel">
+				<!--begin:::Transaction history-->
+				<div class="card mb-5 mb-lg-10">
+					<!--begin::Card header-->
+					<div class="card-header">
+						<!--begin::Heading-->
+						<div class="card-title">
+							<h3>Transactions</h3>
+						</div>
+						<!--end::Heading-->
+
+						<!--begin::Toolbar-->
+						<div class="card-toolbar">
+							<a href="#" class="btn btn-sm btn-light-primary my-1">
+								View More
+							</a>
+						</div>
+						<!--end::Toolbar-->
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Card body-->
+					<div class="card-body p-0">
+						<!--begin::Table wrapper-->
+						<div class="table-responsive">
+							<!--begin::Table-->
+							<table class="table align-middle table-row-dashed gy-4 gs-9">
+								<thead>
+									<tr class="text-start text-gray-700 fw-bolder fs-7 text-uppercase">
+										<th class="min-w-70px">Batch ID</th>
+										<th class="min-w-100px">Tran Type</th>
+										<th class="min-w-100px">Account Number</th>
+										<th class="min-w-70px">Currency</th>
+										<th class="min-w-70px">Amount</th>
+										<th class="min-w-100px">Source</th>
+										<th class="min-w-70px">Status</th>
+										<th class="min-w-100px">Date Effective</th>
+									</tr>
+								</thead>
+								<tbody class="fw-6 fw-bold text-gray-600">
+									<td th:if="${#lists.isEmpty(transactions)}" class="text-center" colspan="7">No data
+										avalaible</td>
+									<tr th:each="transaction: ${transactions}">
+										<td>
+											<a th:text="${transaction.transactionId}"
+												th:href="@{/transactions/{id}(id=${transaction.transactionId})}"
+												class="text-hover-primary text-gray-600">14330</a>
+										</td>
+										<td th:text="${transaction.transactionType}">Withdraw</td>
+										<td th:text="${transaction.accountNumber}">0071001997</td>
+										<td th:text="${transaction.currency}">KMF</td>
+										<td th:text="${transaction.amount}">65000</td>
+										<td>
+											<img th:unless="${transaction.sourceType} == 'Online'"
+												th:src="${transaction.sourceType == 'Visa'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
+												class="w-35px me-3" alt="" />
+											<span th:text="${transaction.sourceValue}">**** 3840</span>
+
+										</td>
+										<td class="pe-0">
+											<div th:text="${transaction.status}"
+												th:class="${'badge badge-light-' + @appSpEL.statusColor(transaction.status)}">
+												Failed</div>
+										</td>
+										<td th:text="${#temporals.format(transaction.createdAt, 'yyyy-MM-dd HH:mm')}">
+											21/09/2023
+											15:56</td>
+									</tr>
+								</tbody>
+								<!--end::Tbody-->
+							</table>
+							<!--end::Table-->
+						</div>
+						<!--end::Table wrapper-->
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end:::Transaction history-->
+			</div>
+			<!--end:::Tab pane-->
+
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade" id="kt_customer_payments" role="tabpanel">
+
+				<!--begin:::Payment history-->
+				<div class="card mb-5 mb-lg-10">
+					<!--begin::Card header-->
+					<div class="card-header">
+						<!--begin::Heading-->
+						<div class="card-title">
+							<h3>Payments</h3>
+						</div>
+						<!--end::Heading-->
+
+						<!--begin::Toolbar-->
+						<div class="card-toolbar">
+							<a href="#" class="btn btn-sm btn-light-primary my-1">
+								View More
+							</a>
+						</div>
+						<!--end::Toolbar-->
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Card body-->
+					<div class="card-body p-0">
+						<!--begin::Table wrapper-->
+						<div class="table-responsive">
+							<!--begin::Table-->
+							<table class="table align-middle table-row-dashed gy-4 gs-9">
+								<thead>
+									<tr class="text-start text-gray-700 fw-bolder fs-7 text-uppercase">
+										<th class="min-w-70px">Batch ID</th>
+										<th class="min-w-100px">Debit Account</th>
+										<th class="min-w-100px">Credit Account</th>
+										<th class="min-w-70px">Currency</th>
+										<th class="min-w-70px">Amount</th>
+										<th class="min-w-70px">Status</th>
+										<th class="min-w-100px">Date Effective</th>
+									</tr>
+								</thead>
+								<tbody class="fw-6 fw-bold text-gray-600">
+									<td th:if="${#lists.isEmpty(payments)}" class="text-center" colspan="7">No data
+										avalaible</td>
+									<tr th:each="payment: ${payments}">
+										<td>
+											<a th:text="${payment.paymentId}"
+												th:href="@{/transactions/payments/{id}(id=${payment.paymentId})}"
+												class="text-hover-primary text-gray-600">14330</a>
+										</td>
+										<td th:text="${payment.debitAccountNumber}">0071001997</td>
+										<td th:text="${payment.creditAccountNumber}">0071001997</td>
+										<td th:text="${payment.currency}">KMF</td>
+										<td th:text="${payment.amount}">65000</td>
+										<td class="pe-0">
+											<div th:text="${payment.status}"
+												th:class="${'badge badge-light-' + @appSpEL.statusColor(payment.status)}">
+												Failed</div>
+										</td>
+										<td th:text="${#temporals.format(payment.createdAt, 'yyyy-MM-dd HH:mm')}">
+											21/09/2023
+											15:56</td>
+									</tr>
+								</tbody>
+								<!--end::Tbody-->
+							</table>
+							<!--end::Table-->
+						</div>
+						<!--end::Table wrapper-->
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end:::Payment history-->
+			</div>
+			<!--end:::Tab pane-->
+
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade" id="kt_customer_exchanges" role="tabpanel">
+
+				<!--begin:::Exchange history-->
+				<div class="card mb-5 mb-lg-10">
+					<!--begin::Card header-->
+					<div class="card-header">
+						<!--begin::Heading-->
+						<div class="card-title">
+							<h3>Exchanges</h3>
+						</div>
+						<!--end::Heading-->
+
+						<!--begin::Toolbar-->
+						<div class="card-toolbar">
+							<a href="#" class="btn btn-sm btn-light-primary my-1">
+								View More
+							</a>
+						</div>
+						<!--end::Toolbar-->
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Card body-->
+					<div class="card-body p-0">
+						<!--begin::Table wrapper-->
+						<div class="table-responsive">
+							<!--begin::Table-->
+							<table class="table align-middle table-row-dashed gy-4 gs-9">
+								<thead>
+									<tr class="text-start text-gray-700 fw-bolder fs-7 text-uppercase">
+										<th class="min-w-70px">Batch ID</th>
+										<th class="min-w-70px">Purch Currency</th>
+										<th class="min-w-100px">Purch Amount</th>
+										<th class="min-w-70px">Sale Currency</th>
+										<th class="min-w-100px">Sale Amount</th>
+										<th class="min-w-70px">Status</th>
+										<th class="min-w-100px">Date Effective</th>
+									</tr>
+								</thead>
+								<tbody class="fw-6 fw-bold text-gray-600">
+									<td th:if="${#lists.isEmpty(exchanges)}" class="text-center" colspan="7">No data
+										avalaible</td>
+									<tr th:each="exchange: ${exchanges}">
+										<td>
+											<a th:text="${exchange.exchangeId}"
+												th:href="@{/transactions/exchanges/{id}(id=${exchange.exchangeId})}"
+												class="text-hover-primary text-gray-600">14330</a>
+										</td>
+										<td th:text="${exchange.purchaseCurrency}">EUR</td>
+										<td th:text="${exchange.purchaseAmount}" class="text-success">20</td>
+										<td th:text="${exchange.saleCurrency}">KMF</td>
+										<td th:text="${exchange.saleAmount}" class="text-danger">65000</td>
+										<td class="pe-0">
+											<div th:text="${exchange.status}"
+												th:class="${'badge badge-light-' + @appSpEL.statusColor(exchange.status)}">
+												Failed</div>
+										</td>
+										<td th:text="${#temporals.format(exchange.createdAt, 'yyyy-MM-dd HH:mm')}">
+											21/09/2023
+											15:56</td>
+									</tr>
+								</tbody>
+								<!--end::Tbody-->
+							</table>
+							<!--end::Table-->
+						</div>
+						<!--end::Table wrapper-->
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end:::Exchange history-->
+			</div>
+			<!--end:::Tab pane-->
+
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade" id="kt_customer_loans" role="tabpanel">
+				<!--begin:::Card-->
+				<div class="card mb-5 mb-lg-10">
+					<!--begin::Card header-->
+					<div class="card-header">
+						<!--begin::Heading-->
+						<div class="card-title">
+							<h3>Loans</h3>
+						</div>
+						<!--end::Heading-->
+
+						<!--begin::Toolbar-->
+						<div class="card-toolbar">
+							<a href="#" class="btn btn-sm btn-light-primary my-1">
+								Action
+							</a>
+						</div>
+						<!--end::Toolbar-->
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Card body-->
+					<div class="card-body p-0">
+						<!--begin::Table wrapper-->
+						<div class="table-responsive">
+							<!--begin::Table-->
+							<table class="table align-middle table-row-dashed gy-4 gs-9">
+								<thead>
+									<tr class="text-start text-gray-700 fw-bolder fs-7 text-uppercase">
+										<th class="min-w-70px">Loan ID</th>
+										<th class="min-w-70px">Loan Type</th>
+										<th class="min-w-100px">Account Number</th>
+										<th class="min-w-100px">Issued Amount</th>
+										<th class="min-w-100px">Remaining Amount</th>
+										<th class="min-w-70px">Status</th>
+										<th class="min-w-100px">Date Effective</th>
+									</tr>
+								</thead>
+								<tbody class="fw-6 fw-bold text-gray-600">
+									<td th:if="${#lists.isEmpty(loans)}" class="text-center" colspan="7">No data
+										avalaible</td>
+									<tr th:each="loan: ${loans}">
+										<td>
+											<a th:href="@{/loans/{id}(id=${loan.loanId})}" th:text="${loan.loanId}"
+												class="text-hover-primary text-gray-600">14330</a>
+										</td>
+										<td th:text="${loan.loanType}">Gold</td>
+										<td th:text="${loan.accountNumber}">0071001997</td>
+										<td th:text="${loan.issuedAmount + ' KMF'}">500 0000 KMF</td>
+										<td th:text="${loan.totalAmount + ' KMF'}">500 0000 KMF</td>
+										<td class="pe-0">
+											<div th:text="${loan.status}"
+												th:class="${'badge badge-light-' + @appSpEL.statusColor(loan.status)}">
+												Failed</div>
+										</td>
+										<td th:text="${#temporals.format(loan.createdAt, 'yyyy-MM-dd HH:mm')}">
+											21/09/2023
+											15:56</td>
+									</tr>
+								</tbody>
+								<!--end::Tbody-->
+							</table>
+							<!--end::Table-->
+						</div>
+						<!--end::Table wrapper-->
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end:::Card-->
+			</div>
+			<!--end:::Tab pane-->
+
+			<!--begin:::Tab pane-->
+			<div class="tab-pane fade" id="kt_customer_settings" role="tabpanel">
+
+				<!--begin::Basic info-->
+				<div class="card mb-5 mb-xl-10">
+					<!--begin::Card header-->
+					<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+						data-bs-target="#kt_account_profile_details" aria-expanded="true"
+						aria-controls="kt_account_profile_details">
+						<!--begin::Card title-->
+						<div class="card-title m-0">
+							<h3 class="fw-bolder m-0">Profile Details</h3>
+						</div>
+						<!--end::Card title-->
+					</div>
+					<!--begin::Card header-->
+
+					<!--begin::Content-->
+					<div id="kt_account_settings_profile_details" class="collapse show">
+						<!--begin::Form-->
+						<form method="post" th:action="@{/customers/{id}(id=${customer.customerId})}"
+							th:object="${customer}" class="form">
+							<!--begin::Card body-->
+							<div class="card-body border-top p-9">
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8">
+										<!--begin::Image input-->
+										<div class="image-input image-input-outline" data-kt-image-input="true"
+											style="background-image: url('/img/svg/avatars/blank.svg')">
+											<!--begin::Preview existing avatar-->
+											<div class="image-input-wrapper w-125px h-125px"
+												style="background-image: url('/img/avatars/150-1.jpg')">
+											</div>
+											<!--end::Preview existing avatar-->
+
+											<!--begin::Label-->
+											<label
+												class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+												data-kt-image-input-action="change" data-bs-toggle="tooltip"
+												title="Change avatar">
+												<i class="bi bi-pencil-fill fs-7"></i>
+
+												<!--begin::Inputs-->
+												<input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
+												<input type="hidden" name="avatar_remove" />
+												<!--end::Inputs-->
+											</label>
+											<!--end::Label-->
+
+											<!--begin::Cancel-->
+											<span
+												class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+												data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+												title="Cancel avatar">
+												<i class="bi bi-x fs-2"></i>
+											</span>
+											<!--end::Cancel-->
+
+											<!--begin::Remove-->
+											<span
+												class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+												data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+												title="Remove avatar">
+												<i class="bi bi-x fs-2"></i>
+											</span>
+											<!--end::Remove-->
+										</div>
+										<!--end::Image input-->
+
+										<!--begin::Hint-->
+										<div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+										<!--end::Hint-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Full
+										Name</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8">
+										<!--begin::Row-->
+										<div class="row">
+											<!--begin::Col-->
+											<div class="col-lg-6 fv-row">
+												<input type="text" th:field="*{firstName}"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+													th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
+													placeholder="First name" />
+												<div class="invalid-feedback" th:errors="*{firstName}"></div>
+											</div>
+											<!--end::Col-->
+
+											<!--begin::Col-->
+											<div class="col-lg-6 fv-row">
+												<input type="text" th:field="*{lastName}"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+													th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
+													placeholder="Last name" />
+												<div class="invalid-feedback" th:errors="*{lastName}"></div>
+											</div>
+											<!--end::Col-->
+										</div>
+										<!--end::Row-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Identity</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+
+										<div class="row">
+											<div class="col-lg-3 fv-row">
+												<select th:field="*{identityType}"
+													class="form-select form-select-solid form-select-lg mb-3 mb-lg-0"
+													th:classappend="${#fields.hasErrors('identityType')} ? 'is-invalid' : ''"
+													data-control="select2" data-hide-search="true"
+													data-placeholder="Select an option">
+													<option value="Card"
+														th:selected="${customer.identityType} == 'Card'">
+														Card</option>
+													<option value="Passport"
+														th:selected="${customer.identityType} == 'Passport'">Passport
+													</option>
+												</select>
+												<div class="invalid-feedback" th:errors="*{identityType}"></div>
+											</div>
+
+											<div class="col-lg-3 fv-row">
+												<input type="text" th:field="*{identityNumber}"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+													placeholder="Identity Number"
+													th:value="${customer.identityNumber}" />
+											</div>
+
+											<div class="col-lg-3 fv-row">
+												<input type="text" th:field="*{identityIssue}"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+													placeholder="Identity Issue" th:value="${customer.identityIssue}" />
+											</div>
+
+											<div class="col-lg-3 fv-row">
+												<input name="identityExpiration" placeholder="Select a date"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0 kt_flatpickr"
+													th:value="${customer.identityExpiration}" />
+											</div>
+										</div>
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Nationality</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<select th:field="*{nationality}"
+											class="form-select form-select-solid form-select-lg fw-bold"
+											data-control="select2" data-placeholder="Nationality"
+											data-allow-clear="true">
+
+											<option th:each="country: ${@appSpEL.countries}" th:text="${country}"
+												th:value="${country}" th:selected="${customer.nationality == country}">
+												Comoros</option>
+										</select>
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label fw-bold fs-6">
+										<span class="required">Gender</span>
+									</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<select th:field="*{gender}"
+											class="form-select form-select-solid form-select-lg fw-bold"
+											th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid' : ''"
+											data-control="select2" data-hide-search="true"
+											data-placeholder="Select an option">
+											<option value="MALE" th:selected="${customer.gender} == 'MALE'">Male
+											</option>
+											<option value="FEMALE" th:selected="${customer.gender} == 'FEMALE'">Female
+											</option>
+										</select>
+										<div class="invalid-feedback" th:errors="*{gender}"></div>
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Birth
+										Date / Place</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8">
+										<!--begin::Row-->
+										<div class="row">
+											<!--begin::Col-->
+											<div class="col-lg-4 fv-row">
+												<input name="birthDate" placeholder="Select a date"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0 kt_flatpickr"
+													th:value="${customer.birthDate}" />
+											</div>
+											<!--end::Col-->
+
+											<!--begin::Col-->
+											<div class="col-lg-8 fv-row">
+												<input type="text" th:field="*{birthPlace}"
+													class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+													th:classappend="${#fields.hasErrors('birthPlace')} ? 'is-invalid' : ''"
+													placeholder="Birth Place" />
+												<div class="invalid-feedback" th:errors="*{birthPlace}"></div>
+											</div>
+											<!--end::Col-->
+										</div>
+										<!--end::Row-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label fw-bold fs-6">Profession</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<input type="text" th:field="*{profession}"
+											class="form-control form-control-lg form-control-solid"
+											placeholder="Profession" th:value="${customer.profession}" />
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Email</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<input type="email" th:field="*{email}"
+											class="form-control form-control-lg form-control-solid"
+											placeholder="Address email" th:value="${customer.email}" />
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Nationality</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<input type="tel" th:field="*{phone}"
+											class="form-control form-control-lg form-control-solid"
+											placeholder="Phone Number" th:value="${customer.phone}" />
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label fw-bold fs-6">Residence / Address / Post
+										code</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<div class="row">
+											<div class="col-lg-4">
+												<select th:field="*{residence}"
+													class="form-select form-select-solid form-select-lg fw-bold"
+													data-control="select2" data-placeholder="Residence"
+													data-allow-clear="true">
+
+													<option th:each="country: ${@appSpEL.countries}"
+														th:text="${country}" th:value="${country}"
+														th:selected="${customer.nationality == country}">Comoros
+													</option>
+												</select>
+											</div>
+											<div class="col-lg-4">
+												<input type="text" th:field="*{address}"
+													class="form-control form-control-lg form-control-solid"
+													placeholder="Address" th:value="${customer.address}" />
+											</div>
+											<div class="col-lg-4">
+												<input type="text" th:field="*{postCode}"
+													class="form-control form-control-lg form-control-solid"
+													placeholder="Post code" th:value="${customer.postCode}" />
+											</div>
+										</div>
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-6">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Communication</label>
+									<!--end::Label-->
+
+									<!--begin::Col-->
+									<div class="col-lg-8 fv-row">
+										<!--begin::Options-->
+										<div class="d-flex align-items-center mt-3">
+											<!--begin::Option-->
+											<label class="form-check form-check-inline form-check-solid me-5">
+												<input class="form-check-input" name="communication[]" type="checkbox"
+													value="1" />
+												<span class="fw-bold ps-2 fs-6">
+													Email
+												</span>
+											</label>
+											<!--end::Option-->
+
+											<!--begin::Option-->
+											<label class="form-check form-check-inline form-check-solid">
+												<input class="form-check-input" name="communication[]" type="checkbox"
+													value="2" />
+												<span class="fw-bold ps-2 fs-6">
+													Phone
+												</span>
+											</label>
+											<!--end::Option-->
+										</div>
+										<!--end::Options-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+
+								<!--begin::Input group-->
+								<div class="row mb-0">
+									<!--begin::Label-->
+									<label class="col-lg-4 col-form-label fw-bold fs-6">Allow
+										Marketing</label>
+									<!--begin::Label-->
+
+									<!--begin::Label-->
+									<div class="col-lg-8 d-flex align-items-center">
+										<div class="form-check form-check-solid form-switch fv-row">
+											<input class="form-check-input w-45px h-30px" type="checkbox"
+												id="allowmarketing" checked />
+											<label class="form-check-label" for="allowmarketing"></label>
+										</div>
+									</div>
+									<!--begin::Label-->
+								</div>
+								<!--end::Input group-->
+							</div>
+							<!--end::Card body-->
+
+							<!--begin::Actions-->
+							<div class="card-footer d-flex justify-content-end py-6 px-9">
+
+								<button type="submit" class="btn btn-primary"
+									id="kt_account_profile_details_submit">Save Changes</button>
+							</div>
+							<!--end::Actions-->
+						</form>
+						<!--end::Form-->
+					</div>
+					<!--end::Content-->
+				</div>
+				<!--end::Basic info-->
+				<!--begin::Notifications email preferences-->
+				<div class="card mb-5 mb-xl-10">
+					<!--begin::Card header-->
+					<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+						data-bs-target="#kt_account_email_preferences" aria-expanded="true"
+						aria-controls="kt_account_email_preferences">
+						<div class="card-title m-0">
+							<h3 class="fw-bolder m-0">Email Preferences</h3>
+						</div>
+					</div>
+					<!--begin::Card header-->
+
+					<!--begin::Content-->
+					<div id="kt_account_settings_email_preferences" class="collapse show">
+						<!--begin::Form-->
+						<form class="form">
+							<!--begin::Card body-->
+							<div class="card-body border-top px-9 py-9">
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Successful Payments</span>
+										<span class="text-muted fs-6">Receive a notification for every
+											successful payment.</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+								<!--begin::Option-->
+								<div class="separator separator-dashed my-6"></div>
+								<!--end::Option-->
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										checked="checked" value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Payouts</span>
+										<span class="text-muted fs-6">Receive a notification for every
+											initiated
+											payout.</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+								<!--begin::Option-->
+								<div class="separator separator-dashed my-6"></div>
+								<!--end::Option-->
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Fee Collection</span>
+										<span class="text-muted fs-6">Receive a notification each time
+											you
+											collect a fee from sales</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+								<!--begin::Option-->
+								<div class="separator separator-dashed my-6"></div>
+								<!--end::Option-->
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										checked="checked" value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Customer Payment
+											Dispute</span>
+										<span class="text-muted fs-6">Receive a notification if a
+											payment is
+											disputed by a customer and for dispute purposes.</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+								<!--begin::Option-->
+								<div class="separator separator-dashed my-6"></div>
+								<!--end::Option-->
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Refund Alerts</span>
+										<span class="text-muted fs-6">Receive a notification if a
+											payment is
+											stated as risk by the Finance Department.</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+								<!--begin::Option-->
+								<div class="separator separator-dashed my-6"></div>
+								<!--end::Option-->
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										checked="checked" value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Invoice Payments</span>
+										<span class="text-muted fs-6">Receive a notification if a
+											customer sends
+											an incorrect amount to pay their invoice.</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+								<!--begin::Option-->
+								<div class="separator separator-dashed my-6"></div>
+								<!--end::Option-->
+								<!--begin::Option-->
+								<label class="form-check form-check-custom form-check-solid align-items-start">
+									<!--begin::Input-->
+									<input class="form-check-input me-3" type="checkbox" name="email-preferences[]"
+										value="1" />
+									<!--end::Input-->
+
+									<!--begin::Label-->
+									<span class="form-check-label d-flex flex-column align-items-start">
+										<span class="fw-bolder fs-5 mb-0">Webhook API Endpoints</span>
+										<span class="text-muted fs-6">Receive notifications for
+											consistently
+											failing webhook API endpoints.</span>
+									</span>
+									<!--end::Label-->
+								</label>
+								<!--end::Option-->
+
+							</div>
+							<!--end::Card body-->
+
+							<!--begin::Card footer-->
+							<div class="card-footer d-flex justify-content-end py-6 px-9">
+								<button class="btn btn-light btn-active-light-primary me-2">Discard</button>
+								<button class="btn btn-primary  px-6">Save Changes</button>
+							</div>
+							<!--end::Card footer-->
+						</form>
+						<!--end::Form-->
+					</div>
+					<!--end::Content-->
+				</div>
+				<!--end::Notifications email preferences-->
+				<!--begin::Deactivate Account-->
+				<div class="card  ">
+
+					<!--begin::Card header-->
+					<div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+						data-bs-target="#kt_account_deactivate" aria-expanded="true"
+						aria-controls="kt_account_deactivate">
+						<div class="card-title m-0">
+							<h3 class="fw-bolder m-0">Deactivate Account</h3>
+						</div>
+					</div>
+					<!--end::Card header-->
+
+					<!--begin::Content-->
+					<div id="kt_account_settings_deactivate" class="collapse show">
+						<!--begin::Form-->
+						<form id="kt_account_deactivate_form" class="form">
+
+							<!--begin::Card body-->
+							<div class="card-body border-top p-9">
+
+								<!--begin::Notice-->
+								<div
+									class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-9 p-6">
+									<!--begin::Icon-->
+									<!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+									<span class="svg-icon svg-icon-2tx svg-icon-warning me-4"><svg
+											xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none">
+											<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10"
+												fill="currentColor" />
+											<rect x="11" y="14" width="7" height="2" rx="1"
+												transform="rotate(-90 11 14)" fill="currentColor" />
+											<rect x="11" y="17" width="2" height="2" rx="1"
+												transform="rotate(-90 11 17)" fill="currentColor" />
+										</svg></span>
+									<!--end::Svg Icon--> <!--end::Icon-->
+
+									<!--begin::Wrapper-->
+									<div class="d-flex flex-stack flex-grow-1 ">
+										<!--begin::Content-->
+										<div class=" fw-bold">
+											<h4 class="text-gray-900 fw-bolder">You Are Deactivating
+												Your
+												Account</h4>
+
+											<div class="fs-6 text-gray-700 ">For extra security, this
+												requires
+												you to confirm your email or phone number when you reset
+												yousignr password. <br /><a class="fw-bolder" href="#">Learn
+													more</a></div>
+										</div>
+										<!--end::Content-->
+
+									</div>
+									<!--end::Wrapper-->
+								</div>
+								<!--end::Notice-->
+
+								<!--begin::Form input row-->
+								<div class="form-check form-check-solid fv-row">
+									<input name="deactivate" class="form-check-input" type="checkbox" value=""
+										id="deactivate" />
+									<label class="form-check-label fw-bold ps-2 fs-6" for="deactivate">I
+										confirm
+										my account deactivation</label>
+								</div>
+								<!--end::Form input row-->
+							</div>
+							<!--end::Card body-->
+
+							<!--begin::Card footer-->
+							<div class="card-footer d-flex justify-content-end py-6 px-9">
+								<button id="kt_account_deactivate_account_submit" type="submit"
+									class="btn btn-danger fw-bold">Deactivate Account</button>
+							</div>
+							<!--end::Card footer-->
+
+						</form>
+						<!--end::Form-->
+					</div>
+					<!--end::Content-->
+				</div>
+				<!--end::Deactivate Account-->
+
+			</div>
+			<!--end:::Tab pane-->
+		</div>
+		<!--end::Tab content-->
+
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<div th:replace="~{fragments/footer}"></div>

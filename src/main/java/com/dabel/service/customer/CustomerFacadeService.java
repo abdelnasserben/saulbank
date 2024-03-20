@@ -1,6 +1,7 @@
 package com.dabel.service.customer;
 
 import com.dabel.app.Generator;
+import com.dabel.constant.AccountMembership;
 import com.dabel.constant.AccountProfile;
 import com.dabel.constant.Currency;
 import com.dabel.constant.Status;
@@ -41,8 +42,9 @@ public class CustomerFacadeService {
                         .accountProfile(AccountProfile.PERSONAL.name())
                         .currency(Currency.KMF.name())
                         .branch(savedCustomer.getBranch())
-                        .status(savedCustomer.getStatus())
+                        .status(Status.ACTIVE.code())
                         .build())
+                .membership(AccountMembership.OWNER.name())
                 .build());
     }
 
@@ -52,5 +54,9 @@ public class CustomerFacadeService {
 
     public CustomerDto findByIdentity(String identityNumber) {
         return customerService.findByIdentity(identityNumber);
+    }
+
+    public CustomerDto findById(Long customerId) {
+        return customerService.findById(customerId);
     }
 }

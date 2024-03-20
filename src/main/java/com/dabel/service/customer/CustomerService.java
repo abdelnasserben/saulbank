@@ -32,4 +32,8 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found")));
     }
 
+    public CustomerDto findById(Long customerId) {
+        return CustomerMapper.toDto(customerRepository.findById(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found")));
+    }
 }
