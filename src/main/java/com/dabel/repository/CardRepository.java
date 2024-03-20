@@ -1,6 +1,5 @@
 package com.dabel.repository;
 
-import com.dabel.dto.AccountDto;
 import com.dabel.model.Account;
 import com.dabel.model.Card;
 import org.springframework.data.jpa.repository.JpaRepository;

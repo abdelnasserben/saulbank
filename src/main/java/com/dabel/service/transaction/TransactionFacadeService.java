@@ -1,6 +1,5 @@
 package com.dabel.service.transaction;
 
-import com.dabel.dto.AccountDto;
 import com.dabel.dto.TransactionDto;
 import org.springframework.stereotype.Service;
 
