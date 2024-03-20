@@ -10,6 +10,8 @@ public class App {
 
         String TRANSACTION_ROOT = "/transactions";
         String TRANSACTION_INIT = TRANSACTION_ROOT + "/init";
+
+        String PAGE_404 = "/404";
     }
 
     public interface View {
@@ -23,6 +25,8 @@ public class App {
 
         String TRANSACTION_LIST = "transactions";
         String TRANSACTION_INIT = "transactions-init";
+
+        String PAGE_404 = "page404";
     }
 
     public interface MessageTag {

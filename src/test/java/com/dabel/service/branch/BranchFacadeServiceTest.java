@@ -75,7 +75,8 @@ class BranchFacadeServiceTest {
                 .build(),  new double[3]);
 
         //when
-        BranchDto expected = branchFacadeService.findById(1L);
+        BranchDto savedBranch = branchFacadeService.findAll().get(0);
+        BranchDto expected = branchFacadeService.findById(savedBranch.getBranchId());
 
         //then
         assertThat(expected.getBranchName()).isEqualTo("HQ");
