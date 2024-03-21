@@ -76,7 +76,7 @@ public class BasicTransactionController implements PageTitleConfig {
         //TODO: set branch - We'll replace this automatically by user authenticated
         BranchDto branchDto = branchFacadeService.findById(1L);
         transactionDto.setBranch(branchDto);
-        transactionDto.setSourceValue(String.format("%s, %s", branchDto.getBranchName(), branchDto.getBranchAddress()));
+        transactionDto.setSourceValue(branchDto.getBranchName());
 
         transactionFacadeService.init(transactionDto);
         redirect.addFlashAttribute(App.MessageTag.SUCCESS, transactionDto.getTransactionType() + " successfully initiated.");

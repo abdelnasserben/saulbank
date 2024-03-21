@@ -3,13 +3,11 @@ package com.dabel.controller;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.App;
-import com.dabel.dto.AccountDto;
-import com.dabel.dto.BranchDto;
-import com.dabel.dto.CustomerDto;
-import com.dabel.dto.TrunkDto;
+import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.transaction.TransactionFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +26,13 @@ public class CustomerController implements PageTitleConfig {
     private final CustomerFacadeService customerFacadeService;
     private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
+    private final TransactionFacadeService transactionFacadeService;
 
-    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService) {
+    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService) {
         this.customerFacadeService = customerFacadeService;
         this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
+        this.transactionFacadeService = transactionFacadeService;
     }
 
     @GetMapping(value = App.Endpoint.CUSTOMER_ROOT)
@@ -90,9 +90,9 @@ public class CustomerController implements PageTitleConfig {
 //        boolean notifyNoActiveCreditCards = customerCards.stream()
 //                .anyMatch(c -> c.getStatus().equals(Status.ACTIVE.code()));
 //
-//        List<TransactionDTO> lastTenCustomerTransactions = transactionFacadeService.findAllByCustomerId(customerId).stream()
-//                .limit(10)
-//                .toList();
+        List<TransactionDto> lastTenCustomerTransactions = transactionFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
+                .limit(10)
+                .toList();
 //
 //        List<PaymentDTO> lastTenCustomerPayments = paymentFacadeService.findAllByCustomerId(customerId).stream()
 //                .limit(10)
@@ -116,7 +116,7 @@ public class CustomerController implements PageTitleConfig {
         model.addAttribute("totalBalance", totalBalance);
 //        model.addAttribute("cards", StatedObjectFormatter.format(customerCards));
 //        model.addAttribute("notifyNoActiveCreditCards", notifyNoActiveCreditCards);
-//        model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
+        model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
 //        model.addAttribute("payments", StatedObjectFormatter.format(lastTenCustomerPayments));
 //        model.addAttribute("exchanges", StatedObjectFormatter.format(lastTenCustomerExchanges));
 //        model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));

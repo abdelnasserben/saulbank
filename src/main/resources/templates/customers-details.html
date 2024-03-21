@@ -74,7 +74,8 @@
 													fill="currentColor"></path>
 											</svg></span>
 										<!--end::Svg Icon-->
-										<span th:text="${customer.residence + ', ' + customer.address}">SF, Bay Area</span>
+										<span th:text="${customer.residence + ', ' + customer.address}">SF, Bay
+											Area</span>
 									</span>
 								</div>
 								<!--end::Info-->
@@ -992,27 +993,31 @@
 										<td>
 											<a th:text="${transaction.transactionId}"
 												th:href="@{/transactions/{id}(id=${transaction.transactionId})}"
-												class="text-hover-primary text-gray-600">14330</a>
+												class="text-hover-primary text-gray-600 mb-1">25874</a>
 										</td>
-										<td th:text="${transaction.transactionType}">Withdraw</td>
-										<td th:text="${transaction.accountNumber}">0071001997</td>
+										<td>
+											<a th:text="${transaction.transactionType}"
+												th:href="@{/transactions/{id}(id=${transaction.transactionId})}"
+												class="text-hover-primary text-gray-600 mb-1">Withdraw</a>
+										</td>
+										<td
+											th:text="${transaction.transactionType == 'WITHDRAW' ? transaction.initiatorAccount.accountNumber : transaction.receiverAccount.accountNumber}">
+											0071001997</td>
 										<td th:text="${transaction.currency}">KMF</td>
 										<td th:text="${transaction.amount}">65000</td>
 										<td>
-											<img th:unless="${transaction.sourceType} == 'Online'"
+											<img th:unless="${transaction.sourceType} == 'ONLINE'"
 												th:src="${transaction.sourceType == 'Visa'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
 												class="w-35px me-3" alt="" />
 											<span th:text="${transaction.sourceValue}">**** 3840</span>
-
 										</td>
-										<td class="pe-0">
-											<div th:text="${transaction.status}"
-												th:class="${'badge badge-light-' + @appSpEL.statusColor(transaction.status)}">
-												Failed</div>
+										<td><span th:text="${transaction.status}"
+												th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(transaction.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
 										</td>
 										<td th:text="${#temporals.format(transaction.createdAt, 'yyyy-MM-dd HH:mm')}">
-											21/09/2023
-											15:56</td>
+											2024-12-25
+											08:55
+										</td>
 									</tr>
 								</tbody>
 								<!--end::Tbody-->
@@ -1649,8 +1654,8 @@
 							<!--begin::Actions-->
 							<div class="card-footer d-flex justify-content-end py-6 px-9">
 
-								<button type="submit" class="btn btn-primary"
-									id="kt_submit_button">Save Changes</button>
+								<button type="submit" class="btn btn-primary" id="kt_submit_button">Save
+									Changes</button>
 							</div>
 							<!--end::Actions-->
 						</form>

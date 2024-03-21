@@ -32,4 +32,10 @@ public class TransactionService {
         return TransactionMapper.toDto(transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found")));
     }
+
+    public List<TransactionDto> findAllByCustomerIdentity(String customerIdentity) {
+        return transactionRepository.findAllByCustomerIdentity(customerIdentity).stream()
+                .map(TransactionMapper::toDto)
+                .toList();
+    }
 }
