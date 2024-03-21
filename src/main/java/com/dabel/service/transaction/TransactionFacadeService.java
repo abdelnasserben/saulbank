@@ -33,4 +33,8 @@ public class TransactionFacadeService {
     public List<TransactionDto> findAll() {
         return transactionService.findAll();
     }
+
+    public TransactionDto findById(Long transactionId) {
+        return transactionService.findById(transactionId);
+    }
 }

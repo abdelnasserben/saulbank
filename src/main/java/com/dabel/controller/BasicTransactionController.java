@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,6 +38,16 @@ public class BasicTransactionController implements PageTitleConfig {
         model.addAttribute("transactions", StatedObjectFormatter.format(transactionFacadeService.findAll()));
 
         return App.View.TRANSACTION_LIST;
+    }
+
+    @GetMapping(value = App.Endpoint.TRANSACTION_ROOT + "/{transactionId}")
+    public String transactionDetails(@PathVariable Long transactionId, Model model) {
+
+        TransactionDto transactionDto = transactionFacadeService.findById(transactionId);
+
+        model.addAttribute("transaction", StatedObjectFormatter.format(transactionDto));
+        configPageTitle(model, "Transaction Details");
+        return App.View.TRANSACTION_DETAILS;
     }
 
     @GetMapping(value = App.Endpoint.TRANSACTION_INIT)
@@ -65,11 +76,34 @@ public class BasicTransactionController implements PageTitleConfig {
         //TODO: set branch - We'll replace this automatically by user authenticated
         BranchDto branchDto = branchFacadeService.findById(1L);
         transactionDto.setBranch(branchDto);
+        transactionDto.setSourceValue(String.format("%s, %s", branchDto.getBranchName(), branchDto.getBranchAddress()));
 
         transactionFacadeService.init(transactionDto);
         redirect.addFlashAttribute(App.MessageTag.SUCCESS, transactionDto.getTransactionType() + " successfully initiated.");
 
         return "redirect:" + App.Endpoint.TRANSACTION_INIT;
+    }
+
+    @GetMapping(value = App.Endpoint.TRANSACTION_APPROVE + "/{transactionId}")
+    public String approveTransaction(@PathVariable Long transactionId, RedirectAttributes redirect) {
+
+        transactionFacadeService.approve(transactionId);
+        redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Transaction successfully approved!");
+
+        return "redirect:" + App.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
+    }
+
+    @PostMapping(value = App.Endpoint.TRANSACTION_REJECT + "/{transactionId}")
+    public String rejectTransaction(@PathVariable Long transactionId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+
+        if(rejectReason.isBlank())
+            redirect.addFlashAttribute(App.MessageTag.ERROR, "Reject reason is mandatory!");
+        else {
+            redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Transaction successfully rejected!");
+            transactionFacadeService.reject(transactionId, rejectReason);
+        }
+
+        return "redirect:" + App.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
     }
 
 

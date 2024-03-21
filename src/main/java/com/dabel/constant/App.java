@@ -10,6 +10,8 @@ public class App {
 
         String TRANSACTION_ROOT = "/transactions";
         String TRANSACTION_INIT = TRANSACTION_ROOT + "/init";
+        String TRANSACTION_APPROVE = TRANSACTION_ROOT + "/approve";
+        String TRANSACTION_REJECT = TRANSACTION_ROOT + "/reject";
 
         String PAGE_404 = "/404";
     }
@@ -25,6 +27,7 @@ public class App {
 
         String TRANSACTION_LIST = "transactions";
         String TRANSACTION_INIT = "transactions-init";
+        String TRANSACTION_DETAILS = "transactions-details";
 
         String PAGE_404 = "page404";
     }

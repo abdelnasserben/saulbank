@@ -72,7 +72,7 @@
 							<td th:text="${customer.phone}">+2694561212</td>
 							<td th:text="${customer.address}">Ndzaouze Mitsamiouli</td>
 							<td><span th:text="${customer.status}"
-									th:class="${'badge badge-light-' + @appSpEL.statusColor(customer.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(customer.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
 							</td>
 							<td th:text="${#temporals.format(customer.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25 08:55
 							</td>

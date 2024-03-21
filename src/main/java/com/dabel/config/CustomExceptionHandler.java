@@ -15,14 +15,17 @@ import java.util.List;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(value = {
-            BalanceInsufficientException.class,
-            IllegalOperationException.class,
-            ResourceNotFoundException.class})
-    public String accountNotFoundHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
+    @ExceptionHandler(value = {BalanceInsufficientException.class, IllegalOperationException.class,})
+    public String basicHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
+        return redirection(redirect, request.getRequestURI(), ex.getMessage());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public String resourceNotFoundHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
 
         List<String> infiniteRedirectionViews = List.of(
-                App.Endpoint.CUSTOMER_ROOT
+                App.Endpoint.CUSTOMER_ROOT,
+                App.Endpoint.TRANSACTION_ROOT
         );
 
         String view = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));

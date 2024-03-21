@@ -83,7 +83,7 @@
 								<span th:text="${transaction.sourceValue}">**** 3840</span>
 							</td>
 							<td><span th:text="${transaction.status}"
-									th:class="${'badge badge-light-' + @appSpEL.statusColor(transaction.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(transaction.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
 							</td>
 							<td th:text="${#temporals.format(transaction.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25
 								08:55

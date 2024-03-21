@@ -66,7 +66,7 @@
 								<a th:href="@{/branchs/{id}(id=${branch.branchId})}" th:text="${branch.branchName}" class="text-gray-800 text-hover-primary mb-1">HQ Moroni</a>
 							</td>
 							<td th:text="${branch.branchAddress}">Moroni, Place de la France</td>
-							<td><span th:text="${branch.status}" th:class="${'badge badge-light-' + @appSpEL.statusColor(branch.status) + ' fw-bold px-4 py-3'}">ACTIVE</span></td>
+							<td><span th:text="${branch.status}" th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(branch.status) + ' fw-bold px-4 py-3'}">ACTIVE</span></td>
 							<td th:text="${#temporals.format(branch.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25 08:55</td>
 						</tr>
 					</tbody>
