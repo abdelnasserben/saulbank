@@ -60,6 +60,16 @@ public class BranchFacadeService {
                 .status(savedBranch.getStatus())
                 .build());
 
+        AccountDto forExchangeLedger = accountService.save(AccountDto.builder()
+                .accountName(String.format("GL Exchange Fees Branch %d", savedBranch.getBranchId()))
+                .accountNumber(Generator.generateAccountNumber())
+                .accountType(AccountType.BUSINESS.name())
+                .accountProfile(AccountProfile.PERSONAL.name())
+                .currency(Currency.KMF.name())
+                .branch(savedBranch)
+                .status(savedBranch.getStatus())
+                .build());
+
         AccountDto forLoanLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Loan Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Generator.generateAccountNumber())
@@ -98,6 +108,11 @@ public class BranchFacadeService {
         accountService.save(LedgerDto.builder()
                 .ledgerType(LedgerType.TRANSFER.name())
                 .account(forTransferLedger)
+                .build());
+
+        accountService.save(LedgerDto.builder()
+                .ledgerType(LedgerType.EXCHANGE.name())
+                .account(forExchangeLedger)
                 .build());
 
         accountService.save(LedgerDto.builder()

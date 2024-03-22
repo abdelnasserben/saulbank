@@ -20,21 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class BasicTransactionController implements PageTitleConfig {
+public class TransactionController implements PageTitleConfig {
 
     private final TransactionFacadeService transactionFacadeService;
     private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
 
-    public BasicTransactionController(TransactionFacadeService transactionFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService) {
+    public TransactionController(TransactionFacadeService transactionFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService) {
         this.transactionFacadeService = transactionFacadeService;
         this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
     }
 
     @GetMapping(value = App.Endpoint.TRANSACTION_ROOT)
-    public String listingBasicTransaction(Model model) {
-        configPageTitle(model, App.Menu.Transaction.Basics.ROOT);
+    public String listingTransaction(Model model) {
+        configPageTitle(model, App.Menu.Transaction.ROOT);
         model.addAttribute("transactions", StatedObjectFormatter.format(transactionFacadeService.findAll()));
 
         return App.View.TRANSACTION_LIST;
@@ -51,19 +51,19 @@ public class BasicTransactionController implements PageTitleConfig {
     }
 
     @GetMapping(value = App.Endpoint.TRANSACTION_INIT)
-    public String initBasicTransaction(Model model, TransactionDto transactionDto) {
-        configPageTitle(model, App.Menu.Transaction.Basics.INIT);
+    public String initTransaction(Model model, TransactionDto transactionDto) {
+        configPageTitle(model, App.Menu.Transaction.INIT);
 
         return App.View.TRANSACTION_INIT;
     }
 
     @PostMapping(value = App.Endpoint.TRANSACTION_INIT)
-    public String initBasicTransaction(Model model, @Valid TransactionDto transactionDto, BindingResult binding,
-                                       @RequestParam String accountNumber,
-                                       RedirectAttributes redirect) {
+    public String initTransaction(Model model, @Valid TransactionDto transactionDto, BindingResult binding,
+                                  @RequestParam String accountNumber,
+                                  RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
-            configPageTitle(model, App.Menu.Transaction.Basics.INIT);
+            configPageTitle(model, App.Menu.Transaction.INIT);
             model.addAttribute(App.MessageTag.ERROR, "Invalid information!");
 
             return App.View.TRANSACTION_INIT;
@@ -109,6 +109,6 @@ public class BasicTransactionController implements PageTitleConfig {
 
     @Override
     public String[] getMenuAndSubMenu() {
-        return new String[]{App.Menu.Transaction.MENU, App.Menu.Transaction.Basics.SUB_MENU};
+        return new String[]{App.Menu.Transaction.MENU, null};
     }
 }

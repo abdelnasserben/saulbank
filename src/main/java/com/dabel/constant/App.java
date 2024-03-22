@@ -13,6 +13,12 @@ public class App {
         String TRANSACTION_APPROVE = TRANSACTION_ROOT + "/approve";
         String TRANSACTION_REJECT = TRANSACTION_ROOT + "/reject";
 
+        String EXCHANGE_ROOT = "/exchanges";
+        String EXCHANGE_INIT = EXCHANGE_ROOT + "/init";
+        String EXCHANGE_APPROVE = EXCHANGE_ROOT + "/approve";
+        String EXCHANGE_REJECT = EXCHANGE_ROOT + "/reject";
+
+
         String PAGE_404 = "/404";
     }
 
@@ -28,6 +34,10 @@ public class App {
         String TRANSACTION_LIST = "transactions";
         String TRANSACTION_INIT = "transactions-init";
         String TRANSACTION_DETAILS = "transactions-details";
+
+        String EXCHANGE_LIST = "exchanges";
+        String EXCHANGE_INIT = "exchanges-init";
+        String EXCHANGE_DETAILS = "exchanges-details";
 
         String PAGE_404 = "page404";
     }
@@ -61,15 +71,15 @@ public class App {
         }
         
         interface Transaction {
-
             String MENU = "Transactions";
+            String ROOT = "All Transactions";
+            String INIT = "Init Transaction";
+        }
 
-            interface Basics {
-
-                String SUB_MENU = "Basics";
-                String ROOT = "All Transactions";
-                String INIT = "Deposit/Withdraw";
-            }
+        interface Exchange {
+            String MENU = "Exchanges";
+            String ROOT = "All Exchanges";
+            String INIT = "Init Exchange";
         }
     }
 }

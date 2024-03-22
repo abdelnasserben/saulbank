@@ -9,6 +9,8 @@ public class Bank {
         double TRANSFER = 525;
 
         double WITHDRAW = 200;
+
+        double EXCHANGE = 0;
     }
 
     public interface ExchangeCourse {

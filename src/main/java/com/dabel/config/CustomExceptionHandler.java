@@ -25,7 +25,8 @@ public class CustomExceptionHandler {
 
         List<String> infiniteRedirectionViews = List.of(
                 App.Endpoint.CUSTOMER_ROOT,
-                App.Endpoint.TRANSACTION_ROOT
+                App.Endpoint.TRANSACTION_ROOT,
+                App.Endpoint.EXCHANGE_ROOT
         );
 
         String view = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));

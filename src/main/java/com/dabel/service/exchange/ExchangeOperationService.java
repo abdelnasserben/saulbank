@@ -1,10 +1,14 @@
 package com.dabel.service.exchange;
 
 import com.dabel.app.CurrencyExchanger;
+import com.dabel.app.Fee;
+import com.dabel.constant.Bank;
+import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.dto.ExchangeDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
+import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +17,11 @@ import org.springframework.stereotype.Service;
 public class ExchangeOperationService implements EvaluableOperation<ExchangeDto> {
 
     private final ExchangeService exchangeService;
+    private final FeeService feeService;
 
-    public ExchangeOperationService(ExchangeService exchangeService) {
+    public ExchangeOperationService(ExchangeService exchangeService, FeeService feeService) {
         this.exchangeService = exchangeService;
+        this.feeService = feeService;
     }
 
     @Override
@@ -35,6 +41,11 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
 
     @Override
     public void approve(ExchangeDto exchangeDto) {
+
+        //TODO: apply withdraw fees
+//        Fee fee = new Fee(exchangeDto.getBranch(), Bank.Fees.EXCHANGE, "Exchange");
+//        feeService.apply(exc.getInitiatorAccount(), LedgerType.EXCHANGE, fee);
+
         exchangeDto.setStatus(Status.APPROVED.code());
 //        exchange.setUpdatedBy("Administrator");
 //        exchange.setUpdatedAt(LocalDateTime.now());

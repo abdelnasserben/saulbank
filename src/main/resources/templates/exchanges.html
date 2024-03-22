@@ -1,0 +1,95 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+		<!--begin::Card-->
+		<div class="card">
+			<!--begin::Card header-->
+			<div class="card-header border-0 pt-6">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<!--begin::Search-->
+					<div class="d-flex align-items-center position-relative my-1">
+						<i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+							<span class="path1"></span>
+							<span class="path2"></span>
+						</i>
+						<input type="text" data-kt-datatable-table-filter="search"
+							class="form-control form-control-solid w-250px ps-12" placeholder="Search Exchanges" />
+					</div>
+					<!--end::Search-->
+				</div>
+				<!--begin::Card title-->
+				<!--begin::Card toolbar-->
+				<div class="card-toolbar">
+					<!--begin::Toolbar-->
+					<div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+						<!--begin::Add customer-->
+						<a th:href="@{/exchanges/init}" class="btn btn-primary">
+							<i class="ki-duotone ki-arrow-up-down fs-2">
+								<span class="path1"></span>
+								<span class="path2"></span>
+							</i>
+							Init Exchange
+						</a>
+						<!--end::Add customer-->
+					</div>
+					<!--end::Toolbar-->
+				</div>
+				<!--end::Card toolbar-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0">
+				<!--begin::Table-->
+				<table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_datatable_table">
+					<thead>
+						<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+							<th class="min-w-70px">Batch ID</th>
+							<th class="min-w-100px">Customer</th>
+							<th class="min-w-100px">Purch Amount</th>
+							<th class="min-w-100px">Sale Amount</th>
+							<th class="min-w-70px">Status</th>
+							<th class="min-w-100px">Date Effective</th>
+						</tr>
+					</thead>
+					<tbody class="fw-semibold text-gray-600">
+						<tr th:each="exchange: ${exchanges}">
+							<td>
+								<a th:text="${exchange.exchangeId}"
+									th:href="@{/exchanges/{id}(id=${exchange.exchangeId})}"
+									class="text-hover-primary text-gray-600 mb-1">25874</a>
+							</td>
+							<td>
+								<a th:text="${exchange.customerFullName}"
+									th:href="@{/exchanges/{id}(id=${exchange.exchangeId})}"
+									class="text-hover-primary text-gray-600 mb-1">25874</a>
+							</td>
+							<td th:text="${exchange.purchaseCurrency + ' ' + exchange.purchaseAmount}"
+								class="text-success">KMF 20</td>
+							<td th:text="${exchange.saleCurrency + ' ' + exchange.saleAmount}" class="text-danger">EUR
+								65000</td>
+
+							<td>
+								<span th:text="${exchange.status}"
+									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(exchange.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+							</td>
+							<td th:text="${#temporals.format(exchange.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25
+								08:55
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!--end::Table-->
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<div th:replace="~{fragments/footer}"></div>

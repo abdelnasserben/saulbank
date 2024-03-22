@@ -8254,3 +8254,8 @@ var lastName = $("input[name = 'lastName']");
 $(firstName, lastName).change(function () {
     $("input[name='accountName']").val(firstName.val() + " " + lastName.val());
 });
+
+//Transaction init: when type of transaction change
+$('#transactionType').change(function() {
+    alert($(this).val())
+});

@@ -300,11 +300,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" href="#" data-kt-page="pro">
+										<a class="menu-link" th:href="@{/exchanges/init}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Exchanges</span>
+											<span class="menu-title">Init Exchange</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -399,87 +399,40 @@
 								<!--begin:Menu sub-->
 								<div class="menu-sub menu-sub-accordion">
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentSubMenu == 'Basics' ? 'show' : ''}">
+									<div class="menu-item">
 										<!--begin:Menu link-->
-										<span class="menu-link">
+										<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'All Transactions' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Basics</span>
-											<span class="menu-arrow"></span>
-										</span>
+											<span class="menu-title">All Transactions</span>
+										</a>
 										<!--end:Menu link-->
-										<!--begin:Menu sub-->
-										<div class="menu-sub menu-sub-accordion">
-											<!--begin:Menu item-->
-											<div class="menu-item">
-												<!--begin:Menu link-->
-												<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'All Transactions' ? 'active' : ''}">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">All Transactions</span>
-												</a>
-												<!--end:Menu link-->
-											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
-											<div class="menu-item">
-												<!--begin:Menu link-->
-												<a class="menu-link" th:href="@{/transactions/init}" th:classappend="${currentPage == 'Deposit/Withdraw' ? 'active' : ''}">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Deposit/Withdraw</span>
-												</a>
-												<!--end:Menu link-->
-											</div>
-											<!--end:Menu item-->
-										</div>
-										<!--end:Menu sub-->
+									</div>
+									<!--end:Menu item-->
+
+									<!--begin:Menu item-->
+									<div class="menu-item">
+										<!--begin:Menu link-->
+										<a class="menu-link" th:href="@{/transactions/init}" th:classappend="${currentPage == 'Init Transaction' ? 'active' : ''}">
+											<span class="menu-bullet">
+												<span class="bullet bullet-dot"></span>
+											</span>
+											<span class="menu-title">Init Transaction</span>
+										</a>
+										<!--end:Menu link-->
 									</div>
 									<!--end:Menu item-->
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									<div class="menu-item">
 										<!--begin:Menu link-->
-										<span class="menu-link">
+										<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'Invoices' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Payments</span>
-											<span class="menu-arrow"></span>
-										</span>
+											<span class="menu-title">Invoices</span>
+										</a>
 										<!--end:Menu link-->
-										<!--begin:Menu sub-->
-										<div class="menu-sub menu-sub-accordion">
-											<!--begin:Menu item-->
-											<div class="menu-item">
-												<!--begin:Menu link-->
-												<a class="menu-link"
-													href="../dist/apps/ecommerce/catalog/products.html">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">All Payments</span>
-												</a>
-												<!--end:Menu link-->
-											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
-											<div class="menu-item">
-												<!--begin:Menu link-->
-												<a class="menu-link"
-													href="../dist/apps/ecommerce/catalog/products.html">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Init Payment</span>
-												</a>
-												<!--end:Menu link-->
-											</div>
-											<!--end:Menu item-->
-										</div>
-										<!--end:Menu sub-->
 									</div>
 									<!--end:Menu item-->
 								</div>
@@ -487,7 +440,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Exchanges' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -505,11 +458,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs/base/utilities"
-											target="_blank" title="Check out over 200 in-house components"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/exchanges}" th:classappend="${currentPage == 'All Exchanges' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -521,11 +470,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs"
-											target="_blank" title="Check out the complete documentation"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/exchanges/init}" th:classappend="${currentPage == 'Init Exchange' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>

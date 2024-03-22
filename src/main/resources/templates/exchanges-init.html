@@ -1,0 +1,99 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+
+		<form method="post" th:object="${exchangeDto}" th:action="@{/exchanges/init}">
+
+			<div class="row mb-4 pt-6">
+				<label class="col-lg-2 col-form-label required fw-bold fs-6">Customer</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-md-5">
+							<input type="text" th:field="*{customerIdentityNumber}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('customerIdentityNumber')} ? 'is-invalid' : ''"
+								placeholder="Identity Number" />
+							<div class="invalid-feedback" th:errors="*{customerIdentityNumber}"></div>
+						</div>
+						<div class="col-md-5">
+							<input type="text" th:field="*{customerFullName}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('customerFullName')} ? 'is-invalid' : ''"
+								placeholder="Full name" />
+							<div class="invalid-feedback" th:errors="*{customerFullName}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label required fw-bold fs-6">Purchase Amount</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-auto">
+							<select th:field="*{purchaseCurrency}" class="form-select mb-3"
+								th:classappend="${#fields.hasErrors('purchaseCurrency')} ? 'is-invalid' : ''"
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								<option value="KMF">KMF</option>
+								<option value="EUR">EUR</option>
+								<option value="USD">USD</option>
+							</select>
+							<div class="invalid-feedback" th:errors="*{purchaseCurrency}"></div>
+						</div>
+						<div class="col col-md-4">
+							<input type="number" th:field="*{purchaseAmount}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('purchaseAmount')} ? 'is-invalid' : ''" step=".01"
+								placeholder="0.00" />
+							<div class="invalid-feedback" th:errors="*{purchaseAmount}">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-4">
+				<label class="col-lg-2 col-form-label fw-bold fs-6">Sale Amount</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-auto">
+							<select th:field="*{saleCurrency}" class="form-select mb-3"
+								th:classappend="${#fields.hasErrors('saleCurrency')} ? 'is-invalid' : ''"
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								<option value="KMF">KMF</option>
+								<option value="EUR">EUR</option>
+								<option value="USD">USD</option>
+							</select>
+							<div class="invalid-feedback" th:errors="*{saleCurrency}"></div>
+						</div>
+						<div class="col col-md-4">
+							<input type="number" name="saleAmount" class="form-control mb-2" step=".01"
+								placeholder="0.00" disabled />
+						</div>
+						<div class="col col-md-auto">
+							<input type="number" name="conversionRate" class="form-control mb-2" disabled />
+							<div class="text-muted fs-7">Conversion rate</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6 mb-6">
+				<label for="exampleFormControlTextarea1" class="form-label fw-bold fs-6">Remarks</label>
+				<textarea th:field="*{reason}" class="form-control"
+					th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''" id="exampleFormControlTextarea1"
+					rows="4"></textarea>
+				<div class="invalid-feedback" th:errors="*{reason}"></div>
+			</div>
+
+			<button type="submit" id="kt_submit_button" class="btn btn-primary">Init Exchange</button>
+		</form>
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<div th:replace="~{fragments/footer}"></div>
