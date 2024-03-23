@@ -104,10 +104,10 @@ public class CustomerController implements PageTitleConfig {
                 .toList();
 
         List<LoanDto> customerLoans = loanFacadeService.findAllByCustomerIdentityNumber(customerDto.getIdentityNumber()).stream()
-                .filter(l -> l.getStatus().equals(Status.ACTIVE.code()))
                 .toList();
 
         double totalLoan = customerLoans.stream()
+                .filter(l -> l.getStatus().equals(Status.ACTIVE.code()))
                 .mapToDouble(LoanDto::getTotalAmount)
                 .sum();
 
