@@ -1,6 +1,7 @@
 package com.dabel.constant;
 
-public class App {
+public final class Web {
+
     public interface Endpoint {
         String BRANCH_ROOT = "/branches";
         String BRANCH_ACCOUNTS = BRANCH_ROOT + "/accounts";

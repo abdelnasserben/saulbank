@@ -3,7 +3,7 @@ package com.dabel.service.transaction;
 import com.dabel.app.Checker;
 import com.dabel.app.CurrencyExchanger;
 import com.dabel.app.Fee;
-import com.dabel.constant.Bank;
+import com.dabel.constant.BankFees;
 import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
@@ -31,7 +31,7 @@ public class Transfer extends Transaction{
         if(Checker.isInactiveAccount(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Initiator account must be active");
 
-        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + Bank.Fees.TRANSFER) {
+        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + BankFees.Basic.TRANSFER) {
 
             transactionDto.setStatus(Status.FAILED.code());
             transactionDto.setFailureReason("Insufficient balance");
@@ -57,7 +57,7 @@ public class Transfer extends Transaction{
         accountOperationService.credit(transactionDto.getReceiverAccount(), creditAmount);
 
         //TODO: apply transfer fees
-        Fee fee = new Fee(transactionDto.getBranch(), Bank.Fees.TRANSFER, "Transfer");
+        Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.TRANSFER, "Transfer");
         feeService.apply(transactionDto.getInitiatorAccount(), LedgerType.TRANSFER, fee);
 
         //TODO: update transaction info and save it

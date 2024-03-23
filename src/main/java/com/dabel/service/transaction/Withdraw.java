@@ -2,7 +2,7 @@ package com.dabel.service.transaction;
 
 import com.dabel.app.Checker;
 import com.dabel.app.Fee;
-import com.dabel.constant.Bank;
+import com.dabel.constant.BankFees;
 import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
@@ -38,7 +38,7 @@ public class Withdraw extends Transaction {
         //TODO: set receiver account of transaction
         transactionDto.setReceiverAccount(receiverAccount);
 
-        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + Bank.Fees.WITHDRAW) {
+        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + BankFees.Basic.WITHDRAW) {
 
             transactionDto.setStatus(Status.FAILED.code());
             transactionDto.setFailureReason("Insufficient balance");
@@ -62,7 +62,7 @@ public class Withdraw extends Transaction {
         accountOperationService.credit(transactionDto.getReceiverAccount(), transactionDto.getAmount());
 
         //TODO: apply withdraw fees
-        Fee fee = new Fee(transactionDto.getBranch(), Bank.Fees.WITHDRAW, "Withdraw");
+        Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.WITHDRAW, "Withdraw");
         feeService.apply(transactionDto.getInitiatorAccount(), LedgerType.WITHDRAW, fee);
 
         //TODO: update transaction info and save it

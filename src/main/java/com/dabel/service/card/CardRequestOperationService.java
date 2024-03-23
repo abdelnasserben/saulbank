@@ -2,7 +2,7 @@ package com.dabel.service.card;
 
 import com.dabel.app.Checker;
 import com.dabel.app.Fee;
-import com.dabel.constant.Bank;
+import com.dabel.constant.BankFees;
 import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
@@ -34,7 +34,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
         if(Checker.isInactiveAccount(accountDto) || Checker.isAssociativeAccount(accountDto))
             throw new IllegalOperationException("The account is not eligible for this operation");
 
-        if(accountDto.getBalance() < Bank.Fees.CARD_APPLICATION_REQUEST) {
+        if(accountDto.getBalance() < BankFees.Basic.CARD_APPLICATION_REQUEST) {
             cardRequestDto.setStatus(Status.FAILED.code());
             cardRequestDto.setFailureReason("Account balance is insufficient for card request fees");
             cardRequestService.save(cardRequestDto);
@@ -54,7 +54,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
         //we'll make update by info later...
 
         //TODO: apply fees
-        Fee fee = new Fee(cardRequestDto.getBranch(), Bank.Fees.CARD_APPLICATION_REQUEST, "Card application request");
+        Fee fee = new Fee(cardRequestDto.getBranch(), BankFees.Basic.CARD_APPLICATION_REQUEST, "Card application request");
         feeService.apply(cardRequestDto.getTrunk().getAccount(), LedgerType.CARD_REQUEST, fee);
 
         cardRequestService.save(cardRequestDto);

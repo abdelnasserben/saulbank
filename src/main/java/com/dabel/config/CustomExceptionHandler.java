@@ -1,6 +1,6 @@
 package com.dabel.config;
 
-import com.dabel.constant.App;
+import com.dabel.constant.Web;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.exception.ResourceNotFoundException;
@@ -24,15 +24,15 @@ public class CustomExceptionHandler {
     public String resourceNotFoundHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
 
         List<String> infiniteRedirectionViews = List.of(
-                App.Endpoint.CUSTOMER_ROOT,
-                App.Endpoint.TRANSACTION_ROOT,
-                App.Endpoint.EXCHANGE_ROOT
+                Web.Endpoint.CUSTOMER_ROOT,
+                Web.Endpoint.TRANSACTION_ROOT,
+                Web.Endpoint.EXCHANGE_ROOT
         );
 
         String view = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));
 
         if(infiniteRedirectionViews.contains(view)) {
-            return "redirect:" + App.Endpoint.PAGE_404;
+            return "redirect:" + Web.Endpoint.PAGE_404;
         }
 
         return redirection(redirect, request.getRequestURI(), ex.getMessage());
@@ -44,7 +44,7 @@ public class CustomExceptionHandler {
     }
 
     private String redirection(RedirectAttributes redirect, String url, String message) {
-        redirect.addFlashAttribute(App.MessageTag.ERROR, message);
+        redirect.addFlashAttribute(Web.MessageTag.ERROR, message);
         return "redirect:" + url;
     }
 }

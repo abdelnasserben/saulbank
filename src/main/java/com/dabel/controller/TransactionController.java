@@ -2,7 +2,8 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
-import com.dabel.constant.App;
+import com.dabel.constant.TransactionType;
+import com.dabel.constant.Web;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.TransactionDto;
@@ -32,46 +33,53 @@ public class TransactionController implements PageTitleConfig {
         this.accountFacadeService = accountFacadeService;
     }
 
-    @GetMapping(value = App.Endpoint.TRANSACTION_ROOT)
+    @GetMapping(value = Web.Endpoint.TRANSACTION_ROOT)
     public String listingTransaction(Model model) {
-        configPageTitle(model, App.Menu.Transaction.ROOT);
+        configPageTitle(model, Web.Menu.Transaction.ROOT);
         model.addAttribute("transactions", StatedObjectFormatter.format(transactionFacadeService.findAll()));
 
-        return App.View.TRANSACTION_LIST;
+        return Web.View.TRANSACTION_LIST;
     }
 
-    @GetMapping(value = App.Endpoint.TRANSACTION_ROOT + "/{transactionId}")
+    @GetMapping(value = Web.Endpoint.TRANSACTION_ROOT + "/{transactionId}")
     public String transactionDetails(@PathVariable Long transactionId, Model model) {
 
         TransactionDto transactionDto = transactionFacadeService.findById(transactionId);
 
         model.addAttribute("transaction", StatedObjectFormatter.format(transactionDto));
         configPageTitle(model, "Transaction Details");
-        return App.View.TRANSACTION_DETAILS;
+        return Web.View.TRANSACTION_DETAILS;
     }
 
-    @GetMapping(value = App.Endpoint.TRANSACTION_INIT)
+    @GetMapping(value = Web.Endpoint.TRANSACTION_INIT)
     public String initTransaction(Model model, TransactionDto transactionDto) {
-        configPageTitle(model, App.Menu.Transaction.INIT);
+        configPageTitle(model, Web.Menu.Transaction.INIT);
 
-        return App.View.TRANSACTION_INIT;
+        return Web.View.TRANSACTION_INIT;
     }
 
-    @PostMapping(value = App.Endpoint.TRANSACTION_INIT)
+    @PostMapping(value = Web.Endpoint.TRANSACTION_INIT)
     public String initTransaction(Model model, @Valid TransactionDto transactionDto, BindingResult binding,
-                                  @RequestParam String accountNumber,
+                                  @RequestParam String initiatorAccountNumber,
+                                  @RequestParam(name = "receiverAccountNumber", required = false) String receiverAccountNumber,
                                   RedirectAttributes redirect) {
 
-        if(binding.hasErrors()) {
-            configPageTitle(model, App.Menu.Transaction.INIT);
-            model.addAttribute(App.MessageTag.ERROR, "Invalid information!");
+        if(binding.hasErrors() || transactionDto.getTransactionType().equalsIgnoreCase(TransactionType.TRANSFER.name()) && receiverAccountNumber.isEmpty()) {
+            configPageTitle(model, Web.Menu.Transaction.INIT);
+            model.addAttribute(Web.MessageTag.ERROR, "Invalid information!");
 
-            return App.View.TRANSACTION_INIT;
+            return Web.View.TRANSACTION_INIT;
         }
 
-        //TODO: set transaction account
-        AccountDto accountDto = accountFacadeService.findCustomerAccountByNumber(accountNumber).getAccount();
-        transactionDto.setInitiatorAccount(accountDto);
+        //TODO: set initiator account
+        AccountDto initiatorAccount = accountFacadeService.findCustomerAccountByNumber(initiatorAccountNumber).getAccount();
+        transactionDto.setInitiatorAccount(initiatorAccount);
+
+        //TODO: set receiver account when transaction is a transfer
+        if(transactionDto.getTransactionType().equalsIgnoreCase(TransactionType.TRANSFER.name())) {
+            AccountDto receiverAccount = accountFacadeService.findCustomerAccountByNumber(receiverAccountNumber).getAccount();
+            transactionDto.setReceiverAccount(receiverAccount);
+        }
 
         //TODO: set branch - We'll replace this automatically by user authenticated
         BranchDto branchDto = branchFacadeService.findById(1L);
@@ -79,36 +87,36 @@ public class TransactionController implements PageTitleConfig {
         transactionDto.setSourceValue(branchDto.getBranchName());
 
         transactionFacadeService.init(transactionDto);
-        redirect.addFlashAttribute(App.MessageTag.SUCCESS, transactionDto.getTransactionType() + " successfully initiated.");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, transactionDto.getTransactionType() + " successfully initiated.");
 
-        return "redirect:" + App.Endpoint.TRANSACTION_INIT;
+        return "redirect:" + Web.Endpoint.TRANSACTION_INIT;
     }
 
-    @GetMapping(value = App.Endpoint.TRANSACTION_APPROVE + "/{transactionId}")
+    @GetMapping(value = Web.Endpoint.TRANSACTION_APPROVE + "/{transactionId}")
     public String approveTransaction(@PathVariable Long transactionId, RedirectAttributes redirect) {
 
         transactionFacadeService.approve(transactionId);
-        redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Transaction successfully approved!");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Transaction successfully approved!");
 
-        return "redirect:" + App.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
+        return "redirect:" + Web.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
     }
 
-    @PostMapping(value = App.Endpoint.TRANSACTION_REJECT + "/{transactionId}")
+    @PostMapping(value = Web.Endpoint.TRANSACTION_REJECT + "/{transactionId}")
     public String rejectTransaction(@PathVariable Long transactionId, @RequestParam String rejectReason, RedirectAttributes redirect) {
 
         if(rejectReason.isBlank())
-            redirect.addFlashAttribute(App.MessageTag.ERROR, "Reject reason is mandatory!");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");
         else {
-            redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Transaction successfully rejected!");
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Transaction successfully rejected!");
             transactionFacadeService.reject(transactionId, rejectReason);
         }
 
-        return "redirect:" + App.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
+        return "redirect:" + Web.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
     }
 
 
     @Override
     public String[] getMenuAndSubMenu() {
-        return new String[]{App.Menu.Transaction.MENU, null};
+        return new String[]{Web.Menu.Transaction.MENU, null};
     }
 }

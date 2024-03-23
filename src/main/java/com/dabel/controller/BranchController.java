@@ -2,7 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
-import com.dabel.constant.App;
+import com.dabel.constant.Web;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.LedgerDto;
@@ -31,14 +31,14 @@ public class BranchController implements PageTitleConfig {
         this.accountOperationService = accountOperationService;
     }
 
-    @GetMapping(value = App.Endpoint.BRANCH_ROOT)
+    @GetMapping(value = Web.Endpoint.BRANCH_ROOT)
     public String listBranches(Model model, BranchDto branchDTO) {
 
         listingAndConfigTitle(model);
-        return App.View.BRANCH_LIST;
+        return Web.View.BRANCH_LIST;
     }
 
-    @PostMapping(value = App.Endpoint.BRANCH_ROOT)
+    @PostMapping(value = Web.Endpoint.BRANCH_ROOT)
     public String addNewBranch(Model model, @Valid BranchDto branchDto, BindingResult binding,
                                @RequestParam(required = false, defaultValue = "0") double assetKMF,
                                @RequestParam(required = false, defaultValue = "0") double assetEUR,
@@ -47,18 +47,18 @@ public class BranchController implements PageTitleConfig {
 
         if(binding.hasErrors() || assetKMF < 0 || assetEUR < 0 || assetUSD < 0) {
             listingAndConfigTitle(model);
-            model.addAttribute(App.MessageTag.ERROR, "Invalid information !");
-            return App.View.BRANCH_LIST;
+            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
+            return Web.View.BRANCH_LIST;
         }
 
         double[] vaultsAssets = new double[]{assetKMF, assetEUR, assetUSD};
         branchFacadeService.create(branchDto, vaultsAssets);
-        redirect.addFlashAttribute(App.MessageTag.SUCCESS, "New branch added successfully !");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "New branch added successfully !");
 
-        return "redirect:" + App.View.BRANCH_LIST;
+        return "redirect:" + Web.View.BRANCH_LIST;
     }
 
-    @GetMapping(value = App.Endpoint.BRANCH_ACCOUNTS)
+    @GetMapping(value = Web.Endpoint.BRANCH_ACCOUNTS)
     public String listBranchAccounts(Model model, @RequestParam(required = false) Long code) {
 
         List< AccountDto> vaults = List.of(
@@ -76,7 +76,7 @@ public class BranchController implements PageTitleConfig {
         return configAttributesAndRedirectToBranchAccounts(model, vaults, ledgers);
     }
 
-    @PostMapping(value = App.Endpoint.BRANCH_ACCOUNTS)
+    @PostMapping(value = Web.Endpoint.BRANCH_ACCOUNTS)
     public String adjustVault(Model model, @RequestParam(required = false) Long code,
                               @RequestParam(required = false) String currency,
                               @RequestParam(required = false, defaultValue = "0") double amount,
@@ -90,7 +90,7 @@ public class BranchController implements PageTitleConfig {
         List<LedgerDto> ledgers = Collections.emptyList();
 
         if(amount <= 0) {
-            model.addAttribute(App.MessageTag.ERROR, "Amount must be positive !");
+            model.addAttribute(Web.MessageTag.ERROR, "Amount must be positive !");
             return configAttributesAndRedirectToBranchAccounts(model, vaults, ledgers);
         }
 
@@ -110,22 +110,22 @@ public class BranchController implements PageTitleConfig {
     }
 
     private String configAttributesAndRedirectToBranchAccounts(Model model, List<AccountDto> vaults, List<LedgerDto> ledgers) {
-        configPageTitle(model, App.Menu.Bank.Branches.ACCOUNTS);
+        configPageTitle(model, Web.Menu.Bank.Branches.ACCOUNTS);
 
         model.addAttribute("branches", branchFacadeService.findAll());
         model.addAttribute("vaults", vaults);
         model.addAttribute("ledgers", ledgers);
 
-        return App.View.BRANCH_ACCOUNTS;
+        return Web.View.BRANCH_ACCOUNTS;
     }
 
     private void listingAndConfigTitle(Model model) {
-        configPageTitle(model, App.Menu.Bank.Branches.ROOT);
+        configPageTitle(model, Web.Menu.Bank.Branches.ROOT);
         model.addAttribute("branches", StatedObjectFormatter.format(branchFacadeService.findAll()));
     }
 
     @Override
     public String[] getMenuAndSubMenu() {
-        return new String[]{App.Menu.Bank.MENU, App.Menu.Bank.Branches.SUB_MENU};
+        return new String[]{Web.Menu.Bank.MENU, Web.Menu.Bank.Branches.SUB_MENU};
     }
 }

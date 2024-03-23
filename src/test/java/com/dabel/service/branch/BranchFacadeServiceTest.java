@@ -44,7 +44,7 @@ class BranchFacadeServiceTest {
         List<AccountDto> expected = accountService.findAll();
 
         //then
-        assertThat(expected.size()).isEqualTo(9); //because branch have 3 vaults and 6 GL
+        assertThat(expected.size()).isEqualTo(8); //because branch have 3 vaults and 5 GL
         assertThat(expected.stream()
                 .filter(a -> a.getIsVault() == 1)
                 .count()).isEqualTo(3);

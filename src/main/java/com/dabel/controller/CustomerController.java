@@ -2,7 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
-import com.dabel.constant.App;
+import com.dabel.constant.Web;
 import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
@@ -38,28 +38,28 @@ public class CustomerController implements PageTitleConfig {
         this.exchangeFacadeService = exchangeFacadeService;
     }
 
-    @GetMapping(value = App.Endpoint.CUSTOMER_ROOT)
+    @GetMapping(value = Web.Endpoint.CUSTOMER_ROOT)
     public String listingCustomers(Model model) {
 
-        configPageTitle(model, App.Menu.Customer.ROOT);
+        configPageTitle(model, Web.Menu.Customer.ROOT);
         model.addAttribute("customers", StatedObjectFormatter.format(customerFacadeService.findAll()));
-        return App.View.CUSTOMER_LIST;
+        return Web.View.CUSTOMER_LIST;
     }
 
-    @GetMapping(value = App.Endpoint.CUSTOMER_ADD)
+    @GetMapping(value = Web.Endpoint.CUSTOMER_ADD)
     public String addNewCustomer(Model model, CustomerDto customerDto) {
-        configPageTitle(model, App.Menu.Customer.ADD);
-        return App.View.CUSTOMER_ADD;
+        configPageTitle(model, Web.Menu.Customer.ADD);
+        return Web.View.CUSTOMER_ADD;
     }
 
-    @PostMapping(value = App.Endpoint.CUSTOMER_ADD)
+    @PostMapping(value = Web.Endpoint.CUSTOMER_ADD)
     public String addNewCustomer(Model model, @Valid CustomerDto customerDto,
                                  @RequestParam(defaultValue = "Saving") String accountType,
                                  BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
-            configPageTitle(model, App.Menu.Customer.ADD);
-            model.addAttribute(App.MessageTag.ERROR, "Invalid information !");
+            configPageTitle(model, Web.Menu.Customer.ADD);
+            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
             return "customers-add";
         }
 
@@ -69,11 +69,11 @@ public class CustomerController implements PageTitleConfig {
 
         customerFacadeService.create(customerDto, accountType);
 
-        redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Customer added successfully !");
-        return "redirect:" + App.Endpoint.CUSTOMER_ADD;
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Customer added successfully !");
+        return "redirect:" + Web.Endpoint.CUSTOMER_ADD;
     }
 
-    @GetMapping(value = App.Endpoint.CUSTOMER_ROOT + "/{customerId}")
+    @GetMapping(value = Web.Endpoint.CUSTOMER_ROOT + "/{customerId}")
     public String customerDetails(@PathVariable Long customerId, Model model) {
 
         CustomerDto customerDto = customerFacadeService.findById(customerId);
@@ -125,11 +125,11 @@ public class CustomerController implements PageTitleConfig {
 //        model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
 //        model.addAttribute("totalLoan", totalLoan);
 
-        return App.View.CUSTOMER_DETAILS;
+        return Web.View.CUSTOMER_DETAILS;
     }
 
     @Override
     public String[] getMenuAndSubMenu() {
-        return new String[]{App.Menu.Customer.MENU, null};
+        return new String[]{Web.Menu.Customer.MENU, null};
     }
 }

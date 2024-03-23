@@ -8257,5 +8257,10 @@ $(firstName, lastName).change(function () {
 
 //Transaction init: when type of transaction change
 $('#transactionType').change(function() {
-    alert($(this).val())
+ 
+    var selectedValue = $(this).val();
+
+    if(selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
+    else $('#receiverAccountSection').addClass('d-none');
+
 });

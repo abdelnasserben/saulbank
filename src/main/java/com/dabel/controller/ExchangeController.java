@@ -2,7 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
-import com.dabel.constant.App;
+import com.dabel.constant.Web;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.ExchangeDto;
 import com.dabel.service.branch.BranchFacadeService;
@@ -28,37 +28,37 @@ public class ExchangeController implements PageTitleConfig {
         this.branchFacadeService = branchFacadeService;
     }
 
-    @GetMapping(value = App.Endpoint.EXCHANGE_ROOT)
+    @GetMapping(value = Web.Endpoint.EXCHANGE_ROOT)
     public String listingExchanges(Model model) {
-        configPageTitle(model, App.Menu.Exchange.ROOT);
+        configPageTitle(model, Web.Menu.Exchange.ROOT);
         model.addAttribute("exchanges", StatedObjectFormatter.format(exchangeFacadeService.findAll()));
 
-        return App.View.EXCHANGE_LIST;
+        return Web.View.EXCHANGE_LIST;
     }
 
-    @GetMapping(value = App.Endpoint.EXCHANGE_ROOT + "/{exchangeId}")
+    @GetMapping(value = Web.Endpoint.EXCHANGE_ROOT + "/{exchangeId}")
     public String exchangeDetails(@PathVariable Long exchangeId, Model model) {
 
         ExchangeDto exchange = exchangeFacadeService.findById(exchangeId);
 
         configPageTitle(model, "Exchange Details");
         model.addAttribute("exchange", StatedObjectFormatter.format(exchange));
-        return App.View.EXCHANGE_DETAILS;
+        return Web.View.EXCHANGE_DETAILS;
     }
 
-    @GetMapping(value = App.Endpoint.EXCHANGE_INIT)
+    @GetMapping(value = Web.Endpoint.EXCHANGE_INIT)
     public String initExchange(Model model, ExchangeDto exchangeDto) {
-        configPageTitle(model, App.Menu.Exchange.INIT);
+        configPageTitle(model, Web.Menu.Exchange.INIT);
 
-        return App.View.EXCHANGE_INIT;
+        return Web.View.EXCHANGE_INIT;
     }
 
-    @PostMapping(value = App.Endpoint.EXCHANGE_INIT)
+    @PostMapping(value = Web.Endpoint.EXCHANGE_INIT)
     public String initExchange(Model model, @Valid ExchangeDto exchangeDto, BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
-            configPageTitle(model, App.Menu.Exchange.INIT);
-            return App.View.EXCHANGE_INIT;
+            configPageTitle(model, Web.Menu.Exchange.INIT);
+            return Web.View.EXCHANGE_INIT;
         }
 
         //TODO: set branch - We'll replace this automatically by user authenticated
@@ -67,35 +67,35 @@ public class ExchangeController implements PageTitleConfig {
 
         exchangeFacadeService.init(exchangeDto);
 
-        redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Exchange successfully initiated");
-        return "redirect:" + App.Endpoint.EXCHANGE_INIT;
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully initiated");
+        return "redirect:" + Web.Endpoint.EXCHANGE_INIT;
     }
 
-    @GetMapping(value = App.Endpoint.EXCHANGE_APPROVE + "/{exchangeId}")
+    @GetMapping(value = Web.Endpoint.EXCHANGE_APPROVE + "/{exchangeId}")
     public String approveExchange(@PathVariable Long exchangeId, RedirectAttributes redirect) {
 
         exchangeFacadeService.approve(exchangeId);
-        redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Exchange successfully approved!");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully approved!");
 
-        return "redirect:" + App.Endpoint.EXCHANGE_ROOT + "/" + exchangeId;
+        return "redirect:" + Web.Endpoint.EXCHANGE_ROOT + "/" + exchangeId;
     }
 
-    @PostMapping(value = App.Endpoint.EXCHANGE_REJECT + "/{exchangeId}")
+    @PostMapping(value = Web.Endpoint.EXCHANGE_REJECT + "/{exchangeId}")
     public String rejectExchange(@PathVariable Long exchangeId, @RequestParam String rejectReason, RedirectAttributes redirect) {
 
         if(rejectReason.isBlank())
-            redirect.addFlashAttribute(App.MessageTag.ERROR, "Reject reason is mandatory!");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");
         else {
-            redirect.addFlashAttribute(App.MessageTag.SUCCESS, "Exchange successfully rejected!");
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully rejected!");
             exchangeFacadeService.reject(exchangeId, rejectReason);
         }
 
-        return "redirect:" + App.Endpoint.EXCHANGE_ROOT + "/" + exchangeId;
+        return "redirect:" + Web.Endpoint.EXCHANGE_ROOT + "/" + exchangeId;
     }
 
 
     @Override
     public String[] getMenuAndSubMenu() {
-        return new String[]{App.Menu.Exchange.MENU, null};
+        return new String[]{Web.Menu.Exchange.MENU, null};
     }
 }

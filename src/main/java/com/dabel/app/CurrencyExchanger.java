@@ -1,23 +1,24 @@
 package com.dabel.app;
 
-import com.dabel.constant.Bank;
+import com.dabel.constant.BankFees;
 import com.dabel.constant.Currency;
+import com.dabel.constant.ExchangeType;
 
 public final class CurrencyExchanger {
 
     public static double exchange(String receivedCurrency, String givenCurrency, double amount) {
 
         if (isKmf2Eur(receivedCurrency, givenCurrency))
-            amount /= Bank.ExchangeCourse.SALE_EUR;
+            amount /= BankFees.Exchange.SALE_EUR;
 
         if (isEur2Kmf(receivedCurrency, givenCurrency))
-            amount *= Bank.ExchangeCourse.BUY_EUR;
+            amount *= BankFees.Exchange.BUY_EUR;
 
         if (isKmf2Usd(receivedCurrency, givenCurrency))
-            amount /= Bank.ExchangeCourse.SALE_USD;
+            amount /= BankFees.Exchange.SALE_USD;
 
         if (isUsd2Kmf(receivedCurrency, givenCurrency))
-            amount *= Bank.ExchangeCourse.BUY_USD;
+            amount *= BankFees.Exchange.BUY_USD;
 
 
         return AmountFormatter.format(amount);
@@ -37,6 +38,20 @@ public final class CurrencyExchanger {
 
     private static boolean isUsd2Kmf(String currency1, String currency2) {
         return currency1.equals(Currency.USD.name()) && currency2.equals(Currency.KMF.name());
+    }
+
+    public static ExchangeType getExchangeType(String currency1, String currency2) {
+
+        if(isKmf2Eur(currency1, currency2))
+            return ExchangeType.KMF_EUR;
+
+        if(isEur2Kmf(currency1, currency2))
+            return ExchangeType.EUR_KMF;
+
+        if(isKmf2Usd(currency1, currency2))
+            return ExchangeType.KMF_USD;
+
+        return ExchangeType.USD_KMF;
     }
 
 }
