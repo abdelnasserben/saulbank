@@ -35,8 +35,13 @@ public class TransactionController implements PageTitleConfig {
 
     @GetMapping(value = Web.Endpoint.TRANSACTION_ROOT)
     public String listingTransaction(Model model) {
+
         configPageTitle(model, Web.Menu.Transaction.ROOT);
-        model.addAttribute("transactions", StatedObjectFormatter.format(transactionFacadeService.findAll()));
+        model.addAttribute("transactions", StatedObjectFormatter.format(
+                transactionFacadeService.findAll().stream()
+                        .filter(transactionDto -> !transactionDto.getTransactionType().equals(TransactionType.FEE.name()))
+                        .toList())
+        );
 
         return Web.View.TRANSACTION_LIST;
     }

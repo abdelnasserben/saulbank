@@ -2,6 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
+import com.dabel.constant.TransactionType;
 import com.dabel.constant.Web;
 import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -86,6 +88,17 @@ public class CustomerController implements PageTitleConfig {
                 .mapToDouble(AccountDto::getBalance)
                 .sum();
 
+        List<TransactionDto> lastTenCustomerTransactions = customerAccounts.stream()
+                .map(trunkDto -> transactionFacadeService.findAllByAccount(trunkDto.getAccount()))
+                .flatMap(Collection::stream)
+                .filter(transactionDto -> !transactionDto.getTransactionType().equals(TransactionType.FEE.name()))
+                .limit(10)
+                .toList();
+
+//        List<TransactionDto> lastTenCustomerTransactions = transactionFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
+//                .limit(10)
+//                .toList();
+
 //        List<CardDTO> customerCards = cardFacadeService.findAllByCustomerId(customerId)
 //                .stream()
 //                .peek(c -> c.setCardNumber(CardNumberFormatter.hide(c.getCardNumber())))
@@ -93,9 +106,6 @@ public class CustomerController implements PageTitleConfig {
 //        boolean notifyNoActiveCreditCards = customerCards.stream()
 //                .anyMatch(c -> c.getStatus().equals(Status.ACTIVE.code()));
 //
-        List<TransactionDto> lastTenCustomerTransactions = transactionFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
-                .limit(10)
-                .toList();
 //
 //        List<PaymentDTO> lastTenCustomerPayments = paymentFacadeService.findAllByCustomerId(customerId).stream()
 //                .limit(10)

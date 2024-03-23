@@ -72,7 +72,7 @@
 									class="text-hover-primary text-gray-600 mb-1">Withdraw</a>
 							</td>
 							<td
-								th:text="${transaction.transactionType == 'WITHDRAW' ? transaction.initiatorAccount.accountNumber : transaction.receiverAccount.accountNumber}">
+								th:text="${transaction.transactionType == 'WITHDRAW' ? transaction.receiverAccount.accountNumber : transaction.initiatorAccount.accountNumber}">
 								0071001997</td>
 							<td th:text="${transaction.currency}">KMF</td>
 							<td th:text="${transaction.amount}">65000</td>

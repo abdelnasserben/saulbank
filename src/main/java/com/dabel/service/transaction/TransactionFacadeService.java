@@ -1,5 +1,6 @@
 package com.dabel.service.transaction;
 
+import com.dabel.dto.AccountDto;
 import com.dabel.dto.TransactionDto;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class TransactionFacadeService {
         return transactionService.findById(transactionId);
     }
 
-    public List<TransactionDto> findAllByCustomerIdentity(String customerIdentity) {
-        return transactionService.findAllByCustomerIdentity(customerIdentity);
+    public List<TransactionDto> findAllByAccount(AccountDto accountDto) {
+        return transactionService.findAllByAccount(accountDto);
     }
 }

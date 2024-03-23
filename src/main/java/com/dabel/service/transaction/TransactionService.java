@@ -1,8 +1,11 @@
 package com.dabel.service.transaction;
 
+import com.dabel.dto.AccountDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.exception.ResourceNotFoundException;
+import com.dabel.mapper.AccountMapper;
 import com.dabel.mapper.TransactionMapper;
+import com.dabel.model.Account;
 import com.dabel.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +36,9 @@ public class TransactionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found")));
     }
 
-    public List<TransactionDto> findAllByCustomerIdentity(String customerIdentity) {
-        return transactionRepository.findAllByCustomerIdentity(customerIdentity).stream()
+    public List<TransactionDto> findAllByAccount(AccountDto accountDto) {
+        Account account = AccountMapper.toModel(accountDto);
+        return transactionRepository.findAllByInitiatorAccountOrReceiverAccount(account, account).stream()
                 .map(TransactionMapper::toDto)
                 .toList();
     }
