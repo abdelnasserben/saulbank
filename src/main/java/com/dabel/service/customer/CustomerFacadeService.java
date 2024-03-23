@@ -29,7 +29,7 @@ public class CustomerFacadeService {
         if (customerDTO.getCustomerId() != null)
             return;
 
-        customerDTO.setStatus(Status.PENDING.code());
+        customerDTO.setStatus(Status.ACTIVE.code());
         CustomerDto savedCustomer = customerService.save(customerDTO);
 
         //TODO: create trunk kmf

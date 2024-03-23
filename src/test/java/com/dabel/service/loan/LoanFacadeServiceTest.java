@@ -1,12 +1,10 @@
 package com.dabel.service.loan;
 
 import com.dabel.DBSetupForTests;
-import com.dabel.constant.LoanType;
-import com.dabel.constant.Status;
-import com.dabel.dto.BranchDto;
-import com.dabel.dto.CustomerDto;
-import com.dabel.dto.LoanDto;
+import com.dabel.constant.*;
+import com.dabel.dto.*;
 import com.dabel.exception.IllegalOperationException;
+import com.dabel.service.account.AccountService;
 import com.dabel.service.branch.BranchService;
 import com.dabel.service.customer.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +28,9 @@ class LoanFacadeServiceTest {
 
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    AccountService accountService;
 
     @Autowired
     DBSetupForTests dbSetupForTests;
@@ -81,6 +82,18 @@ class LoanFacadeServiceTest {
         //given
         loanFacadeService.init(getLoanDto());
         LoanDto savedLoan = loanFacadeService.findAll().get(0);
+        accountService.save(LedgerDto.builder()
+                .ledgerType(LedgerType.LOAN.name())
+                .account(AccountDto.builder()
+                        .accountName("Loan ledger")
+                        .accountNumber("0213456587")
+                        .accountType(AccountType.BUSINESS.name())
+                        .accountProfile(AccountProfile.PERSONAL.name())
+                        .currency(Currency.KMF.name())
+                        .branch(savedLoan.getBranch())
+                        .status(Status.ACTIVE.code())
+                        .build())
+                .build());
 
         //when
         loanFacadeService.approve(savedLoan.getLoanId());

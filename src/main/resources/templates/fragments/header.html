@@ -484,7 +484,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Cards' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -502,11 +502,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs/base/utilities"
-											target="_blank" title="Check out over 200 in-house components"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/cards}" th:classappend="${currentPage == 'All Cards' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -518,15 +514,23 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs"
-											target="_blank" title="Check out the complete documentation"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/cards/requests}" th:classappend="${currentPage == 'All Requests' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
 											<span class="menu-title">All Requests</span>
+										</a>
+										<!--end:Menu link-->
+									</div>
+									<!--end:Menu item-->
+									<!--begin:Menu item-->
+									<div class="menu-item">
+										<!--begin:Menu link-->
+										<a class="menu-link" th:href="@{/cards/requests/send}" th:classappend="${currentPage == 'Send Request' ? 'active' : ''}">
+											<span class="menu-bullet">
+												<span class="bullet bullet-dot"></span>
+											</span>
+											<span class="menu-title">Send Request</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -536,7 +540,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Loans' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -554,11 +558,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs/base/utilities"
-											target="_blank" title="Check out over 200 in-house components"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/loans}" th:classappend="${currentPage == 'All Loans' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -570,15 +570,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs"
-											target="_blank" title="Check out the complete documentation"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/loans/init}" th:classappend="${currentPage == 'Init Loan' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Init Loans</span>
+											<span class="menu-title">Init Loan</span>
 										</a>
 										<!--end:Menu link-->
 									</div>

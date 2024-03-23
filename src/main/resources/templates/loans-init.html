@@ -1,0 +1,104 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+
+		<form class="form" th:action="@{/loans/init}" method="post" th:object="${loanDto}">
+
+			<div class="row mb-6">
+				<div class="col-md-1">
+					<label class="required form-label">Loan Type</label>
+					<select th:field="*{loanType}" class="form-select mb-3" data-control="select2"
+						data-hide-search="true" data-placeholder="Select an option"
+						th:classappend="${#fields.hasErrors('loanType')} ? 'is-invalid' : ''">
+						<option value="Gold">Gold</option>
+						<option value="Salary">Salary</option>
+						<option value="Other">Other</option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{loanType}"></div>
+				</div>
+				<div class="col-md-10">
+					<div class="row">
+						<div class="col-md-5">
+							<label class="required form-label">Customer Identity</label>
+							<input type="text" name="customerIdentityNumber" class="form-control mb-2"
+								placeholder="Customer Identity Number" />
+						</div>
+						<div class="col-md-5">
+							<label class="form-label">Customer Name</label>
+							<input type="text" name="customerFullName" class="form-control mb-2"
+								placeholder="Customer Full name" disabled />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-6">
+				<div class="col-md-1">
+					<label class="required form-label">Currency </label>
+					<input type="text" class="form-control" value="KMF" disabled>
+				</div>
+				<div class="col-md-10">
+					<div class="row">
+						<div class="col-md-5">
+							<label class="required form-label">Amount</label>
+							<input type="number" th:field="*{issuedAmount}" class="form-control mb-2" step=".01"
+								placeholder="0.00"
+								th:classappend="${#fields.hasErrors('issuedAmount')} ? 'is-invalid' : ''" />
+							<div class="invalid-feedback" th:errors="*{issuedAmount}"></div>
+						</div>
+						<div class="col-md-5">
+							<label class="required form-label">Duration (months)</label>
+							<input type="number" th:field="*{duration}" class="form-control mb-2"
+								th:classappend="${#fields.hasErrors('duration')} ? 'is-invalid' : ''" />
+							<div class="invalid-feedback" th:errors="*{duration}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mb-6">
+				<div class="col-md-2">
+					<!--begin::Input group-->
+					<div class="fv-row">
+						<label class="required form-label">Interest (%)</label>
+						<input type="number" th:field="*{interestRate}" class="form-control mb-2" step=".01"
+							placeholder="0.00"
+							th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid' : ''" />
+						<div class="invalid-feedback" th:errors="*{interestRate}"></div>
+					</div>
+					<!--end::Input group-->
+				</div>
+				<div class="col-md-3">
+					<label class="required form-label">Application Fees</label>
+					<input type="number" th:field="*{applicationFees}" class="form-control mb-2" step=".01"
+						placeholder="0.00"
+						th:classappend="${#fields.hasErrors('applicationFees')} ? 'is-invalid' : ''" />
+					<div class="invalid-feedback" th:errors="*{applicationFees}"></div>
+				</div>
+				<div class="col-md-2">
+					<label class="form-label">Total Due</label>
+					<input type="number" name="" class="form-control mb-2" placeholder="0.00" disabled />
+				</div>
+			</div>
+			<div class="col-md-5 mb-6">
+				<label for="exampleFormControlTextarea1" class="form-label required fw-bold fs-6">Remarks</label>
+				<textarea th:field="*{reason}" class="form-control" id="exampleFormControlTextarea1" rows="3"
+					th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''"></textarea>
+				<div class="invalid-feedback" th:errors="*{reason}"></div>
+			</div>
+
+
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<div th:replace="~{fragments/footer}"></div>

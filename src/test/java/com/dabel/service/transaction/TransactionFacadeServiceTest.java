@@ -77,6 +77,21 @@ class TransactionFacadeServiceTest {
                 .build());
     }
 
+    private void createLedger(LedgerType ledgerType) {
+        accountService.save(LedgerDto.builder()
+                .ledgerType(ledgerType.name())
+                .account(AccountDto.builder()
+                        .accountName("Withdraw ledger")
+                        .accountNumber("0213456587")
+                        .accountType(AccountType.BUSINESS.name())
+                        .accountProfile(AccountProfile.PERSONAL.name())
+                        .currency(Currency.KMF.name())
+                        .branch(transactionDto.getInitiatorAccount().getBranch())
+                        .status(Status.ACTIVE.code())
+                        .build())
+                .build());
+    }
+
     @Test
     void shouldInitDeposit() {
         //given
@@ -180,18 +195,7 @@ class TransactionFacadeServiceTest {
     void shouldApproveWithdraw() {
         //given
         createVault();
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.WITHDRAW.name())
-                .account(AccountDto.builder()
-                        .accountName("Withdraw ledger")
-                        .accountNumber("0213456587")
-                        .accountType(AccountType.BUSINESS.name())
-                        .accountProfile(AccountProfile.PERSONAL.name())
-                        .currency(Currency.KMF.name())
-                        .branch(transactionDto.getInitiatorAccount().getBranch())
-                        .status(Status.ACTIVE.code())
-                        .build())
-                .build());
+        createLedger(LedgerType.WITHDRAW);
         transactionDto.setTransactionType(TransactionType.WITHDRAW.name());
         transactionFacadeService.init(transactionDto);
 
@@ -308,18 +312,7 @@ class TransactionFacadeServiceTest {
         transactionDto.setTransactionType(TransactionType.TRANSFER.name());
         transactionDto.setReceiverAccount(receiverAccount);
 
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.TRANSFER.name())
-                .account(AccountDto.builder()
-                        .accountName("Withdraw ledger")
-                        .accountNumber("0213456587")
-                        .accountType(AccountType.BUSINESS.name())
-                        .accountProfile(AccountProfile.PERSONAL.name())
-                        .currency(Currency.KMF.name())
-                        .branch(transactionDto.getInitiatorAccount().getBranch())
-                        .status(Status.ACTIVE.code())
-                        .build())
-                .build());
+        createLedger(LedgerType.TRANSFER);
         transactionDto.setTransactionType(TransactionType.TRANSFER.name());
         transactionFacadeService.init(transactionDto);
 

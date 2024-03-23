@@ -1,17 +1,16 @@
 package com.dabel.service.loan;
 
 import com.dabel.app.Checker;
+import com.dabel.app.Fee;
 import com.dabel.app.Generator;
 import com.dabel.app.LoanCalculator;
-import com.dabel.constant.AccountProfile;
-import com.dabel.constant.AccountType;
-import com.dabel.constant.Currency;
-import com.dabel.constant.Status;
+import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.LoanDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
+import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +20,12 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     @Getter
     private final LoanService loanService;
     private final AccountService accountService;
+    private final FeeService feeService;
 
-    public LoanOperationService(LoanService loanService, AccountService accountService) {
+    public LoanOperationService(LoanService loanService, AccountService accountService, FeeService feeService) {
         this.loanService = loanService;
         this.accountService = accountService;
+        this.feeService = feeService;
     }
 
     @Override
@@ -62,10 +63,15 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
         loanDto.setStatus(Status.ACTIVE.code());
         //we'll make updated by later...
 
+        //TODO: active loan account
         AccountDto loanAccount = loanDto.getAccount();
         loanAccount.setStatus(Status.ACTIVE.code());
         //we'll make updated account info later...
         accountService.save(loanAccount);
+
+        //TODO: apply withdraw fees
+        Fee fee = new Fee(loanDto.getBranch(), loanDto.getApplicationFees(), "Loan");
+        feeService.apply(loanDto.getAccount(), LedgerType.LOAN, fee);
 
         loanService.save(loanDto);
     }

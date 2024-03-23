@@ -24,6 +24,7 @@ public class LoanDto extends BasicDto {
     private double issuedAmount;
     private double interestRate;
     private int duration;
+    private double applicationFees;
     private double totalAmount;
     private String reason;
     private String failureReason;

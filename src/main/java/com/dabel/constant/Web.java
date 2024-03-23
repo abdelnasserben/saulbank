@@ -19,6 +19,10 @@ public final class Web {
         String EXCHANGE_APPROVE = EXCHANGE_ROOT + "/approve";
         String EXCHANGE_REJECT = EXCHANGE_ROOT + "/reject";
 
+        String LOAN_ROOT = "/loans";
+        String LOAN_INIT = LOAN_ROOT + "/init";
+        String LOAN_APPROVE = LOAN_ROOT + "/approve";
+        String LOAN_REJECT = LOAN_ROOT + "/reject";
 
         String PAGE_404 = "/404";
     }
@@ -39,6 +43,10 @@ public final class Web {
         String EXCHANGE_LIST = "exchanges";
         String EXCHANGE_INIT = "exchanges-init";
         String EXCHANGE_DETAILS = "exchanges-details";
+
+        String LOAN_LIST = "loans";
+        String LOAN_INIT = "loans-init";
+        String LOAN_DETAILS = "loans-details";
 
         String PAGE_404 = "page404";
     }
@@ -81,6 +89,12 @@ public final class Web {
             String MENU = "Exchanges";
             String ROOT = "All Exchanges";
             String INIT = "Init Exchange";
+        }
+
+        interface Loan {
+            String MENU = "Loans";
+            String ROOT = "All Loans";
+            String INIT = "Init Loan";
         }
     }
 }
