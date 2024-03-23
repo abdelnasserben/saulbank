@@ -1001,7 +1001,7 @@
 												class="text-hover-primary text-gray-600 mb-1">Withdraw</a>
 										</td>
 										<td
-										th:text="${transaction.transactionType == 'WITHDRAW' ? transaction.receiverAccount.accountNumber : transaction.initiatorAccount.accountNumber}">
+											th:text="${transaction.transactionType == 'WITHDRAW' ? transaction.receiverAccount.accountNumber : transaction.initiatorAccount.accountNumber}">
 											0071001997</td>
 										<td th:text="${transaction.currency}">KMF</td>
 										<td th:text="${transaction.amount}">65000</td>
@@ -1235,8 +1235,11 @@
 											<a th:href="@{/loans/{id}(id=${loan.loanId})}" th:text="${loan.loanId}"
 												class="text-hover-primary text-gray-600">14330</a>
 										</td>
-										<td th:text="${loan.loanType}">Gold</td>
-										<td th:text="${loan.accountNumber}">0071001997</td>
+										<td>
+											<a th:href="@{/loans/{id}(id=${loan.loanId})}" th:text="${loan.loanType}"
+												class="text-gray-800 text-hover-primary mb-1">Gold</a>
+										</td>
+										<td th:text="${loan.account.accountNumber}">0071001997</td>
 										<td th:text="${loan.issuedAmount + ' KMF'}">500 0000 KMF</td>
 										<td th:text="${loan.totalAmount + ' KMF'}">500 0000 KMF</td>
 										<td class="pe-0">

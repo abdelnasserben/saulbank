@@ -2,6 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
+import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
 import com.dabel.constant.Web;
 import com.dabel.dto.*;
@@ -9,6 +10,7 @@ import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.exchange.ExchangeFacadeService;
+import com.dabel.service.loan.LoanFacadeService;
 import com.dabel.service.transaction.TransactionFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -31,13 +33,15 @@ public class CustomerController implements PageTitleConfig {
     private final AccountFacadeService accountFacadeService;
     private final TransactionFacadeService transactionFacadeService;
     private final ExchangeFacadeService exchangeFacadeService;
+    private final LoanFacadeService loanFacadeService;
 
-    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService) {
+    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService, LoanFacadeService loanFacadeService) {
         this.customerFacadeService = customerFacadeService;
         this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
         this.transactionFacadeService = transactionFacadeService;
         this.exchangeFacadeService = exchangeFacadeService;
+        this.loanFacadeService = loanFacadeService;
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMER_ROOT)
@@ -95,9 +99,17 @@ public class CustomerController implements PageTitleConfig {
                 .limit(10)
                 .toList();
 
-//        List<TransactionDto> lastTenCustomerTransactions = transactionFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
-//                .limit(10)
-//                .toList();
+        List<ExchangeDto> lastTenCustomerExchanges = exchangeFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
+                .limit(10)
+                .toList();
+
+        List<LoanDto> customerLoans = loanFacadeService.findAllByCustomerIdentityNumber(customerDto.getIdentityNumber()).stream()
+                .filter(l -> l.getStatus().equals(Status.ACTIVE.code()))
+                .toList();
+
+        double totalLoan = customerLoans.stream()
+                .mapToDouble(LoanDto::getTotalAmount)
+                .sum();
 
 //        List<CardDTO> customerCards = cardFacadeService.findAllByCustomerId(customerId)
 //                .stream()
@@ -111,17 +123,7 @@ public class CustomerController implements PageTitleConfig {
 //                .limit(10)
 //                .toList();
 //
-        List<ExchangeDto> lastTenCustomerExchanges = exchangeFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
-                .limit(10)
-                .toList();
 
-//        List<LoanDTO> customerLoans = loanFacadeService.findAllByCustomerIdentityNumber(customerDto.getIdentityNumber()).stream()
-//                .filter(l -> l.getStatus().equals(Status.ACTIVE.code()))
-//                .toList();
-//
-//        double totalLoan = customerLoans.stream()
-//                .mapToDouble(LoanDTO::getTotalAmount)
-//                .sum();
 
         configPageTitle(model, "Customer Details");
         model.addAttribute("customer", StatedObjectFormatter.format(customerDto));
@@ -132,8 +134,8 @@ public class CustomerController implements PageTitleConfig {
         model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
 //        model.addAttribute("payments", StatedObjectFormatter.format(lastTenCustomerPayments));
         model.addAttribute("exchanges", StatedObjectFormatter.format(lastTenCustomerExchanges));
-//        model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
-//        model.addAttribute("totalLoan", totalLoan);
+        model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
+        model.addAttribute("totalLoan", totalLoan);
 
         return Web.View.CUSTOMER_DETAILS;
     }
