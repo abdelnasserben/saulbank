@@ -23,17 +23,20 @@ public class CustomExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public String resourceNotFoundHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
 
-        List<String> infiniteRedirectionViews = List.of(
+        List<String> infiniteRedirectionUrl = List.of(
                 Web.Endpoint.CUSTOMER_ROOT,
                 Web.Endpoint.TRANSACTION_ROOT,
                 Web.Endpoint.EXCHANGE_ROOT
         );
 
-        String view = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));
+        String suspectedUrl = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));
 
-        if(infiniteRedirectionViews.contains(view)) {
-            return "redirect:" + Web.Endpoint.PAGE_404;
-        }
+        try {
+            Long.parseLong(request.getRequestURI().substring(suspectedUrl.length() + 1));
+            if(infiniteRedirectionUrl.contains(suspectedUrl))
+                return "redirect:" + Web.Endpoint.PAGE_404;
+
+        } catch (NumberFormatException ignored) {}
 
         return redirection(redirect, request.getRequestURI(), ex.getMessage());
     }
