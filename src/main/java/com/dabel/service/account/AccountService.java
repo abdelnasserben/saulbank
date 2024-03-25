@@ -93,4 +93,10 @@ public class AccountService {
                 .map(TrunkMapper::toDto)
                 .toList();
     }
+
+    public TrunkDto findTrunkByCustomerAndNumber(CustomerDto customerDto, String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));;
+        return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account));
+    }
 }

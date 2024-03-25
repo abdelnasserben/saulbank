@@ -61,6 +61,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     public void approve(LoanDto loanDto) {
 
         loanDto.setStatus(Status.ACTIVE.code());
+        loanDto.setFailureReason("Approved");
         //we'll make updated by later...
 
         //TODO: active loan account

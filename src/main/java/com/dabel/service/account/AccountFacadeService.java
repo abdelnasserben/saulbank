@@ -28,4 +28,8 @@ public class AccountFacadeService {
     public AccountDto findVault(BranchDto branchDto, String currency) {
         return accountService.findVault(branchDto, currency);
     }
+
+    public TrunkDto findAccountByCustomerAndAccount(CustomerDto customerDto, String accountNumber) {
+        return accountService.findTrunkByCustomerAndNumber(customerDto, accountNumber);
+    }
 }

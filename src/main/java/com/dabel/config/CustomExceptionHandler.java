@@ -26,7 +26,8 @@ public class CustomExceptionHandler {
         List<String> infiniteRedirectionUrl = List.of(
                 Web.Endpoint.CUSTOMER_ROOT,
                 Web.Endpoint.TRANSACTION_ROOT,
-                Web.Endpoint.EXCHANGE_ROOT
+                Web.Endpoint.EXCHANGE_ROOT,
+                Web.Endpoint.CARD_REQUEST_ROOT
         );
 
         String suspectedUrl = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));

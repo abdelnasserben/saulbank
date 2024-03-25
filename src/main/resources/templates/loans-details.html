@@ -37,7 +37,8 @@
 
 										<!--end::Col-->
 										<div class="fw-bold fs-6 text-gray-800"
-											th:text="${#temporals.format(loan.createdAt, 'yyyy-MM-dd HH:mm')}">12
+											th:text="${#temporals.format(loan.createdAt, 'yyyy-MM-dd HH:mm')}">
+											12
 											Apr 2021
 										</div>
 										<!--end::Col-->
@@ -79,7 +80,7 @@
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.loanType}">Deposit</div>
+										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.loanType}">Gold</div>
 										<!--end::Text-->
 									</div>
 									<!--end::Col-->
@@ -87,13 +88,13 @@
 									<!--end::Col-->
 									<div class="col-sm-6">
 										<!--end::Label-->
-										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issued Amount:
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Duration:
 										</div>
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.issuedAmount + ' KMF'}">
-											600 000 KMF
+										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.duration + ' Months'}">
+											6 Months
 										</div>
 										<!--end::Text-->
 									</div>
@@ -117,7 +118,8 @@
 
 										<!--end::Description-->
 										<div class="fw-semibold fs-7 text-gray-600"
-											th:text="${loan.borrower.firstName + ' ' + loan.borrower.lastName}">Sarah
+											th:text="${loan.borrower.firstName + ' ' + loan.borrower.lastName}">
+											Sarah
 											Hunt
 										</div>
 										<!--end::Description-->
@@ -127,22 +129,56 @@
 									<!--end::Col-->
 									<div class="col-sm-6">
 										<!--end::Label-->
-										<div class="fw-semibold fs-7 text-gray-600 mb-1">Refund:
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issued
+											Amount:
 										</div>
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-semibold fs-7 text-gray-600">
-											Total: <span th:text="${loan.totalAmount + ' KMF'}">500 0000 KMF</span>
+										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.issuedAmount + ' KMF'}">
+											600 000 KMF
 										</div>
 										<!--end::Text-->
-
+										
 										<!--end::Description-->
-										<div class="fw-semibold fs-7 text-gray-600">
-											Remaining: <span th:text="${loan.account.balance + ' KMF'}">500 0000
+										<div class="fw-bold fs-7 text-gray-600">
+											Fees: <span th:text="${loan.applicationFees + ' KMF'}">500 0000
 												KMF</span>
 										</div>
 										<!--end::Description-->
+									</div>
+								</div>
+								<!--end::Row-->
+
+								<!--begin::Row-->
+								<div class="row g-5 mb-11">
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">
+											Interest Rate:</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.interestRate + '%'}">
+											2.5%
+										</div>
+										<!--end::Text-->
+									</div>
+									<!--end::Col-->
+
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Due Amount:
+										</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.account.balance + ' KMF'}">
+											500 0000 KMF
+										</div>
+										<!--end::Text-->
 									</div>
 									<!--end::Col-->
 								</div>
@@ -158,15 +194,16 @@
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div th:text="${loan.account.accountNumber}"
-											class="fw-bold fs-6 text-gray-800">0071001997
+										<div th:text="${loan.account.accountNumber}" class="fw-bold fs-6 text-gray-800">
+											0071001997
 										</div>
 										<!--end::Text-->
 
 										<!--end::Description-->
 										<div class="fw-semibold fs-7 text-gray-600">
 											LOAN Account <br />
-											<span th:text="${loan.account.accountName}">John Doe</span>
+											<span th:text="${loan.account.accountName}">John
+												Doe</span>
 										</div>
 										<!--end::Description-->
 									</div>
@@ -260,7 +297,7 @@
 									<p class="mb-0">Status : <span th:text="${loan.status}"
 											th:class="${'text-' + @appSpEL.statusColor(loan.status)}">Approved</span>
 									</p>
-									<p class="mb-1">Duration : <span th:text="${loan.duration + ' Months'}">6
+									<p class="mb-1">Expiration Date : <span th:text="${#temporals.format(loan.createdAt.plusMonths(loan.duration), 'yyyy-MM-dd')}">6
 											Months</span>
 								</div>
 							</div>
@@ -286,10 +323,12 @@
 								</div>
 
 								<div class="fw-bold text-gray-600  fs-7">
-									Total: <span th:text="${loan.totalAmount + ' KMF'}">600 000 KMF</span>
+									Total: <span th:text="${loan.totalAmount + ' KMF'}">600 000
+										KMF</span>
 								</div>
 								<div class="fw-bold text-gray-600  fs-7">
-									Remaining: <span th:text="${loan.account.balance + ' KMF'}">600 000 KMF</span>
+									Remaining: <span th:text="${loan.account.balance + ' KMF'}">600
+										000 KMF</span>
 								</div>
 							</div>
 							<!--end::Item-->
@@ -362,8 +401,7 @@
 			<!--begin::Modal body-->
 			<div class="modal-body scroll-y mx-5 my-7">
 				<!--begin::Form-->
-				<form method="post" class="form"
-					th:action="@{/loans/reject/{id}(id=${loan.loanId})}">
+				<form method="post" class="form" th:action="@{/loans/reject/{id}(id=${loan.loanId})}">
 
 					<!--begin::Input group-->
 					<div class="mx-5">

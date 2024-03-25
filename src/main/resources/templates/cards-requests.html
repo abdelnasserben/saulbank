@@ -1,0 +1,187 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+		<!--begin::Card-->
+		<div class="card">
+			<!--begin::Card header-->
+			<div class="card-header border-0 pt-6">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<!--begin::Search-->
+					<div class="d-flex align-items-center position-relative my-1">
+						<i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+							<span class="path1"></span>
+							<span class="path2"></span>
+						</i>
+						<input type="text" data-kt-datatable-table-filter="search"
+							class="form-control form-control-solid w-250px ps-12" placeholder="Search Requests" />
+					</div>
+					<!--end::Search-->
+				</div>
+				<!--begin::Card title-->
+				<!--begin::Card toolbar-->
+				<div class="card-toolbar">
+					<!--begin::Toolbar-->
+					<div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+						<!--begin::Add customer-->
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+							data-bs-target="#kt_modal_send_card_request">
+							<i class="ki-duotone ki-credit-cart fs-1">
+								<span class="path1"></span>
+								<span class="path2"></span>
+								<span class="path3"></span>
+							</i>
+							Send Request
+						</button>
+						<!--end::Add customer-->
+					</div>
+					<!--end::Toolbar-->
+				</div>
+				<!--end::Card toolbar-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0">
+				<!--begin::Table-->
+				<table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_datatable_table">
+					<thead>
+						<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+							<th class="min-w-70px">Request ID</th>
+							<th class="min-w-70px">Card Type</th>
+							<th class="min-w-100px">Customer</th>
+							<th class="min-w-100px">Customer Identity</th>
+							<th class="min-w-100px">Account Number</th>
+							<th class="min-w-70px">Status</th>
+							<th class="min-w-100px">Date Effective</th>
+						</tr>
+					</thead>
+					<tbody class="fw-semibold text-gray-600">
+						<tr th:each="cardApp: ${cardRequests}">
+							<td>
+								<a th:href="@{/cards/requests/{id}(id=${cardApp.requestId})}"
+									th:text="${cardApp.requestId}"
+									class="text-gray-800 text-hover-primary mb-1">1202</a>
+							</td>
+							<td>
+								<a th:href="@{/cards/requests/{id}(id=${cardApp.requestId})}"
+									th:text="${cardApp.cardType}" class="text-gray-800 text-hover-primary mb-1">VISA</a>
+							</td>
+							<td th:text="${cardApp.trunk.customer.firstName + ' ' + cardApp.trunk.customer.lastName}">
+								John Doe</td>
+							<td th:text="${cardApp.trunk.customer.identityNumber}">NBE234557</td>
+							<td th:text="${cardApp.trunk.account.accountNumber}">0071001997</td>
+							<td><span th:text="${cardApp.status}"
+									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(cardApp.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+							</td>
+							<td th:text="${#temporals.format(cardApp.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25 08:55
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!--end::Table-->
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<!--begin::Modals-->
+<div class="modal fade" id="kt_modal_send_card_request" tabindex="-1" aria-hidden="true">
+	<!--begin::Modal dialog-->
+	<div class="modal-dialog modal-dialog-centered mw-650px">
+		<!--begin::Modal content-->
+		<div class="modal-content">
+			<!--begin::Modal header-->
+			<div class="modal-header">
+				<!--begin::Modal title-->
+				<h2>Send Request</h2>
+				<!--end::Modal title-->
+
+				<!--begin::Close-->
+				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+					<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+					<span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+							viewBox="0 0 24 24" fill="none">
+							<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+								transform="rotate(-45 6 17.3137)" fill="currentColor" />
+							<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+								fill="currentColor" />
+						</svg></span>
+					<!--end::Svg Icon-->
+				</div>
+				<!--end::Close-->
+			</div>
+			<!--end::Modal header-->
+
+			<!--begin::Modal body-->
+			<div class="modal-body scroll-y mx-5 my-7">
+				<!--begin::Form-->
+				<form class="form" th:action="@{/cards/requests}" method="post" th:object="${postCardRequest}">
+
+					<div class="row">
+						<div class="col-md-6">
+							<!--begin::Input group-->
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Account Number</label>
+								<input type="text" th:field="*{accountNumber}" class="form-control mb-2"
+									th:classappend="${#fields.hasErrors('accountNumber')} ? 'is-invalid' : ''"
+									placeholder="Account Number" />
+								<div class="invalid-feedback" th:errors="*{accountNumber}"></div>
+							</div>
+							<!--end::Input group-->
+						</div>
+						<div class="col-md-6">
+							<!--begin::Input group-->
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Customer Identity Number</label>
+								<input type="text" th:field="*{customerIdentityNumber}" class="form-control mb-2"
+									th:classappend="${#fields.hasErrors('customerIdentityNumber')} ? 'is-invalid' : ''"
+									placeholder="Customer Identity" />
+								<div class="invalid-feedback" th:errors="*{customerIdentityNumber}"></div>
+							</div>
+							<!--end::Input group-->
+						</div>
+					</div>
+					<div>
+						<label class="required form-label">Card Type</label>
+
+						<select th:field="*{cardType}" class="form-select"
+							th:classappend="${#fields.hasErrors('cardType')} ? 'is-invalid'" data-control="select2"
+							data-hide-search="true" data-placeholder="Card type">
+							<option value=""></option>
+							<option th:each="type: ${@appSpEL.cardTypes}" th:text="${type}" th:value="${type}">
+								VISA</option>
+						</select>
+						<div class="invalid-feedback" th:errors="*{cardType}"></div>
+					</div>
+
+					<!--begin::Actions-->
+					<div class="text-center pt-15">
+						<button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
+							Discard
+						</button>
+
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+					<!--end::Actions-->
+				</form>
+				<!--end::Form-->
+			</div>
+			<!--end::Modal body-->
+		</div>
+		<!--end::Modal content-->
+	</div>
+	<!--end::Modal dialog-->
+</div>
+<!--end::Modals-->
+
+<div th:replace="~{fragments/footer}"></div>

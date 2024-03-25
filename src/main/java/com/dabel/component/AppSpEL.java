@@ -1,5 +1,6 @@
 package com.dabel.component;
 
+import com.dabel.constant.CardType;
 import com.dabel.constant.Country;
 import com.dabel.constant.Currency;
 import com.dabel.constant.Status;
@@ -27,6 +28,12 @@ public class AppSpEL {
 
     public Object[] currencies() {
         return Arrays.stream(Currency.values())
+                .map(Enum::name)
+                .toArray();
+    }
+
+    public Object[] cardTypes() {
+        return Arrays.stream(CardType.values())
                 .map(Enum::name)
                 .toArray();
     }

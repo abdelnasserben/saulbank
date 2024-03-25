@@ -1,0 +1,564 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+		<!--begin::Invoice 2 main-->
+		<div class="card">
+			<!--begin::Body-->
+			<div class="card-body p-lg-20">
+				<!--begin::Layout-->
+				<div class="d-flex flex-column flex-xl-row">
+					<!--begin::Content-->
+					<div class="flex-lg-row-fluid me-xl-18 mb-10 mb-xl-0">
+						<!--begin::Invoice 2 content-->
+						<div class="mt-n1">
+
+							<!--begin::Wrapper-->
+							<div class="m-0">
+								<!--begin::Label-->
+								<div class="fw-bold fs-3 text-gray-800 mb-8">Batch #<span
+										th:text="${requestDto.requestId}">34782</span>
+								</div>
+								<!--end::Label-->
+
+								<!--begin::Row-->
+								<div class="row g-5 mb-11">
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issue
+											Date:</div>
+										<!--end::Label-->
+
+										<!--end::Col-->
+										<div class="fw-bold fs-6 text-gray-800"
+											th:text="${#temporals.format(requestDto.createdAt, 'yyyy-MM-dd HH:mm')}">
+											12
+											Apr 2021
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Col-->
+
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Update
+											Date:</div>
+										<!--end::Label-->
+
+										<!--end::Info-->
+										<div class="fw-bold fs-6 text-gray-800 d-flex align-items-center flex-wrap">
+											<span class="pe-2"
+												th:text="${#temporals.format(requestDto.updatedAt, 'yyyy-MM-dd HH:mm')}">02
+												May 2021</span>
+
+											<span class="fs-7 text-info d-flex align-items-center">
+												<span class="bullet bullet-dot bg-info me-2"></span>
+
+												<span th:text="${requestDto.failureReason}">Rejected</span>
+											</span>
+										</div>
+										<!--end::Info-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Row-->
+
+								<!--begin::Row-->
+								<div class="row g-5 mb-11">
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">
+											Card Type:</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div class="fw-bold fs-6 text-gray-800">
+											<span class="fw-bolder fs-6">
+												<img th:src="${requestDto.cardType} == 'VISA' ? '/assets/svg/visa.svg' : '/assets/svg/mastercard.svg'"
+													class="w-35px me-3" alt="" />
+												<span th:text="${requestDto.cardType}">Visa</span>
+											</span>
+										</div>
+										<!--end::Text-->
+									</div>
+									<!--end::Col-->
+
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Application Fees:
+										</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div class="fw-bold fs-6 text-gray-800">
+											6 Months
+										</div>
+										<!--end::Text-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Row-->
+
+								<!--begin::Row-->
+								<div class="row g-5 mb-11">
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">
+											Customer:</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div class="fw-bold fs-6 text-gray-800"
+											th:text="${requestDto.trunk.customer.identityNumber}">NBE4576</div>
+										<!--end::Text-->
+
+										<!--end::Description-->
+										<div class="fw-semibold fs-7 text-gray-600"
+											th:text="${requestDto.trunk.customer.firstName + ' ' + requestDto.trunk.customer.lastName}">
+											Sarah
+											Hunt
+										</div>
+										<!--end::Description-->
+									</div>
+									<!--end::Col-->
+
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Status:
+										</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<span th:text="${requestDto.status}"
+											th:class="${'badge badge-light-' + @appSpEL.statusColor(requestDto.status) + ' badge-sm px-4 py-3'}">APPROVED</span>
+										<!--end::Text-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Row-->
+
+								<!--begin::Row-->
+								<div class="row g-5 mb-12">
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issue
+											For:</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div th:text="${requestDto.trunk.account.accountNumber}"
+											class="fw-bold fs-6 text-gray-800">
+											0071001997
+										</div>
+										<!--end::Text-->
+
+										<!--end::Description-->
+										<div class="fw-semibold fs-7 text-gray-600">
+											BUSINESS Account <br />
+											<span th:text="${requestDto.trunk.account.accountName}">John
+												Doe</span>
+										</div>
+										<!--end::Description-->
+									</div>
+									<!--end::Col-->
+
+									<!--end::Col-->
+									<div class="col-sm-6">
+										<!--end::Label-->
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issued
+											By:</div>
+										<!--end::Label-->
+
+										<!--end::Text-->
+										<div class="fw-bold fs-6 text-gray-800">Hamida Toilib
+										</div>
+										<!--end::Text-->
+
+										<!--end::Description-->
+										<div class="fw-semibold fs-7 text-gray-600">
+											<span
+												th:text="${requestDto.branch.branchName + ', ' + requestDto.branch.branchAddress}">HQ
+												Moroni, Place de France</span><br />
+											Cashier
+										</div>
+										<!--end::Description-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Row-->
+							</div>
+							<!--end::Wrapper-->
+						</div>
+						<!--end::Invoice 2 content-->
+					</div>
+					<!--end::Content-->
+
+					<!--begin::Sidebar-->
+					<div class="m-0">
+						<!--begin::Invoice 2 sidebar-->
+						<div
+							class="d-print-none border border-dashed border-gray-300 card-rounded h-lg-100 min-w-md-350px p-9 bg-lighten">
+
+
+							<!--begin::Title-->
+							<h3 class="mb-2 fw-bolder">SUMMARY</h3>
+							<p class="fw-semibold text-gray-600 mb-7">key details of the card request</p>
+							<!--end::Title-->
+
+							<div class="separator separator-dashed mb-7"></div>
+
+							<!--begin::Item-->
+							<div class="mb-6">
+								<div class="fw-bold text-gray-800 fs-6 mb-1">Basic details:
+								</div>
+
+								<div class="fw-bold text-gray-600 fs-7">
+									<p class="mb-1">Batch N° : #<span th:text="${requestDto.requestId}">34782</span></p>
+									<p class="mb-1">Type : <span th:text="${requestDto.cardType}">VISA</span>
+									</p>
+									<p class="mb-0">Status : <span th:text="${requestDto.status}"
+											th:class="${'text-' + @appSpEL.statusColor(requestDto.status)}">Approved</span>
+									</p>
+								</div>
+							</div>
+							<!--end::Item-->
+
+							<!--begin::Item-->
+							<div class="mb-10">
+								<div class="fw-bold text-gray-800 fs-6 mb-1">Account:</div>
+
+								<div class="fw-bold text-gray-600 fs-7">
+									<p class="mb-1">Number : <span
+											th:text="${requestDto.trunk.account.accountNumber}">0071001997</span>
+									</p>
+									<p class="mb-0">Name : <span th:text="${requestDto.trunk.account.accountName}">John
+											Doe</span></p>
+								</div>
+							</div>
+							<!--end::Item-->
+
+							<div class="separator separator-dashed mb-7"></div>
+
+							<!--begin::Item-->
+							<div class="mb-10">
+								<div class="fw-bold text-gray-800 fs-6 mb-1">Operators:</div>
+
+								<div class="fw-bold text-gray-600 fs-7">
+									<p class="mb-1">Issued By : Sarah Hunt</p>
+									<p class="mb-0">Updated By : John Doe</p>
+								</div>
+							</div>
+							<!--end::Item-->
+
+							<div th:unless="${requestDto.status} != 'PENDING'">
+								<button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
+									data-bs-target="#kt_modal_reject_operation">
+									Reject
+								</button>
+								<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+									data-bs-target="#kt_modal_approve_operation">
+									Approve
+								</button>
+							</div>
+
+						</div>
+						<!--end::Invoice 2 sidebar-->
+					</div>
+					<!--end::Sidebar-->
+				</div>
+				<!--end::Layout-->
+			</div>
+			<!--end::Body-->
+		</div>
+		<!--end::Invoice 2 main-->
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<!--begin::Modals-->
+<div class="modal fade" id="kt_modal_approve_operation" tabindex="-1" aria-hidden="true">
+	<!--begin::Modal dialog-->
+	<div class="modal-dialog modal-dialog-centered mw-650px">
+		<!--begin::Modal content-->
+		<div class="modal-content">
+			<!--begin::Modal header-->
+			<div class="modal-header">
+				<!--begin::Modal title-->
+				<h2>Approve Request</h2>
+				<!--end::Modal title-->
+
+				<!--begin::Close-->
+				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+					<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+					<span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+							viewBox="0 0 24 24" fill="none">
+							<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+								transform="rotate(-45 6 17.3137)" fill="currentColor" />
+							<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+								fill="currentColor" />
+						</svg></span>
+					<!--end::Svg Icon-->
+				</div>
+				<!--end::Close-->
+			</div>
+			<!--end::Modal header-->
+
+			<!--begin::Modal body-->
+			<div class="modal-body scroll-y mx-5 my-7">
+				<!--begin::Form-->
+				<form method="post" class="form" th:action="@{/cards/requests/approve/{id}(id=${requestDto.requestId})}"
+					th:object="${cardDTO}">
+
+					<!--begin::Input group-->
+					<div class="d-flex flex-column mb-7 fv-row">
+						<!--begin::Label-->
+						<label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+							<span class="required">Account Number</span>
+						</label>
+						<!--end::Label-->
+
+						<input type="text" class="form-control" placeholder="Account number"
+							name="accountNumber" th:value="${requestDto.trunk.account.accountNumber}" disabled />
+					</div>
+					<!--end::Input group-->
+
+					<!--begin::Input group-->
+					<div class="d-flex flex-column mb-7 fv-row">
+						<!--begin::Label-->
+						<label class="required fs-6 fw-bold form-label mb-2">Name On Card</label>
+						<!--end::Label-->
+
+						<input type="text" class="form-control" placeholder="Card name"
+							name="cardName" />
+					</div>
+					<!--end::Input group-->
+
+					<!--begin::Input group-->
+					<div class="d-flex flex-column mb-7 fv-row">
+						<!--begin::Label-->
+						<label class="required fs-6 fw-bold form-label mb-2">Card Type</label>
+						<!--end::Label-->
+						<input type="text" class="form-control" placeholder="Account number"
+							name="cardType" th:value="${requestDto.cardType}" disabled />
+					</div>
+					<!--end::Input group-->
+
+					<!--begin::Input group-->
+					<div class="d-flex flex-column mb-7 fv-row">
+						<!--begin::Label-->
+						<label class="required fs-6 fw-bold form-label mb-2">Card Number</label>
+						<!--end::Label-->
+
+						<!--begin::Input wrapper-->
+						<div class="position-relative">
+							<!--begin::Input-->
+							<input type="text" class="form-control" placeholder="4111 1111 1111 1111"
+								name="cardNumber" />
+							<!--end::Input-->
+
+							<!--begin::Card logos-->
+							<div class="position-absolute translate-middle-y top-50 end-0 me-5">
+								<img th:src="@{/assets/svg/visa.svg}" alt="" class="h-25px" />
+								<img th:src="@{/assets/svg/mastercard.svg}" alt="" class="h-25px" />
+							</div>
+							<!--end::Card logos-->
+						</div>
+						<!--end::Input wrapper-->
+					</div>
+					<!--end::Input group-->
+
+					<!--begin::Input group-->
+					<div class="row mb-10">
+						<!--begin::Col-->
+						<div class="col-md-8 fv-row">
+							<!--begin::Label-->
+							<label class="required fs-6 fw-bold form-label mb-2">Expiration Date</label>
+							<!--end::Label-->
+
+							<!--begin::Row-->
+							<div class="row fv-row">
+								<!--begin::Col-->
+								<div class="col-6">
+									<select name="cardExpiryMonth" class="form-select"
+										data-control="select2" data-hide-search="true" data-placeholder="Month">
+										<option></option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>
+								</div>
+								<!--end::Col-->
+
+								<!--begin::Col-->
+								<div class="col-6">
+									<select name="cardExpiryYear" class="form-select"
+										data-control="select2" data-hide-search="true" data-placeholder="Year">
+										<option></option>
+										<option value="2023">2023</option>
+										<option value="2024">2024</option>
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option>
+										<option value="2028">2028</option>
+										<option value="2029">2029</option>
+										<option value="2030">2030</option>
+										<option value="2031">2031</option>
+										<option value="2032">2032</option>
+										<option value="2033">2033</option>
+									</select>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Row-->
+						</div>
+						<!--end::Col-->
+
+						<!--begin::Col-->
+						<div class="col-md-4 fv-row">
+							<!--begin::Label-->
+							<label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+								<span class="required">CVC</span>
+								<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
+									title="Enter a card CVC code"></i>
+							</label>
+							<!--end::Label-->
+
+							<!--begin::Input wrapper-->
+							<div class="position-relative">
+								<!--begin::Input-->
+								<input type="text" class="form-control" minlength="3" maxlength="4"
+									placeholder="CVC" name="cvc" />
+								<!--end::Input-->
+
+								<!--begin::CVV icon-->
+								<div class="position-absolute translate-middle-y top-50 end-0 me-3">
+									<!--begin::Svg Icon | path: icons/duotune/finance/fin002.svg-->
+									<span class="svg-icon svg-icon-2hx">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none">
+											<path d="M22 7H2V11H22V7Z" fill="currentColor" />
+											<path opacity="0.3"
+												d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19ZM14 14C14 13.4 13.6 13 13 13H5C4.4 13 4 13.4 4 14C4 14.6 4.4 15 5 15H13C13.6 15 14 14.6 14 14ZM16 15.5C16 16.3 16.7 17 17.5 17H18.5C19.3 17 20 16.3 20 15.5C20 14.7 19.3 14 18.5 14H17.5C16.7 14 16 14.7 16 15.5Z"
+												fill="currentColor" />
+										</svg>
+									</span>
+									<!--end::Svg Icon-->
+								</div>
+								<!--end::CVV icon-->
+							</div>
+							<!--end::Input wrapper-->
+						</div>
+						<!--end::Col-->
+					</div>
+					<!--end::Input group-->
+
+
+					<!--begin::Actions-->
+					<div class="text-center pt-15">
+						<button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
+							Discard
+						</button>
+
+						<button type="submit" id="kt_modal_new_card_submit" class="btn btn-primary">Submit</button>
+					</div>
+					<!--end::Actions-->
+				</form>
+				<!--end::Form-->
+			</div>
+			<!--end::Modal body-->
+		</div>
+		<!--end::Modal content-->
+	</div>
+	<!--end::Modal dialog-->
+</div>
+
+<div class="modal fade" id="kt_modal_reject_operation" tabindex="-1" aria-hidden="true">
+	<!--begin::Modal dialog-->
+	<div class="modal-dialog modal-dialog-centered mw-650px">
+		<!--begin::Modal content-->
+		<div class="modal-content">
+			<!--begin::Modal header-->
+			<div class="modal-header">
+				<!--begin::Modal title-->
+				<h2>Reject Request</h2>
+				<!--end::Modal title-->
+
+				<!--begin::Close-->
+				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+					<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+					<span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+							viewBox="0 0 24 24" fill="none">
+							<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+								transform="rotate(-45 6 17.3137)" fill="currentColor" />
+							<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+								fill="currentColor" />
+						</svg></span>
+					<!--end::Svg Icon-->
+				</div>
+				<!--end::Close-->
+			</div>
+			<!--end::Modal header-->
+
+			<!--begin::Modal body-->
+			<div class="modal-body scroll-y mx-5 my-7">
+				<!--begin::Form-->
+				<form method="post" class="form" th:action="@{/cards/requests/reject/{id}(id=${requestDto.requestId})}">
+
+					<!--begin::Input group-->
+					<div class="mx-5">
+
+						<div class="mb-4 fv-row">
+							<label class="required form-label">Reason</label>
+							<textarea name="rejectReason" class="form-control" rows="3"></textarea>
+						</div>
+
+					</div>
+					<!--end::Input group-->
+
+					<!--begin::Actions-->
+					<div class="text-center pt-15">
+						<button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
+							Discard
+						</button>
+
+						<button type="submit" class="btn btn-primary">
+							<span class="indicator-label">
+								Submit
+							</span>
+						</button>
+					</div>
+					<!--end::Actions-->
+				</form>
+				<!--end::Form-->
+			</div>
+			<!--end::Modal body-->
+		</div>
+		<!--end::Modal content-->
+	</div>
+	<!--end::Modal dialog-->
+</div>
+<!--end::Modals-->
+
+<div th:replace="~{fragments/footer}"></div>

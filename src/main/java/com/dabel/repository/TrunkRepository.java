@@ -12,4 +12,6 @@ public interface TrunkRepository extends JpaRepository<Trunk, Long> {
     Optional<Trunk> findByAccount(Account account);
 
     List<Trunk> findAllByCustomer(Customer customer);
+
+    Trunk findByCustomerAndAccount(Customer customer, Account account);
 }

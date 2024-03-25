@@ -12,11 +12,13 @@ import java.util.List;
 public class CardFacadeService {
 
     private final CardService cardService;
+    private final CardRequestService cardRequestService;
     private final CardRequestOperationService requestOperationService;
     private final AccountService accountService;
 
-    public CardFacadeService(CardService cardService, CardRequestOperationService requestOperationService, AccountService accountService) {
+    public CardFacadeService(CardService cardService, CardRequestService cardRequestService, CardRequestOperationService requestOperationService, AccountService accountService) {
         this.cardService = cardService;
+        this.cardRequestService = cardRequestService;
         this.requestOperationService = requestOperationService;
         this.accountService = accountService;
     }
@@ -60,5 +62,9 @@ public class CardFacadeService {
 
     public List<CardRequestDto> findAllCardRequests() {
         return requestOperationService.getCardRequestService().findAll();
+    }
+
+    public CardRequestDto findRequestById(Long requestId) {
+        return cardRequestService.findById(requestId);
     }
 }

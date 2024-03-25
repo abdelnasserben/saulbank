@@ -24,6 +24,11 @@ public final class Web {
         String LOAN_APPROVE = LOAN_ROOT + "/approve";
         String LOAN_REJECT = LOAN_ROOT + "/reject";
 
+        String CARD_ROOT = "/cards";
+        String CARD_REQUEST_ROOT = CARD_ROOT + "/requests";
+        String CARD_REQUEST_APPROVE = CARD_REQUEST_ROOT + "/approve";
+        String CARD_REQUEST_REJECT = CARD_REQUEST_ROOT + "/reject";
+
         String PAGE_404 = "/404";
     }
 
@@ -47,6 +52,9 @@ public final class Web {
         String LOAN_LIST = "loans";
         String LOAN_INIT = "loans-init";
         String LOAN_DETAILS = "loans-details";
+
+        String CARD_REQUEST_LIST = "cards-requests";
+        String CARD_APPLICATION_DETAILS = "cards-requests-details";
 
         String PAGE_404 = "page404";
     }
@@ -95,6 +103,11 @@ public final class Web {
             String MENU = "Loans";
             String ROOT = "All Loans";
             String INIT = "Init Loan";
+        }
+
+        interface Card {
+            String MENU = "Cards";
+            String REQUEST_ROOT = "All Requests";
         }
     }
 }
