@@ -2,6 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
+import com.dabel.constant.Status;
 import com.dabel.constant.Web;
 import com.dabel.dto.*;
 import com.dabel.dto.post.PostCardRequest;
@@ -35,6 +36,14 @@ public class CardController implements PageTitleConfig {
         this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
+    }
+
+    @GetMapping(value = Web.Endpoint.CARD_ROOT)
+    public String listingCards(Model model) {
+
+        configPageTitle(model, Web.Menu.Card.ROOT);
+        model.addAttribute("cards", StatedObjectFormatter.format(cardFacadeService.findAllCards()));
+        return Web.View.CARD_LIST;
     }
 
     @GetMapping(value = Web.Endpoint.CARD_REQUEST_ROOT)
@@ -81,16 +90,17 @@ public class CardController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_APPROVE + "/{requestId}")
-    public String approveRequest(Model model, @PathVariable Long requestId, @Valid CardDto cardDto, BindingResult binding,
+    public String approveRequest(@PathVariable Long requestId, @Valid CardDto cardDto, BindingResult binding,
                                             @RequestParam int cardExpiryMonth,
                                             @RequestParam int cardExpiryYear,
                                             RedirectAttributes redirect) {
 
         CardRequestDto requestDTO = cardFacadeService.findRequestById(requestId);
+        cardDto.setCardType(requestDTO.getCardType());
 
         if(binding.hasErrors()) {
             redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid card information !");
-            return "redirect:" + Web.View.CARD_APPLICATION_DETAILS + "/" + requestId;
+            return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
         }
 
         //TODO: check expiration date
@@ -101,12 +111,15 @@ public class CardController implements PageTitleConfig {
                 throw new IllegalArgumentException();
         } catch (Exception ex) {
             redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid expiration date!");
-            return "redirect:" + Web.View.CARD_APPLICATION_DETAILS + "/" + requestId;
+            return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
         }
 
         //TODO: update card information and save it
         cardDto.setAccount(requestDTO.getTrunk().getAccount());
         cardDto.setExpirationDate(expirationDate);
+        cardDto.setStatus(Status.PENDING.code());
+        cardDto.setBranch(requestDTO.getBranch());
+        cardDto.setFailureReason("Added");
         cardFacadeService.saveCard(cardDto);
 
 
@@ -114,7 +127,7 @@ public class CardController implements PageTitleConfig {
         cardFacadeService.approveRequest(requestId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Application approved successfully !");
 
-        return "redirect:" + Web.View.CARD_APPLICATION_DETAILS + "/" + requestId;
+        return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
     }
 
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_REJECT + "/{requestId}")

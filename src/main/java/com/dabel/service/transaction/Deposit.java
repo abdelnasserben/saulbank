@@ -49,6 +49,7 @@ public class Deposit extends Transaction {
 
         //TODO: update transactionDto info and save it
         transactionDto.setStatus(Status.APPROVED.code());
+        transactionDto.setFailureReason("Approved");
         //we'll set updatedBy later...
 
         transactionService.save(transactionDto);

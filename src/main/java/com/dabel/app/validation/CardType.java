@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CardTypeValidator.class)
 public @interface CardType {
-    String message() default "gender must be Visa or Mastercard";
+    String message() default "Card type must be Visa or Mastercard";
 
     Class<?>[] groups() default {};
 

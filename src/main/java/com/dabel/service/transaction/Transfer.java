@@ -62,6 +62,7 @@ public class Transfer extends Transaction{
 
         //TODO: update transaction info and save it
         transactionDto.setStatus(Status.APPROVED.code());
+        transactionDto.setFailureReason("Approved");
         //we'll set updatedBy later...
 
         transactionService.save(transactionDto);

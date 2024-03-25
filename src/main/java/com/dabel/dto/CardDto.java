@@ -1,6 +1,5 @@
 package com.dabel.dto;
 
-import com.dabel.app.validation.CardType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class CardDto extends BasicDto {
     private Long cardId;
     private AccountDto account;
 
-    @CardType
+
     private String cardType;
     @CreditCardNumber
     private String cardNumber;

@@ -53,6 +53,7 @@ public final class Web {
         String LOAN_INIT = "loans-init";
         String LOAN_DETAILS = "loans-details";
 
+        String CARD_LIST = "cards";
         String CARD_REQUEST_LIST = "cards-requests";
         String CARD_APPLICATION_DETAILS = "cards-requests-details";
 
@@ -107,6 +108,7 @@ public final class Web {
 
         interface Card {
             String MENU = "Cards";
+            String ROOT = "All Cards";
             String REQUEST_ROOT = "All Requests";
         }
     }
