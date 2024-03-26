@@ -1,5 +1,6 @@
 package com.dabel.controller;
 
+import com.dabel.app.Helper;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Status;
@@ -8,6 +9,7 @@ import com.dabel.constant.Web;
 import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
+import com.dabel.service.card.CardFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.exchange.ExchangeFacadeService;
 import com.dabel.service.loan.LoanFacadeService;
@@ -34,14 +36,16 @@ public class CustomerController implements PageTitleConfig {
     private final TransactionFacadeService transactionFacadeService;
     private final ExchangeFacadeService exchangeFacadeService;
     private final LoanFacadeService loanFacadeService;
+    private final CardFacadeService cardFacadeService;
 
-    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService, LoanFacadeService loanFacadeService) {
+    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService, LoanFacadeService loanFacadeService, CardFacadeService cardFacadeService) {
         this.customerFacadeService = customerFacadeService;
         this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
         this.transactionFacadeService = transactionFacadeService;
         this.exchangeFacadeService = exchangeFacadeService;
         this.loanFacadeService = loanFacadeService;
+        this.cardFacadeService = cardFacadeService;
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMER_ROOT)
@@ -111,14 +115,16 @@ public class CustomerController implements PageTitleConfig {
                 .mapToDouble(LoanDto::getTotalAmount)
                 .sum();
 
-//        List<CardDTO> customerCards = cardFacadeService.findAllByCustomerId(customerId)
-//                .stream()
-//                .peek(c -> c.setCardNumber(CardNumberFormatter.hide(c.getCardNumber())))
-//                .toList();
-//        boolean notifyNoActiveCreditCards = customerCards.stream()
-//                .anyMatch(c -> c.getStatus().equals(Status.ACTIVE.code()));
-//
-//
+        List<CardDto> customerCards = customerAccounts.stream()
+                .map(trunkDto -> cardFacadeService.findAllAccountCards(trunkDto.getAccount()))
+                .flatMap(Collection::stream)
+                .peek(c -> c.setCardNumber(Helper.hideCardNumber(c.getCardNumber())))
+                .toList();
+
+        boolean notifyNoActiveCreditCards = customerCards.stream()
+                .anyMatch(c -> c.getStatus().equals(Status.ACTIVE.code()));
+
+
 //        List<PaymentDTO> lastTenCustomerPayments = paymentFacadeService.findAllByCustomerId(customerId).stream()
 //                .limit(10)
 //                .toList();
@@ -129,8 +135,8 @@ public class CustomerController implements PageTitleConfig {
         model.addAttribute("customer", StatedObjectFormatter.format(customerDto));
         model.addAttribute("trunks", customerAccounts);
         model.addAttribute("totalBalance", totalBalance);
-//        model.addAttribute("cards", StatedObjectFormatter.format(customerCards));
-//        model.addAttribute("notifyNoActiveCreditCards", notifyNoActiveCreditCards);
+        model.addAttribute("cards", StatedObjectFormatter.format(customerCards));
+        model.addAttribute("notifyNoActiveCreditCards", notifyNoActiveCreditCards);
         model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
 //        model.addAttribute("payments", StatedObjectFormatter.format(lastTenCustomerPayments));
         model.addAttribute("exchanges", StatedObjectFormatter.format(lastTenCustomerExchanges));

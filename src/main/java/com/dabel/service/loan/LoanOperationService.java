@@ -1,9 +1,7 @@
 package com.dabel.service.loan;
 
-import com.dabel.app.Checker;
 import com.dabel.app.Fee;
-import com.dabel.app.Generator;
-import com.dabel.app.LoanCalculator;
+import com.dabel.app.Helper;
 import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.LoanDto;
@@ -31,15 +29,15 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     @Override
     public void init(LoanDto loanDto) {
 
-        if(Checker.isInActiveCustomer(loanDto.getBorrower()))
+        if(Helper.isInactiveCustomer(loanDto.getBorrower()))
             throw new IllegalOperationException("Customer must be active");
 
-        double loanAmount = LoanCalculator.getTotalAmount(loanDto.getIssuedAmount(), loanDto.getInterestRate());
+        double loanAmount = Helper.calculateTotalAmountOfLoan(loanDto.getIssuedAmount(), loanDto.getInterestRate());
 
         //TODO: create account of loan
         AccountDto savedAccount = accountService.save(AccountDto.builder()
                 .accountName(String.format("%s %s", loanDto.getBorrower().getFirstName(), loanDto.getBorrower().getLastName()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.LOAN.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())

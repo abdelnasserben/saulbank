@@ -818,7 +818,7 @@
 										<!--end::Arrow-->
 
 										<!--begin::Logo-->
-										<img th:src="${card.cardType} == 'Visa' ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
+										<img th:src="${card.cardType} == 'VISA' ? '/assets/svg/visa.svg' : '/assets/svg/mastercard.svg'"
 											class="w-40px me-3" alt="" />
 										<!--end::Logo-->
 
@@ -902,8 +902,12 @@
 											<table class="table table-flush fw-bold gy-1">
 												<tr>
 													<td class="text-muted min-w-125px w-125px">Account number</td>
-													<td th:text="${card.accountNumber}" class="text-gray-800">0071001997
+													<td th:text="${card.account.accountNumber}" class="text-gray-800">0071001997
 													</td>
+												</tr>
+												<tr>
+													<td class="text-muted min-w-125px w-125px">Account name</td>
+													<td th:text="${card.account.accountName}" class="text-gray-800">John Doe</td>
 												</tr>
 												<tr>
 													<td class="text-muted min-w-125px w-125px">CVC

@@ -1,6 +1,6 @@
 package com.dabel.service.branch;
 
-import com.dabel.app.Generator;
+import com.dabel.app.Helper;
 import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
@@ -42,7 +42,7 @@ public class BranchFacadeService {
     private void createGL(BranchDto savedBranch) {
         AccountDto forWithdrawLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Withdraw Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
@@ -52,7 +52,7 @@ public class BranchFacadeService {
 
         AccountDto forTransferLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Transfer Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
@@ -62,7 +62,7 @@ public class BranchFacadeService {
 
         AccountDto forLoanLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Loan Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
@@ -72,7 +72,7 @@ public class BranchFacadeService {
 
         AccountDto forCardApplicationLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Card Application Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
@@ -82,7 +82,7 @@ public class BranchFacadeService {
 
         AccountDto forChequeApplicationLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Cheque Application Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
@@ -121,7 +121,7 @@ public class BranchFacadeService {
         //TODO: build and save vault kmf
         accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault KMF %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
@@ -134,7 +134,7 @@ public class BranchFacadeService {
         //TODO: build and save vault eur
         accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault EUR %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.EUR.name())
@@ -147,7 +147,7 @@ public class BranchFacadeService {
         //TODO: build and save vault usd
         accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault USD %d", savedBranch.getBranchId()))
-                .accountNumber(Generator.generateAccountNumber())
+                .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.USD.name())

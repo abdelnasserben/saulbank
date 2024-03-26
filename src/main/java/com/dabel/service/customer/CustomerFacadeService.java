@@ -1,6 +1,6 @@
 package com.dabel.service.customer;
 
-import com.dabel.app.Generator;
+import com.dabel.app.Helper;
 import com.dabel.constant.AccountMembership;
 import com.dabel.constant.AccountProfile;
 import com.dabel.constant.Currency;
@@ -37,7 +37,7 @@ public class CustomerFacadeService {
                 .customer(savedCustomer)
                 .account(AccountDto.builder()
                         .accountName(String.format("%s %s", savedCustomer.getFirstName(), savedCustomer.getLastName()))
-                        .accountNumber(Generator.generateAccountNumber())
+                        .accountNumber(Helper.generateAccountNumber())
                         .accountType(accountType)
                         .accountProfile(AccountProfile.PERSONAL.name())
                         .currency(Currency.KMF.name())

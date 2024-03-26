@@ -1,7 +1,7 @@
 package com.dabel.service.card;
 
-import com.dabel.app.Checker;
 import com.dabel.app.Fee;
+import com.dabel.app.Helper;
 import com.dabel.constant.BankFees;
 import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
@@ -31,7 +31,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
 
         AccountDto accountDto = cardRequestDto.getTrunk().getAccount();
 
-        if(Checker.isInactiveAccount(accountDto) || Checker.isAssociativeAccount(accountDto))
+        if(Helper.isInactiveAccount(accountDto) || Helper.isAssociativeAccount(accountDto))
             throw new IllegalOperationException("The account is not eligible for this operation");
 
         if(accountDto.getBalance() < BankFees.Basic.CARD_APPLICATION_REQUEST) {

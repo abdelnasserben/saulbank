@@ -25,6 +25,8 @@ public final class Web {
         String LOAN_REJECT = LOAN_ROOT + "/reject";
 
         String CARD_ROOT = "/cards";
+        String CARD_ACTIVATE = CARD_ROOT + "/activate";
+        String CARD_DEACTIVATE = CARD_ROOT + "/deactivate";
         String CARD_REQUEST_ROOT = CARD_ROOT + "/requests";
         String CARD_REQUEST_APPROVE = CARD_REQUEST_ROOT + "/approve";
         String CARD_REQUEST_REJECT = CARD_REQUEST_ROOT + "/reject";
@@ -54,6 +56,7 @@ public final class Web {
         String LOAN_DETAILS = "loans-details";
 
         String CARD_LIST = "cards";
+        String CARD_DETAILS = "cards-details";
         String CARD_REQUEST_LIST = "cards-requests";
         String CARD_APPLICATION_DETAILS = "cards-requests-details";
 

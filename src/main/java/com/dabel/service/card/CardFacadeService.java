@@ -1,8 +1,11 @@
 package com.dabel.service.card;
 
+import com.dabel.app.Helper;
+import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
 import com.dabel.dto.CardRequestDto;
+import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +47,34 @@ public class CardFacadeService {
         return cardService.findAll();
     }
 
+    public void activateCard(Long cardId) {
+
+        CardDto card = cardService.findById(cardId);
+
+        if(Helper.isActiveCard(card))
+            throw new IllegalOperationException("Card already active");
+
+        card.setStatus(Status.ACTIVE.code());
+        card.setFailureReason("Activated");
+        //we'll set update info later...
+
+        cardService.save(card);
+    }
+
+    public void deactivateCard(Long cardId, String remarks) {
+
+        CardDto card = cardService.findById(cardId);
+
+        if(!Helper.isActiveCard(card))
+            throw new IllegalOperationException("Unable to deactivate an inactive card");
+
+        card.setStatus(Status.DEACTIVATED.code());
+        card.setFailureReason(remarks);
+        //we'll set update info later...
+
+        cardService.save(card);
+    }
+
     /**
      * For card requests
      */
@@ -66,5 +97,9 @@ public class CardFacadeService {
 
     public CardRequestDto findRequestById(Long requestId) {
         return cardRequestService.findById(requestId);
+    }
+
+    public List<CardDto> findAllAccountCards(AccountDto accountDto) {
+        return cardService.findAllByAccount(accountDto);
     }
 }

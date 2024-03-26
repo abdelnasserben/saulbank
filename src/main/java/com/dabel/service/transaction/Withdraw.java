@@ -1,7 +1,7 @@
 package com.dabel.service.transaction;
 
-import com.dabel.app.Checker;
 import com.dabel.app.Fee;
+import com.dabel.app.Helper;
 import com.dabel.constant.BankFees;
 import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
@@ -29,7 +29,7 @@ public class Withdraw extends Transaction {
     public void init(TransactionDto transactionDto) {
 
 
-        if(Checker.isInactiveAccount(transactionDto.getInitiatorAccount()))
+        if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Account must be active");
 
         //TODO: for withdraw, debit account is the initiator account of transaction so we interchange nothing, we set only the receiver

@@ -5,7 +5,8 @@ import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Status;
 import com.dabel.constant.Web;
 import com.dabel.dto.*;
-import com.dabel.dto.post.PostCardRequest;
+import com.dabel.dto.post.PostCardDto;
+import com.dabel.dto.post.PostCardRequestDto;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 @Controller
 public class CardController implements PageTitleConfig {
 
+    private static final String VALIDATION_ERROR_CODE = "1001";
     private final CardFacadeService cardFacadeService;
     private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
@@ -46,8 +48,39 @@ public class CardController implements PageTitleConfig {
         return Web.View.CARD_LIST;
     }
 
+    @GetMapping(value = Web.Endpoint.CARD_ROOT + "/{cardId}")
+    public String cardDetails(@PathVariable Long cardId, Model model) {
+
+        CardDto card = cardFacadeService.findCardById(cardId);
+        configPageTitle(model, "Card Details");
+        model.addAttribute("card", StatedObjectFormatter.format(card));
+        return Web.View.CARD_DETAILS;
+    }
+
+    @GetMapping(value = Web.Endpoint.CARD_ACTIVATE + "/{cardId}")
+    public String activateCard(@PathVariable Long cardId, RedirectAttributes redirect) {
+
+        cardFacadeService.activateCard(cardId);
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Card successfully activated !");
+
+        return String.format("redirect:%s/%d", Web.Endpoint.CARD_ROOT , cardId);
+    }
+
+    @PostMapping(value = Web.Endpoint.CARD_DEACTIVATE + "/{cardId}")
+    public String deactivateCard(@PathVariable Long cardId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+
+        if(rejectReason.isBlank())
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Deactivate reason is mandatory !");
+        else {
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Card successfully deactivated!");
+            cardFacadeService.deactivateCard(cardId, rejectReason);
+        }
+
+        return String.format("redirect:%s/%d", Web.Endpoint.CARD_ROOT , cardId);
+    }
+
     @GetMapping(value = Web.Endpoint.CARD_REQUEST_ROOT)
-    public String listingRequests(Model model, PostCardRequest postCardRequest) {
+    public String listingRequests(Model model, PostCardRequestDto postCardRequestDto) {
         configPageTitle(model, Web.Menu.Card.REQUEST_ROOT);
         model.addAttribute("cardRequests", StatedObjectFormatter.format(cardFacadeService.findAllCardRequests()));
 
@@ -55,7 +88,7 @@ public class CardController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_ROOT)
-    public String sendRequest(Model model, @Valid PostCardRequest postCardRequest, BindingResult binding, RedirectAttributes redirect) {
+    public String sendRequest(Model model, @Valid PostCardRequestDto postCardRequestDto, BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
             configPageTitle(model, Web.Menu.Card.REQUEST_ROOT);
@@ -65,11 +98,11 @@ public class CardController implements PageTitleConfig {
 
         //TODO: get branch, customer and his account
         BranchDto branchDto = branchFacadeService.findById(1L);
-        CustomerDto customerDto = customerFacadeService.findByIdentity(postCardRequest.getCustomerIdentityNumber());
-        TrunkDto trunkDto = accountFacadeService.findAccountByCustomerAndAccount(customerDto, postCardRequest.getAccountNumber());
+        CustomerDto customerDto = customerFacadeService.findByIdentity(postCardRequestDto.getCustomerIdentityNumber());
+        TrunkDto trunkDto = accountFacadeService.findAccountByCustomerAndAccount(customerDto, postCardRequestDto.getAccountNumber());
 
         CardRequestDto requestDto = CardRequestDto.builder()
-                .cardType(postCardRequest.getCardType())
+                .cardType(postCardRequestDto.getCardType())
                 .trunk(trunkDto)
                 .branch(branchDto)
                 .build();
@@ -80,7 +113,7 @@ public class CardController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.CARD_REQUEST_ROOT + "/{requestId}")
-    public String requestDetails(Model model, @PathVariable Long requestId, CardDto cardDto) {
+    public String requestDetails(Model model, @PathVariable Long requestId, PostCardDto postCardDto) {
 
         CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
 
@@ -90,36 +123,31 @@ public class CardController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_APPROVE + "/{requestId}")
-    public String approveRequest(@PathVariable Long requestId, @Valid CardDto cardDto, BindingResult binding,
-                                            @RequestParam int cardExpiryMonth,
-                                            @RequestParam int cardExpiryYear,
-                                            RedirectAttributes redirect) {
+    public String approveRequest(Model model, @PathVariable Long requestId, @Valid PostCardDto postCardDto, BindingResult binding, RedirectAttributes redirect) {
 
-        CardRequestDto requestDTO = cardFacadeService.findRequestById(requestId);
-        cardDto.setCardType(requestDTO.getCardType());
+        CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
 
-        if(binding.hasErrors()) {
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid card information !");
-            return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
+        if(binding.hasErrors() || Integer.parseInt(postCardDto.getExpiryYear()) <= LocalDate.now(Clock.systemUTC()).getYear()) {
+            configPageTitle(model, "Request Details");
+            model.addAttribute(Web.MessageTag.ERROR, "Invalid card information. Check expiration date if no error indication has displayed");
+            model.addAttribute("requestDto", StatedObjectFormatter.format(requestDto));
+            return Web.View.CARD_APPLICATION_DETAILS;
         }
 
-        //TODO: check expiration date
-        LocalDate expirationDate;
-        try {
-            expirationDate = LocalDate.of(cardExpiryYear, cardExpiryMonth, LocalDate.MAX.getDayOfMonth());
-            if(expirationDate.getYear() <= LocalDate.now(Clock.systemUTC()).getYear())
-                throw new IllegalArgumentException();
-        } catch (Exception ex) {
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid expiration date!");
-            return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
-        }
 
         //TODO: update card information and save it
-        cardDto.setAccount(requestDTO.getTrunk().getAccount());
-        cardDto.setExpirationDate(expirationDate);
-        cardDto.setStatus(Status.PENDING.code());
-        cardDto.setBranch(requestDTO.getBranch());
-        cardDto.setFailureReason("Added");
+        CardDto cardDto = CardDto.builder()
+                .cardType(postCardDto.getCardType())
+                .cardName(postCardDto.getCardName())
+                .cardNumber(postCardDto.getCardNumber())
+                .account(requestDto.getTrunk().getAccount())
+                .expirationDate(LocalDate.of(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth()), LocalDate.MAX.getDayOfMonth()))
+                .status(Status.PENDING.code())
+                .branch(requestDto.getBranch())
+                .failureReason("New added")
+                .cvc(postCardDto.getCvc())
+                .build();
+
         cardFacadeService.saveCard(cardDto);
 
 

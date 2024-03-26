@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public class PostCardRequest {
+public class PostCardRequestDto {
     @NotBlank
     private String accountNumber;
     @NotBlank

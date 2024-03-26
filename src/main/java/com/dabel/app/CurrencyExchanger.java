@@ -21,7 +21,7 @@ public final class CurrencyExchanger {
             amount *= BankFees.Exchange.BUY_USD;
 
 
-        return AmountFormatter.format(amount);
+        return Helper.formatAmount(amount);
     }
 
     private static boolean isKmf2Eur(String currency1, String currency2) {

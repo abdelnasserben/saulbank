@@ -1,8 +1,8 @@
 package com.dabel.service.transaction;
 
-import com.dabel.app.Checker;
 import com.dabel.app.CurrencyExchanger;
 import com.dabel.app.Fee;
+import com.dabel.app.Helper;
 import com.dabel.constant.BankFees;
 import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
@@ -28,7 +28,7 @@ public class Transfer extends Transaction{
     @Override
     public void init(TransactionDto transactionDto) {
 
-        if(Checker.isInactiveAccount(transactionDto.getInitiatorAccount()))
+        if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Initiator account must be active");
 
         if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + BankFees.Basic.TRANSFER) {

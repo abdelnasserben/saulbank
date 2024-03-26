@@ -1,7 +1,7 @@
 package com.dabel.service.transaction;
 
-import com.dabel.app.Checker;
 import com.dabel.app.CurrencyExchanger;
+import com.dabel.app.Helper;
 import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
 import com.dabel.dto.AccountDto;
@@ -21,7 +21,7 @@ public class Deposit extends Transaction {
     @Override
     public void init(TransactionDto transactionDto) {
 
-        if(Checker.isInactiveAccount(transactionDto.getInitiatorAccount()))
+        if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Account must be active");
 
         //TODO: for deposit, initiator account is the beneficiary account so we interchange initiator as the vault and beneficiary as receiver
