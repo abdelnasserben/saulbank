@@ -514,23 +514,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/cards/requests}" th:classappend="${currentPage == 'All Requests' ? 'active' : ''}">
+										<a class="menu-link" th:href="@{/cards/requests}" th:classappend="${currentPage == 'Card Requests' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">All Requests</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-									<!--end:Menu item-->
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/cards/requests/send}" th:classappend="${currentPage == 'Send Request' ? 'active' : ''}">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Send Request</span>
+											<span class="menu-title">Card Requests</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -602,11 +590,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs/base/utilities"
-											target="_blank" title="Check out over 200 in-house components"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/cheques}" th:classappend="${currentPage == 'All Cheques' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -618,15 +602,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs"
-											target="_blank" title="Check out the complete documentation"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/cheques/requests}" th:classappend="${currentPage == 'Cheque Requests' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Send Request</span>
+											<span class="menu-title">Cheque Requests</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -654,11 +634,7 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs/base/utilities"
-											target="_blank" title="Check out over 200 in-house components"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/accounts}" th:classappend="${currentPage == 'All Accounts' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
@@ -670,31 +646,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs"
-											target="_blank" title="Check out the complete documentation"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
+										<a class="menu-link" th:href="@{/accounts/manage-members}" th:classappend="${currentPage == 'Manage Members' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Add Members</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-									<!--end:Menu item-->
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link"
-											href="https://preview.keenthemes.com/html/saul-html-pro/docs"
-											target="_blank" title="Check out the complete documentation"
-											data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-											data-bs-placement="right">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Vaults Adjustment</span>
+											<span class="menu-title">Manage Members</span>
 										</a>
 										<!--end:Menu link-->
 									</div>

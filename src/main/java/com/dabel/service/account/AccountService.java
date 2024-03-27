@@ -88,15 +88,26 @@ public class AccountService {
                 .toList();
     }
 
+    public List<TrunkDto> findAllTrunks() {
+        return trunkRepository.findAll().stream()
+                .map(TrunkMapper::toDto)
+                .toList();
+    }
+
     public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
         return trunkRepository.findAllByCustomer(CustomerMapper.toModel(customerDto)).stream()
                 .map(TrunkMapper::toDto)
                 .toList();
     }
 
-    public TrunkDto findTrunkByCustomerAndNumber(CustomerDto customerDto, String accountNumber) {
+    public TrunkDto findTrunkByCustomerAndAccountNumber(CustomerDto customerDto, String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));;
         return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account));
+    }
+
+    public TrunkDto findTrunkById(Long trunkId) {
+        return TrunkMapper.toDto(trunkRepository.findById(trunkId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found")));
     }
 }

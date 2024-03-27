@@ -1,11 +1,16 @@
 package com.dabel.service.exchange;
 
 import com.dabel.DBSetupForTests;
+import com.dabel.app.Helper;
+import com.dabel.constant.AccountProfile;
+import com.dabel.constant.AccountType;
 import com.dabel.constant.Currency;
 import com.dabel.constant.Status;
+import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.ExchangeDto;
 import com.dabel.exception.IllegalOperationException;
+import com.dabel.service.account.AccountService;
 import com.dabel.service.branch.BranchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +32,35 @@ class ExchangeFacadeServiceTest {
     BranchService branchService;
 
     @Autowired
+    AccountService accountService;
+
+    @Autowired
     DBSetupForTests dbSetupForTests;
+
+    private void createKmfAndEurVaults(BranchDto branchDto) {
+        accountService.save(AccountDto.builder()
+                .accountName(String.format("Vault KMF %d", branchDto.getBranchId()))
+                .accountNumber(Helper.generateAccountNumber())
+                .accountType(AccountType.BUSINESS.name())
+                .accountProfile(AccountProfile.PERSONAL.name())
+                .currency(Currency.KMF.name())
+                .balance(50000)
+                .isVault(1)
+                .branch(branchDto)
+                .status(Status.ACTIVE.code())
+                .build());
+        accountService.save(AccountDto.builder()
+                .accountName(String.format("Vault EUR %d", branchDto.getBranchId()))
+                .accountNumber(Helper.generateAccountNumber())
+                .accountType(AccountType.BUSINESS.name())
+                .accountProfile(AccountProfile.PERSONAL.name())
+                .currency(Currency.EUR.name())
+                .balance(25000)
+                .isVault(1)
+                .branch(branchDto)
+                .status(Status.ACTIVE.code())
+                .build());
+    }
 
     @BeforeEach
     void setUp() {
@@ -66,7 +99,9 @@ class ExchangeFacadeServiceTest {
     @Test
     void shouldApproveExchange() {
         //given
-        exchangeFacadeService.init(getExchangeDto());
+        ExchangeDto exchangeDto = getExchangeDto();
+        createKmfAndEurVaults(exchangeDto.getBranch());
+        exchangeFacadeService.init(exchangeDto);
         ExchangeDto savedExchange = exchangeFacadeService.findAll().get(0);
 
         //when

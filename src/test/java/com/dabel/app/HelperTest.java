@@ -3,10 +3,13 @@ package com.dabel.app;
 import com.dabel.constant.AccountProfile;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
+import com.dabel.dto.CardDto;
 import com.dabel.dto.CustomerDto;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HelperTest {
 
@@ -17,7 +20,8 @@ class HelperTest {
                 .accountNumber("123456789")
                 .status(Status.PENDING.code())
                 .build();
-        assertThat(Helper.isInactiveAccount(accountDto)).isEqualTo(true);
+
+        assertTrue(Helper.isInactiveAccount(accountDto));
     }
 
     @Test
@@ -27,18 +31,19 @@ class HelperTest {
                 .accountNumber("123456789")
                 .status(Status.ACTIVE.code())
                 .build();
-        assertThat(Helper.isInactiveAccount(accountDto)).isEqualTo(false);
+
+        assertFalse(Helper.isInactiveAccount(accountDto));
     }
 
     @Test
-    void isInActiveCustomer() {
+    void isInactiveCustomer() {
         CustomerDto customerDto = CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .status(Status.DEACTIVATED.code())
                 .build();
 
-        assertThat(Helper.isInactiveCustomer(customerDto)).isEqualTo(true);
+        assertTrue(Helper.isInactiveCustomer(customerDto));
     }
 
     @Test
@@ -49,7 +54,7 @@ class HelperTest {
                 .status(Status.ACTIVE.code())
                 .build();
 
-        assertThat(Helper.isInactiveCustomer(customerDto)).isEqualTo(false);
+        assertFalse(Helper.isInactiveCustomer(customerDto));
     }
 
     @Test
@@ -59,7 +64,8 @@ class HelperTest {
                 .accountNumber("123456789")
                 .accountProfile(AccountProfile.ASSOCIATIVE.name())
                 .build();
-        assertThat(Helper.isAssociativeAccount(accountDto)).isEqualTo(true);
+
+        assertTrue(Helper.isAssociativeAccount(accountDto));
     }
 
     @Test
@@ -82,5 +88,27 @@ class HelperTest {
     @Test
     void generateAccountNumber() {
         assertThat(Helper.generateAccountNumber().length()).isEqualTo(11);
+    }
+
+    @Test
+    void isActiveCard() {
+        CardDto cardDto = CardDto.builder()
+                .cardName("John Doe")
+                .cardNumber("4111 1111 1111 1111")
+                .status(Status.ACTIVE.code())
+                .build();
+
+        assertTrue(Helper.isActiveCard(cardDto));
+    }
+
+    @Test
+    void isInactiveCard() {
+        CardDto cardDto = CardDto.builder()
+                .cardName("John Doe")
+                .cardNumber("4111 1111 1111 1111")
+                .status(Status.PENDING.code())
+                .build();
+
+        assertFalse(Helper.isActiveCard(cardDto));
     }
 }

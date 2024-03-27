@@ -88,7 +88,7 @@ public class CustomerController implements PageTitleConfig {
 
         CustomerDto customerDto = customerFacadeService.findById(customerId);
 
-        List<TrunkDto> customerAccounts = accountFacadeService.findAllCustomerAccounts(customerDto).stream()
+        List<TrunkDto> customerAccounts = accountFacadeService.findCustomerTrunks(customerDto).stream()
                 .peek(trunkDto -> StatedObjectFormatter.format(trunkDto.getAccount()))
                 .toList();
         double totalBalance = customerAccounts.stream()

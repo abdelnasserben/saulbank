@@ -77,12 +77,12 @@ public class TransactionController implements PageTitleConfig {
         }
 
         //TODO: set initiator account
-        AccountDto initiatorAccount = accountFacadeService.findCustomerAccountByNumber(initiatorAccountNumber).getAccount();
+        AccountDto initiatorAccount = accountFacadeService.findTrunkByNumber(initiatorAccountNumber).getAccount();
         transactionDto.setInitiatorAccount(initiatorAccount);
 
         //TODO: set receiver account when transaction is a transfer
         if(transactionDto.getTransactionType().equalsIgnoreCase(TransactionType.TRANSFER.name())) {
-            AccountDto receiverAccount = accountFacadeService.findCustomerAccountByNumber(receiverAccountNumber).getAccount();
+            AccountDto receiverAccount = accountFacadeService.findTrunkByNumber(receiverAccountNumber).getAccount();
             transactionDto.setReceiverAccount(receiverAccount);
         }
 

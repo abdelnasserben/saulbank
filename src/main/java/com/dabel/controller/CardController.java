@@ -1,5 +1,6 @@
 package com.dabel.controller;
 
+import com.dabel.app.CardExpirationDateUtils;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Status;
@@ -21,13 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.Clock;
-import java.time.LocalDate;
-
 @Controller
 public class CardController implements PageTitleConfig {
 
-    private static final String VALIDATION_ERROR_CODE = "1001";
     private final CardFacadeService cardFacadeService;
     private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
@@ -99,7 +96,7 @@ public class CardController implements PageTitleConfig {
         //TODO: get branch, customer and his account
         BranchDto branchDto = branchFacadeService.findById(1L);
         CustomerDto customerDto = customerFacadeService.findByIdentity(postCardRequestDto.getCustomerIdentityNumber());
-        TrunkDto trunkDto = accountFacadeService.findAccountByCustomerAndAccount(customerDto, postCardRequestDto.getAccountNumber());
+        TrunkDto trunkDto = accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, postCardRequestDto.getAccountNumber());
 
         CardRequestDto requestDto = CardRequestDto.builder()
                 .cardType(postCardRequestDto.getCardType())
@@ -117,8 +114,7 @@ public class CardController implements PageTitleConfig {
 
         CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
 
-        configPageTitle(model, "Request Details");
-        model.addAttribute("requestDto", StatedObjectFormatter.format(requestDto));
+        configCardRequestAttributesPage(model, requestDto);
         return Web.View.CARD_APPLICATION_DETAILS;
     }
 
@@ -127,10 +123,9 @@ public class CardController implements PageTitleConfig {
 
         CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
 
-        if(binding.hasErrors() || Integer.parseInt(postCardDto.getExpiryYear()) <= LocalDate.now(Clock.systemUTC()).getYear()) {
-            configPageTitle(model, "Request Details");
+        if(binding.hasErrors() || !CardExpirationDateUtils.isValidExpiryDate(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth()))) {
+            configCardRequestAttributesPage(model, requestDto);
             model.addAttribute(Web.MessageTag.ERROR, "Invalid card information. Check expiration date if no error indication has displayed");
-            model.addAttribute("requestDto", StatedObjectFormatter.format(requestDto));
             return Web.View.CARD_APPLICATION_DETAILS;
         }
 
@@ -141,7 +136,7 @@ public class CardController implements PageTitleConfig {
                 .cardName(postCardDto.getCardName())
                 .cardNumber(postCardDto.getCardNumber())
                 .account(requestDto.getTrunk().getAccount())
-                .expirationDate(LocalDate.of(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth()), LocalDate.MAX.getDayOfMonth()))
+                .expirationDate(CardExpirationDateUtils.getDate(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth())))
                 .status(Status.PENDING.code())
                 .branch(requestDto.getBranch())
                 .failureReason("New added")
@@ -169,6 +164,13 @@ public class CardController implements PageTitleConfig {
         }
 
         return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
+    }
+
+    private void configCardRequestAttributesPage(Model model, CardRequestDto requestDto) {
+        configPageTitle(model, "Request Details");
+        model.addAttribute("requestDto", StatedObjectFormatter.format(requestDto));
+        model.addAttribute("months", CardExpirationDateUtils.getMonths());
+        model.addAttribute("years", CardExpirationDateUtils.getYears());
     }
 
     @Override

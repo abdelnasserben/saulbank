@@ -31,6 +31,10 @@ public final class Web {
         String CARD_REQUEST_APPROVE = CARD_REQUEST_ROOT + "/approve";
         String CARD_REQUEST_REJECT = CARD_REQUEST_ROOT + "/reject";
 
+        String ACCOUNT_ROOT = "/accounts";
+        String ACCOUNT_ACTIVATE = ACCOUNT_ROOT + "/activate";
+        String ACCOUNT_DEACTIVATE = ACCOUNT_ROOT + "/deactivate";
+
         String PAGE_404 = "/404";
     }
 
@@ -59,6 +63,9 @@ public final class Web {
         String CARD_DETAILS = "cards-details";
         String CARD_REQUEST_LIST = "cards-requests";
         String CARD_APPLICATION_DETAILS = "cards-requests-details";
+
+        String ACCOUNT_LIST = "accounts";
+        String ACCOUNT_DETAILS = "accounts-details";
 
         String PAGE_404 = "page404";
     }
@@ -112,7 +119,13 @@ public final class Web {
         interface Card {
             String MENU = "Cards";
             String ROOT = "All Cards";
-            String REQUEST_ROOT = "All Requests";
+            String REQUEST_ROOT = "Card Requests";
+        }
+
+        interface Account {
+            String MENU = "Accounts";
+            String ROOT = "All Accounts";
+            String MANAGE_MEMBERS = "Manage Members";
         }
     }
 }
