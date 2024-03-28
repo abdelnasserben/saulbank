@@ -34,6 +34,7 @@ public final class Web {
         String ACCOUNT_ROOT = "/accounts";
         String ACCOUNT_ACTIVATE = ACCOUNT_ROOT + "/activate";
         String ACCOUNT_DEACTIVATE = ACCOUNT_ROOT + "/deactivate";
+        String ACCOUNT_AFFILIATION = ACCOUNT_ROOT + "/affiliation";
 
         String PAGE_404 = "/404";
     }
@@ -66,6 +67,7 @@ public final class Web {
 
         String ACCOUNT_LIST = "accounts";
         String ACCOUNT_DETAILS = "accounts-details";
+        String ACCOUNT_AFFILIATION = "accounts-affiliation";
 
         String PAGE_404 = "page404";
     }
@@ -125,7 +127,7 @@ public final class Web {
         interface Account {
             String MENU = "Accounts";
             String ROOT = "All Accounts";
-            String MANAGE_MEMBERS = "Manage Members";
+            String MANAGE_AFFILIATION = "Manage Affiliation";
         }
     }
 }

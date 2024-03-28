@@ -1,4 +1,4 @@
-package com.dabel.dto.post;
+package com.dabel.dto;
 
 import com.dabel.app.validation.CardType;
 import jakarta.validation.constraints.NotBlank;

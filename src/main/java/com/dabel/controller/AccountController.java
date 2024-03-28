@@ -3,6 +3,7 @@ package com.dabel.controller;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
+import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
@@ -34,7 +35,7 @@ public class AccountController implements PageTitleConfig {
                 .peek(trunkDto -> StatedObjectFormatter.format(trunkDto.getAccount()))
                 .toList();
 
-        configPageTitle(model, Web.Menu.Bank.Branches.ROOT);
+        configPageTitle(model, Web.Menu.Account.ROOT);
         model.addAttribute("trunks", customerAccounts);
         return Web.View.ACCOUNT_LIST;
     }
@@ -68,6 +69,13 @@ public class AccountController implements PageTitleConfig {
         accountFacadeService.deactivateTrunk(trunkId);
 
         return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNT_ROOT , trunkId);
+    }
+
+    @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION)
+    public String manageTrunkAffiliation(Model model, CustomerDto customerDto) {
+
+        configPageTitle(model, Web.Menu.Account.MANAGE_AFFILIATION);
+        return Web.View.ACCOUNT_AFFILIATION;
     }
 
 

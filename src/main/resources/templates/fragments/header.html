@@ -616,7 +616,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Accounts' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -646,11 +646,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/accounts/manage-members}" th:classappend="${currentPage == 'Manage Members' ? 'active' : ''}">
+										<a class="menu-link" th:href="@{/accounts/affiliation}" th:classappend="${currentPage == 'Manage Affiliation' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Manage Members</span>
+											<span class="menu-title">Manage Affiliation</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
