@@ -82,7 +82,7 @@ public class LoanController implements PageTitleConfig {
         return "redirect:" + Web.Endpoint.LOAN_INIT;
     }
 
-    @GetMapping(value = Web.Endpoint.LOAN_APPROVE + "/{loanId}")
+    @PostMapping(value = Web.Endpoint.LOAN_APPROVE + "/{loanId}")
     public String approveLoan(@PathVariable Long loanId, RedirectAttributes redirect) {
 
         loanFacadeService.approve(loanId);

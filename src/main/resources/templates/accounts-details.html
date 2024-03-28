@@ -241,13 +241,16 @@
                                 </div>
 
                                 <div class="fw-bold text-gray-600 fs-7">
-                                    <p class="mb-1">Type : <span th:text="${trunk.account.accountType}">SAVING</span>
+                                    <p class="mb-1">Acc. Type : <span
+                                            th:text="${trunk.account.accountType}">SAVING</span>
                                     </p>
-                                    <p class="mb-1">Name : <span th:text="${trunk.account.accountName}">John Doe</span>
-                                    </p>
-                                    <p class="mb-1">Number : <span
+                                    <p class="mb-1">Acc. Number : <span
                                             th:text="${trunk.account.accountName}">0071001997</span></p>
-                                    <p class="mb-1">Profile : <span
+                                    <p class="mb-1">Balance : <span
+                                            th:text="${trunk.account.balance + ' ' + trunk.account.currency}">John
+                                            Doe</span>
+                                    </p>
+                                    <p class="mb-1">Acc. Profile : <span
                                             th:text="${trunk.account.accountProfile}">JOINT</span>
                                     </p>
                                     <p class="mb-1">Membership : <span th:text="${trunk.membership}">OWNER</span>
@@ -289,13 +292,13 @@
 
                             <button th:unless="${trunk.account.status} != 'ACTIVE'" type="button"
                                 class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
-                                data-bs-target="#kt_modal_reject_operation">
+                                data-bs-target="#deactivate_account">
                                 Deactivate
                             </button>
-                            <a th:href="@{/accounts/activate/{id}(id=${trunk.trunkId})}"
-                                th:unless="${trunk.account.status} == 'ACTIVE'" class="btn btn-sm btn-primary">
+                            <button th:unless="${trunk.account.status} == 'ACTIVE'" type="button" data-bs-toggle="modal"
+                                data-bs-target="#activate_account" class="btn btn-sm btn-primary">
                                 Activate
-                            </a>
+                            </button>
 
                         </div>
                         <!--end::Invoice 2 sidebar-->
@@ -313,56 +316,13 @@
 <!--end::Content-->
 
 <!--begin::Modals-->
-<div class=" modal fade" id="kt_modal_reject_operation" tabindex="-1" aria-hidden="true">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content">
+<div
+    th:replace="~{fragments/confirmDialog(modalId='deactivate_account', modalTitle='Deactivate Account', actionUrl=${'/accounts/deactivate/' + trunk.trunkId})}">
+    ...</div>
 
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y mx-5 my-7">
-                <!--begin::Form-->
-                <form method="post" class="form" th:action="@{/accounts/deactivate/{id}(id=${trunk.trunkId})}">
-
-                    <!--begin::Input group-->
-                    <div class="mx-5">
-
-                        <div class="swal2-icon swal2-error swal2-icon-show" style="display: flex;"><span
-                                class="swal2-x-mark">
-                                <span class="swal2-x-mark-line-left"></span>
-                                <span class="swal2-x-mark-line-right"></span>
-                            </span>
-                        </div>
-
-                        <div class="swal2-html-container" id="swal2-html-container" style="display: block;">Are you
-                            really sure you want to deactivate this account?</div>
-
-                    </div>
-                    <!--end::Input group-->
-
-                    <!--begin::Actions-->
-                    <div class="text-center pt-15">
-                        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
-                            Discard
-                        </button>
-
-                        <button type="submit" class="btn btn-primary">
-                            <span class="indicator-label">
-                                Submit
-                            </span>
-                        </button>
-                    </div>
-                    <!--end::Actions-->
-                </form>
-                <!--end::Form-->
-            </div>
-            <!--end::Modal body-->
-        </div>
-        <!--end::Modal content-->
-    </div>
-    <!--end::Modal dialog-->
-</div>
-
+<div
+    th:replace="~{fragments/confirmDialog(modalId='activate_account', modalTitle='Activate Account', actionUrl=${'/accounts/activate/' + trunk.trunkId})}">
+    ...</div>
 <!--end::Modals-->
 
 <div th:replace="~{fragments/footer}"></div>

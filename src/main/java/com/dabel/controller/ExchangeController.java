@@ -71,7 +71,7 @@ public class ExchangeController implements PageTitleConfig {
         return "redirect:" + Web.Endpoint.EXCHANGE_INIT;
     }
 
-    @GetMapping(value = Web.Endpoint.EXCHANGE_APPROVE + "/{exchangeId}")
+    @PostMapping(value = Web.Endpoint.EXCHANGE_APPROVE + "/{exchangeId}")
     public String approveExchange(@PathVariable Long exchangeId, RedirectAttributes redirect) {
 
         exchangeFacadeService.approve(exchangeId);

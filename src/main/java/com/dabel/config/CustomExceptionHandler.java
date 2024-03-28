@@ -27,7 +27,10 @@ public class CustomExceptionHandler {
                 Web.Endpoint.CUSTOMER_ROOT,
                 Web.Endpoint.TRANSACTION_ROOT,
                 Web.Endpoint.EXCHANGE_ROOT,
-                Web.Endpoint.CARD_REQUEST_ROOT
+                Web.Endpoint.CARD_ROOT,
+                Web.Endpoint.CARD_REQUEST_ROOT,
+                Web.Endpoint.LOAN_ROOT,
+                Web.Endpoint.ACCOUNT_ROOT
         );
 
         String suspectedUrl = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));

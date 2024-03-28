@@ -52,13 +52,13 @@ public class AccountController implements PageTitleConfig {
     }
 
 
-    @GetMapping(value = Web.Endpoint.ACCOUNT_ACTIVATE + "/{trunkId}")
+    @PostMapping(value = Web.Endpoint.ACCOUNT_ACTIVATE + "/{trunkId}")
     public String activateTrunk(@PathVariable Long trunkId, RedirectAttributes redirect) {
 
         accountFacadeService.activateTrunk(trunkId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Account successfully activated !");
 
-        return String.format("redirect:%s/%d", Web.Endpoint.CARD_ROOT , trunkId);
+        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNT_ROOT , trunkId);
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_DEACTIVATE + "/{trunkId}")
@@ -67,7 +67,7 @@ public class AccountController implements PageTitleConfig {
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Account successfully deactivated!");
         accountFacadeService.deactivateTrunk(trunkId);
 
-        return String.format("redirect:%s/%d", Web.Endpoint.CARD_ROOT , trunkId);
+        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNT_ROOT , trunkId);
     }
 
 

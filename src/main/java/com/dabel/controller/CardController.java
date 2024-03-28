@@ -54,7 +54,7 @@ public class CardController implements PageTitleConfig {
         return Web.View.CARD_DETAILS;
     }
 
-    @GetMapping(value = Web.Endpoint.CARD_ACTIVATE + "/{cardId}")
+    @PostMapping(value = Web.Endpoint.CARD_ACTIVATE + "/{cardId}")
     public String activateCard(@PathVariable Long cardId, RedirectAttributes redirect) {
 
         cardFacadeService.activateCard(cardId);

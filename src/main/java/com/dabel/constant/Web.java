@@ -83,7 +83,7 @@ public final class Web {
             interface Branches {
                 String SUB_MENU = "Branches";
                 String ROOT = "Branches List";
-                String ACCOUNTS = "Branch Accounts";
+                String ACCOUNTS = "Vaults/GL";
             }
         }
 

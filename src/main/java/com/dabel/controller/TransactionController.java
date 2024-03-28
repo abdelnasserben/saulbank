@@ -97,7 +97,7 @@ public class TransactionController implements PageTitleConfig {
         return "redirect:" + Web.Endpoint.TRANSACTION_INIT;
     }
 
-    @GetMapping(value = Web.Endpoint.TRANSACTION_APPROVE + "/{transactionId}")
+    @PostMapping(value = Web.Endpoint.TRANSACTION_APPROVE + "/{transactionId}")
     public String approveTransaction(@PathVariable Long transactionId, RedirectAttributes redirect) {
 
         transactionFacadeService.approve(transactionId);

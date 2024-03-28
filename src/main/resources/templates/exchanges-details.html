@@ -168,7 +168,7 @@
 									</div>
 									<!--end::Col-->
 
-									
+
 									<!--end::Col-->
 									<div class="col-sm-6">
 										<!--end::Label-->
@@ -277,12 +277,16 @@
 							<!--end::Item-->
 
 							<div th:unless="${exchange.status} != 'PENDING'">
-								<button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
-									data-bs-target="#kt_modal_reject_operation">
+								<button type="button"
+									class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
+									data-bs-target="#reject_operation">
 									Reject
 								</button>
-								<a th:href="@{/exchanges/approve/{id}(id=${exchange.exchangeId})}"
-									class="btn btn-sm btn-primary">Approve</a>
+								<button type="button"
+									data-bs-toggle="modal" data-bs-target="#approve_operation"
+									class="btn btn-sm btn-primary">
+									Approve
+								</button>
 							</div>
 
 						</div>
@@ -301,72 +305,13 @@
 <!--end::Content-->
 
 <!--begin::Modals-->
-<div class="modal fade" id="kt_modal_reject_operation" tabindex="-1" aria-hidden="true">
-	<!--begin::Modal dialog-->
-	<div class="modal-dialog modal-dialog-centered mw-650px">
-		<!--begin::Modal content-->
-		<div class="modal-content">
-			<!--begin::Modal header-->
-			<div class="modal-header">
-				<!--begin::Modal title-->
-				<h2>Reject Exchange</h2>
-				<!--end::Modal title-->
+<div
+    th:replace="~{fragments/confirmDialog(modalId='reject_operation', modalTitle='Reject Exchange', confirmReason=1, actionUrl=${'/exchanges/reject/' + exchange.exchangeId})}">
+    ...</div>
 
-				<!--begin::Close-->
-				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-					<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-					<span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-							viewBox="0 0 24 24" fill="none">
-							<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
-								transform="rotate(-45 6 17.3137)" fill="currentColor" />
-							<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
-								fill="currentColor" />
-						</svg></span>
-					<!--end::Svg Icon-->
-				</div>
-				<!--end::Close-->
-			</div>
-			<!--end::Modal header-->
-
-			<!--begin::Modal body-->
-			<div class="modal-body scroll-y mx-5 my-7">
-				<!--begin::Form-->
-				<form method="post" class="form"
-					th:action="@{/exchanges/reject/{id}(id=${exchange.exchangeId})}">
-
-					<!--begin::Input group-->
-					<div class="mx-5">
-
-						<div class="mb-4 fv-row">
-							<label class="required form-label">Reason</label>
-							<textarea name="rejectReason" class="form-control" rows="3"></textarea>
-						</div>
-
-					</div>
-					<!--end::Input group-->
-
-					<!--begin::Actions-->
-					<div class="text-center pt-15">
-						<button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
-							Discard
-						</button>
-
-						<button type="submit" class="btn btn-primary">
-							<span class="indicator-label">
-								Submit
-							</span>
-						</button>
-					</div>
-					<!--end::Actions-->
-				</form>
-				<!--end::Form-->
-			</div>
-			<!--end::Modal body-->
-		</div>
-		<!--end::Modal content-->
-	</div>
-	<!--end::Modal dialog-->
-</div>
+<div
+    th:replace="~{fragments/confirmDialog(modalId='approve_operation', modalTitle='Approve Exchange', actionUrl=${'/exchanges/approve/' + exchange.exchangeId})}">
+    ...</div>
 <!--end::Modals-->
 
 <div th:replace="~{fragments/footer}"></div>
