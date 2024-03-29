@@ -31,7 +31,7 @@ public class AccountController implements PageTitleConfig {
     @GetMapping(value = Web.Endpoint.ACCOUNT_ROOT)
     public String listingTrunks(Model model) {
 
-        List<TrunkDto> customerAccounts = accountFacadeService.findCustomerTrunks().stream()
+        List<TrunkDto> customerAccounts = accountFacadeService.findAllTrunks().stream()
                 .peek(trunkDto -> StatedObjectFormatter.format(trunkDto.getAccount()))
                 .toList();
 

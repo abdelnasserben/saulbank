@@ -3,6 +3,7 @@ package com.dabel.service.branch;
 import com.dabel.DBSetupForTests;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
+import com.dabel.dto.LedgerDto;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountService;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,5 +91,58 @@ class BranchFacadeServiceTest {
 
         //then
         assertThat(expected.getMessage()).isEqualTo("Branch not found");
+    }
+
+    @Test
+    void findAllVaultsByBranchId() {
+        //given
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("London")
+                .build(), new double[3]);
+
+        //when
+        BranchDto savedBranch = branchFacadeService.findAll().get(0);
+        List<AccountDto> expected = branchFacadeService.findAllVaultsByBranchId(savedBranch.getBranchId());
+
+        //then
+        assertThat(expected.size()).isEqualTo(3); //because branch have 3
+        assertThat(expected.get(0).getIsVault()).isEqualTo(1);
+        assertThat(expected.get(0).getBranch().getBranchName()).isEqualTo("HQ");
+    }
+
+    @Test
+    void findAllLedgersByBranchId() {
+        //given
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("London")
+                .build(), new double[3]);
+
+        //when
+        BranchDto savedBranch = branchFacadeService.findAll().get(0);
+        List<LedgerDto> expected = branchFacadeService.findAllLedgersByBranchId(savedBranch.getBranchId());
+
+        //then
+        assertThat(expected.size()).isEqualTo(5); //because branch have 5 ledgers
+        assertThat(expected.get(0).getBranch().getBranchName()).isEqualTo("HQ");
+    }
+
+    @Test
+    void findVaultByBranchIdAndCurrency() {
+        //given
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("London")
+                .build(), new double[3]);
+
+        //when
+        BranchDto savedBranch = branchFacadeService.findAll().get(0);
+        AccountDto expected = branchFacadeService.findVaultByBranchIdAndCurrency(savedBranch.getBranchId(), "KMF");
+
+        //then
+        assertThat(expected.getCurrency()).isEqualTo("KMF");
+        assertThat(expected.getIsVault()).isEqualTo(1);
+        assertThat(expected.getBranch().getBranchName()).isEqualTo("HQ");
     }
 }

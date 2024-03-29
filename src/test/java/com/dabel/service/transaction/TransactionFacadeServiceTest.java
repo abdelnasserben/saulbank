@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -403,5 +405,48 @@ class TransactionFacadeServiceTest {
 
         //then
         assertThat(expected.getMessage()).isEqualTo("Account balance is insufficient");
+    }
+
+    @Test
+    void shouldFindAllByAccount() {
+        //given
+        AccountDto receiverAccount = accountService.save(AccountDto.builder()
+                .accountName("Sarah Hunt")
+                .accountNumber("0987654321")
+                .currency(Currency.KMF.name())
+                .accountType(AccountType.SAVING.name())
+                .accountProfile(AccountProfile.PERSONAL.name())
+                .status(Status.ACTIVE.code())
+                .branch(transactionDto.getInitiatorAccount().getBranch())
+                .build());
+        transactionDto.setTransactionType(TransactionType.TRANSFER.name());
+        transactionDto.setReceiverAccount(receiverAccount);
+        transactionFacadeService.init(transactionDto);
+
+        //when
+        List<TransactionDto> expected = transactionFacadeService.findAllByAccount(receiverAccount);
+
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getTransactionType()).isEqualTo(TransactionType.TRANSFER.name());
+        assertThat(expected.get(0).getStatus()).isEqualTo(Status.PENDING.code());
+        assertThat(expected.get(0).getReceiverAccount().getAccountNumber()).isEqualTo("0987654321");
+    }
+
+    @Test
+    void shouldFindById() {
+        //given
+        createVault();
+        transactionDto.setTransactionType(TransactionType.DEPOSIT.name());
+        transactionFacadeService.init(transactionDto);
+
+        //when
+        TransactionDto expected = transactionFacadeService.findById(1L);
+
+        //then
+        assertThat(expected.getTransactionId()).isGreaterThan(0);
+        assertThat(expected.getTransactionType()).isEqualTo(TransactionType.DEPOSIT.name());
+        assertThat(expected.getStatus()).isEqualTo(Status.PENDING.code());
+        assertThat(expected.getReceiverAccount().getBalance()).isEqualTo(25000);
     }
 }
