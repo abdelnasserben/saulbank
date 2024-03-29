@@ -79,8 +79,8 @@
 							<input type="text" class="form-control" name="receiverAccountCurrency" value="KMF" disabled>
 						</div>
 						<div class="col col-md-4">
-							<input type="number" name="receiverAvalaibleBalance" class="form-control mb-2" placeholder="0.00"
-								disabled />
+							<input type="number" name="receiverAvalaibleBalance" class="form-control mb-2"
+								placeholder="0.00" disabled />
 						</div>
 					</div>
 				</div>
@@ -114,9 +114,8 @@
 							<select th:field="*{currency}" class="form-select mb-3"
 								th:classappend="${#fields.hasErrors('currency')} ? 'is-invalid' : ''"
 								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
-								<option value="KMF">KMF</option>
-								<option value="EUR">EUR</option>
-								<option value="USD">USD</option>
+								<option th:each="currency: ${@appSpEL.currencies}" th:text="${currency}"
+									th:value="${currency}">KMF</option>
 							</select>
 							<div class="invalid-feedback" th:errors="*{currency}"></div>
 						</div>

@@ -8154,7 +8154,6 @@ var KTOtherComponents = function () {
     var flatpickr;
     var stepper;
     var myDropzone;
-    var submitButtonIndicator;
 
     // Private functions
     // Init flatpickr
@@ -8193,19 +8192,6 @@ var KTOtherComponents = function () {
         });
     }
 
-    const initSubmitButtonIndicator = () => {
-        submitButtonIndicator = $("#kt_submit_button");
-
-        submitButtonIndicator.addEventListener("click", function () {
-            button.setAttribute("data-kt-indicator", "on");
-
-            // Disable indicator after 2 seconds
-            setTimeout(function () {
-                button.removeAttribute("data-kt-indicator");
-            }, 2000);
-        });
-    }
-
 
     // Public methods
     return {
@@ -8221,10 +8207,6 @@ var KTOtherComponents = function () {
 
             if (!myDropzone) {
                 initDropzone();
-            }
-
-            if (!submitButtonIndicator) {
-                initSubmitButtonIndicator();
             }
 
         }

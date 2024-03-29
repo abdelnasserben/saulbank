@@ -11,6 +11,6 @@ public class SaulBankApplication {
 	}
 
 }
-//continue account details and affiliation / activation and deactivation with confirm dialog
+//continue account manage affiliation
 //review services test
 //begin cheques futures implementation

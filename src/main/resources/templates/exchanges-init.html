@@ -38,9 +38,8 @@
 							<select th:field="*{purchaseCurrency}" class="form-select mb-3"
 								th:classappend="${#fields.hasErrors('purchaseCurrency')} ? 'is-invalid' : ''"
 								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
-								<option value="KMF">KMF</option>
-								<option value="EUR">EUR</option>
-								<option value="USD">USD</option>
+								<option th:each="currency: ${@appSpEL.currencies}" th:text="${currency}"
+									th:value="${currency}">KMF</option>
 							</select>
 							<div class="invalid-feedback" th:errors="*{purchaseCurrency}"></div>
 						</div>
@@ -63,9 +62,8 @@
 							<select th:field="*{saleCurrency}" class="form-select mb-3"
 								th:classappend="${#fields.hasErrors('saleCurrency')} ? 'is-invalid' : ''"
 								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
-								<option value="KMF">KMF</option>
-								<option value="EUR">EUR</option>
-								<option value="USD">USD</option>
+								<option th:each="currency: ${@appSpEL.currencies}" th:text="${currency}"
+									th:value="${currency}">KMF</option>
 							</select>
 							<div class="invalid-feedback" th:errors="*{saleCurrency}"></div>
 						</div>
