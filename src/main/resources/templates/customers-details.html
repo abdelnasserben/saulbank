@@ -256,13 +256,6 @@
 					<!--begin:::Tab item-->
 					<li class="nav-item">
 						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
-							data-bs-target="#kt_customer_payments">Payments</span>
-					</li>
-					<!--end:::Tab item-->
-
-					<!--begin:::Tab item-->
-					<li class="nav-item">
-						<span class="nav-link text-active-primary pb-4 me-5" data-bs-toggle="tab" type="button"
 							data-bs-target="#kt_customer_exchanges">Exchanges</span>
 					</li>
 					<!--end:::Tab item-->
@@ -1033,81 +1026,6 @@
 					<!--end::Card body-->
 				</div>
 				<!--end:::Transaction history-->
-			</div>
-			<!--end:::Tab pane-->
-
-			<!--begin:::Tab pane-->
-			<div class="tab-pane fade" id="kt_customer_payments" role="tabpanel">
-
-				<!--begin:::Payment history-->
-				<div class="card mb-5 mb-lg-10">
-					<!--begin::Card header-->
-					<div class="card-header">
-						<!--begin::Heading-->
-						<div class="card-title">
-							<h3>Payments</h3>
-						</div>
-						<!--end::Heading-->
-
-						<!--begin::Toolbar-->
-						<div class="card-toolbar">
-							<a href="#" class="btn btn-sm btn-light-primary my-1">
-								View More
-							</a>
-						</div>
-						<!--end::Toolbar-->
-					</div>
-					<!--end::Card header-->
-
-					<!--begin::Card body-->
-					<div class="card-body p-0">
-						<!--begin::Table wrapper-->
-						<div class="table-responsive">
-							<!--begin::Table-->
-							<table class="table align-middle table-row-dashed gy-4 gs-9">
-								<thead>
-									<tr class="text-start text-gray-700 fw-bolder fs-7 text-uppercase">
-										<th class="min-w-70px">Batch ID</th>
-										<th class="min-w-100px">Debit Account</th>
-										<th class="min-w-100px">Credit Account</th>
-										<th class="min-w-70px">Currency</th>
-										<th class="min-w-70px">Amount</th>
-										<th class="min-w-70px">Status</th>
-										<th class="min-w-100px">Date Effective</th>
-									</tr>
-								</thead>
-								<tbody class="fw-6 fw-bold text-gray-600">
-									<td th:if="${#lists.isEmpty(payments)}" class="text-center" colspan="7">No data
-										avalaible</td>
-									<tr th:each="payment: ${payments}">
-										<td>
-											<a th:text="${payment.paymentId}"
-												th:href="@{/transactions/payments/{id}(id=${payment.paymentId})}"
-												class="text-hover-primary text-gray-600">14330</a>
-										</td>
-										<td th:text="${payment.debitAccountNumber}">0071001997</td>
-										<td th:text="${payment.creditAccountNumber}">0071001997</td>
-										<td th:text="${payment.currency}">KMF</td>
-										<td th:text="${payment.amount}">65000</td>
-										<td class="pe-0">
-											<div th:text="${payment.status}"
-												th:class="${'badge badge-light-' + @appSpEL.statusColor(payment.status)}">
-												Failed</div>
-										</td>
-										<td th:text="${#temporals.format(payment.createdAt, 'yyyy-MM-dd HH:mm')}">
-											21/09/2023
-											15:56</td>
-									</tr>
-								</tbody>
-								<!--end::Tbody-->
-							</table>
-							<!--end::Table-->
-						</div>
-						<!--end::Table wrapper-->
-					</div>
-					<!--end::Card body-->
-				</div>
-				<!--end:::Payment history-->
 			</div>
 			<!--end:::Tab pane-->
 

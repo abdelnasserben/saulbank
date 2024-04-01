@@ -100,6 +100,12 @@ public class AccountService {
                 .toList();
     }
 
+    public List<TrunkDto> findAllTrunks(AccountDto accountDto) {
+        return trunkRepository.findAllByAccount(AccountMapper.toModel(accountDto)).stream()
+                .map(TrunkMapper::toDto)
+                .toList();
+    }
+
     public TrunkDto findTrunkById(Long trunkId) {
         return TrunkMapper.toDto(trunkRepository.findById(trunkId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found")));

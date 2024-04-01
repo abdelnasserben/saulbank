@@ -8233,7 +8233,7 @@ $("#selectBranchCode").change(function () {
 //Add new Customer: fill automatically the accountName input by firstName and lastName values
 var firstName = $("input[name = 'firstName']");
 var lastName = $("input[name = 'lastName']");
-$(firstName, lastName).change(function () {
+$(firstName,lastName).change(function () {
     $("input[name='accountName']").val(firstName.val() + " " + lastName.val());
 });
 
@@ -8244,5 +8244,13 @@ $('#transactionType').change(function() {
 
     if(selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
     else $('#receiverAccountSection').addClass('d-none');
+
+});
+
+$("#accountAffiliationInputAccountNumber").change(function() {
+    var accountNumber = $(this).val().trim().replace('/[^\w\s]/');
+
+    if (accountNumber != "")
+        location.replace('http://localhost:8080/accounts/affiliation?code=' + accountNumber);
 
 });

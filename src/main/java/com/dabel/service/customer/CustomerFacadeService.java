@@ -1,10 +1,7 @@
 package com.dabel.service.customer;
 
 import com.dabel.app.Helper;
-import com.dabel.constant.AccountMembership;
-import com.dabel.constant.AccountProfile;
-import com.dabel.constant.Currency;
-import com.dabel.constant.Status;
+import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
@@ -24,27 +21,29 @@ public class CustomerFacadeService {
         this.accountService = accountService;
     }
 
-    public void create(CustomerDto customerDTO, String accountType) {
+    public void create(CustomerDto customerDto, String accountName, AccountType accountType, AccountProfile accountProfile) {
 
-        if (customerDTO.getCustomerId() != null)
+        if (customerDto.getCustomerId() != null)
             return;
 
-        customerDTO.setStatus(Status.ACTIVE.code());
-        CustomerDto savedCustomer = customerService.save(customerDTO);
+        //TODO: save customer
+        customerDto.setStatus(Status.ACTIVE.code());
+        CustomerDto savedCustomer = customerService.save(customerDto);
 
-        //TODO: create trunk kmf
+        //TODO: define the membership and save trunk
+        String accountMembership = accountProfile.equals(AccountProfile.ASSOCIATIVE) ? AccountMembership.ASSOCIATED.name() : AccountMembership.OWNER.name();
         accountService.save(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(AccountDto.builder()
-                        .accountName(String.format("%s %s", savedCustomer.getFirstName(), savedCustomer.getLastName()))
+                        .accountName(accountName)
                         .accountNumber(Helper.generateAccountNumber())
-                        .accountType(accountType)
-                        .accountProfile(AccountProfile.PERSONAL.name())
+                        .accountType(accountType.name())
+                        .accountProfile(accountProfile.name())
                         .currency(Currency.KMF.name())
                         .branch(savedCustomer.getBranch())
                         .status(Status.ACTIVE.code())
                         .build())
-                .membership(AccountMembership.OWNER.name())
+                .membership(accountMembership)
                 .build());
     }
 
@@ -59,4 +58,5 @@ public class CustomerFacadeService {
     public CustomerDto findById(Long customerId) {
         return customerService.findById(customerId);
     }
+
 }

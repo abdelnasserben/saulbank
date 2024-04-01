@@ -1,9 +1,8 @@
-package com.dabel.component;
+package com.dabel.config;
 
-import com.dabel.constant.CardType;
-import com.dabel.constant.Country;
-import com.dabel.constant.Currency;
-import com.dabel.constant.Status;
+import com.dabel.constant.*;
+import com.dabel.dto.AccountDto;
+import com.dabel.dto.TrunkDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -36,5 +35,12 @@ public class AppSpEL {
         return Arrays.stream(CardType.values())
                 .map(Enum::name)
                 .toArray();
+    }
+
+    public boolean removableMember(TrunkDto trunkDto) {
+
+        return trunkDto.getAccount().getAccountProfile().equals(AccountProfile.ASSOCIATIVE.name())
+                || trunkDto.getAccount().getAccountProfile().equals(AccountProfile.JOINT.name())
+                && !trunkDto.getMembership().equals(AccountMembership.OWNER.name());
     }
 }

@@ -3,9 +3,7 @@ package com.dabel.controller;
 import com.dabel.app.Helper;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
-import com.dabel.constant.Status;
-import com.dabel.constant.TransactionType;
-import com.dabel.constant.Web;
+import com.dabel.constant.*;
 import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
@@ -64,7 +62,9 @@ public class CustomerController implements PageTitleConfig {
 
     @PostMapping(value = Web.Endpoint.CUSTOMER_ADD)
     public String addNewCustomer(Model model, @Valid CustomerDto customerDto,
-                                 @RequestParam(defaultValue = "Saving") String accountType,
+                                 @RequestParam String accountName,
+                                 @RequestParam AccountType accountType,
+                                 @RequestParam AccountProfile accountProfile,
                                  BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
@@ -77,7 +77,7 @@ public class CustomerController implements PageTitleConfig {
         BranchDto branchDto = branchFacadeService.findById(1L);
         customerDto.setBranch(branchDto);
 
-        customerFacadeService.create(customerDto, accountType);
+        customerFacadeService.create(customerDto, accountName, accountType, accountProfile);
 
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Customer added successfully !");
         return "redirect:" + Web.Endpoint.CUSTOMER_ADD;

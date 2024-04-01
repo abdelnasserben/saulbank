@@ -3,15 +3,14 @@ package com.dabel.controller;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
-import com.dabel.dto.CustomerDto;
+import com.dabel.dto.AccountDto;
 import com.dabel.dto.TrunkDto;
+import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -72,10 +71,32 @@ public class AccountController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION)
-    public String manageTrunkAffiliation(Model model, CustomerDto customerDto) {
+    public String manageTrunkAffiliation(Model model, @RequestParam(name = "code", required = false) String code) {
+
+        if(code != null) {
+            try {
+                AccountDto accountDto = accountFacadeService.findTrunkByNumber(code).getAccount();
+                List<TrunkDto> trunks = accountFacadeService.findAllTrunks(accountDto).stream()
+                        .peek(t -> StatedObjectFormatter.format(t.getAccount()))
+                        .peek(t -> StatedObjectFormatter.format(t.getCustomer()))
+                        .toList();
+
+                model.addAttribute("account", StatedObjectFormatter.format(accountDto));
+                model.addAttribute("trunks", trunks);
+            } catch (ResourceNotFoundException ex) {
+                model.addAttribute(Web.MessageTag.ERROR, "Account not found");
+            }
+        }
 
         configPageTitle(model, Web.Menu.Account.MANAGE_AFFILIATION);
         return Web.View.ACCOUNT_AFFILIATION;
+    }
+
+    @PostMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{trunkId}/" + "remove/" + "{customerIdentityNumber}")
+    @ResponseBody
+    public String manageTrunkAffiliation(Model model, @PathVariable Long trunkId, @PathVariable String customerIdentityNumber) {
+
+        return String.format("remove trunkId=%d for customer=%s", trunkId, customerIdentityNumber);
     }
 
 

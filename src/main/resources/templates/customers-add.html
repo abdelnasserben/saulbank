@@ -499,14 +499,13 @@
 
 										<!--begin::Input-->
 										<input type="text" name="accountName"
-											class="form-control form-control-solid mb-2" placeholder="John Doe"
-											readonly />
+											class="form-control form-control-solid mb-2" placeholder="John Doe"/>
 										<!--end::Input-->
 									</div>
 									<!--end::Input group-->
 
 									<!--begin::Input group-->
-									<div class="fv-row">
+									<div class="mb-10 fv-row">
 										<!--begin::Label-->
 										<label class="required form-label">Account type</label>
 										<!--end::Label-->
@@ -552,7 +551,7 @@
 												<span
 													class="form-check form-check-custom form-check-solid form-check-lg">
 													<input class="form-check-input" type="radio" name="accountType"
-														value="SAVING" checked/>
+														value="SAVING" checked />
 												</span>
 												<!--end:Input-->
 											</label>
@@ -611,6 +610,22 @@
 										<!--end:Options-->
 									</div>
 									<!--end::Input group-->
+
+									<!--begin::Input group-->
+									<div class="mb-10 fv-row">
+										<!--begin::Label-->
+										<label class="form-label required">Account Profile</label>
+										<!--end::Label-->
+
+										<!--begin::Input-->
+										<select name="accountProfile" class="form-select mb-3"
+											data-control="select2" data-hide-search="true">
+											<option value="PERSONAL">Personal</option>
+											<option value="ASSOCIATIVE">Association</option>
+										</select>
+										<!--end::Input-->
+									</div>
+									<!--end::Input group-->
 								</div>
 								<!--end::Card header-->
 							</div>
@@ -646,7 +661,8 @@
 											</div>
 										</div>
 										<!--end::Dropzone-->
-										<div class="text-muted fs-7">Upload here all about customer documents like contract and others.</div>
+										<div class="text-muted fs-7">Upload here all about customer documents like
+											contract and others.</div>
 									</div>
 								</div>
 							</div>

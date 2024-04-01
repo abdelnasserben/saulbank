@@ -1,6 +1,7 @@
 package com.dabel.service.customer;
 
 import com.dabel.DBSetupForTests;
+import com.dabel.constant.AccountProfile;
 import com.dabel.constant.AccountType;
 import com.dabel.constant.Status;
 import com.dabel.dto.BranchDto;
@@ -57,7 +58,7 @@ class CustomerFacadeServiceTest {
     void shouldCreateCustomerWithHisTrunk() {
         //given
         //when
-        customerFacadeService.create(getCustomerDto(), AccountType.SAVING.name());
+        customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
         TrunkDto expected = accountService.findTrunkByNumber(accountService.findAll().get(0).getAccountNumber());
 
         //then
@@ -68,7 +69,7 @@ class CustomerFacadeServiceTest {
     @Test
     void shouldFindAllCustomers() {
         //given
-        customerFacadeService.create(getCustomerDto(), AccountType.SAVING.name());
+        customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
 
         //when
         List<CustomerDto> expected = customerFacadeService.findAll();
@@ -81,7 +82,7 @@ class CustomerFacadeServiceTest {
     @Test
     void shouldFindCustomerByIdentityNumber() {
         //given
-        customerFacadeService.create(getCustomerDto(), AccountType.SAVING.name());
+        customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
 
         //when
         CustomerDto expected = customerFacadeService.findByIdentity("NBE46611");

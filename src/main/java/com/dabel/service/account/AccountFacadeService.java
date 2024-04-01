@@ -72,6 +72,10 @@ public class AccountFacadeService {
         return accountService.findAllTrunks(customerDto);
     }
 
+    public List<TrunkDto> findAllTrunks(AccountDto accountDto) {
+        return accountService.findAllTrunks(accountDto);
+    }
+
     public void activateTrunk(Long trunkId) {
         AccountDto accountDto = findTrunkById(trunkId).getAccount();
         if(Helper.isInactiveAccount(accountDto)) {
