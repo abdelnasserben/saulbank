@@ -5,7 +5,7 @@ import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
-import com.dabel.dto.LedgerDto;
+import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountOperationService;
 import com.dabel.service.branch.BranchFacadeService;
 import jakarta.validation.Valid;
@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Collections;
-import java.util.List;
 
 @Controller
 public class BranchController implements PageTitleConfig {
@@ -59,64 +56,47 @@ public class BranchController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.BRANCH_ACCOUNTS)
-    public String listBranchAccounts(Model model, @RequestParam(required = false) Long code) {
-
-        List< AccountDto> vaults = List.of(
-                AccountDto.builder().branch(new BranchDto()).build(),
-                AccountDto.builder().branch(new BranchDto()).build(),
-                AccountDto.builder().branch(new BranchDto()).build()
-        );
-        List<LedgerDto> ledgers = Collections.emptyList();
+    public String listBranchAccounts(Model model, @RequestParam(name="code", required = false) Long code) {
 
         if(code != null) {
-            vaults = branchFacadeService.findAllVaultsByBranchId(code);
-            ledgers = branchFacadeService.findAllLedgersByBranchId(code);
+            try {
+                BranchDto branchDto = branchFacadeService.findById(code);
+                model.addAttribute("branch", StatedObjectFormatter.format(branchDto));
+                model.addAttribute("vaults", branchFacadeService.findAllVaultsByBranchId(branchDto.getBranchId()));
+                model.addAttribute("ledgers", branchFacadeService.findAllLedgersByBranchId(branchDto.getBranchId()));
+            } catch (ResourceNotFoundException ex) {
+                model.addAttribute(Web.MessageTag.ERROR, "Branch not found");
+            }
         }
 
-        return configAttributesAndRedirectToBranchAccounts(model, vaults, ledgers);
+        configPageTitle(model, Web.Menu.Bank.Branches.ACCOUNTS);
+        return Web.View.BRANCH_ACCOUNTS;
     }
 
     @PostMapping(value = Web.Endpoint.BRANCH_ACCOUNTS)
-    public String adjustVault(Model model, @RequestParam(required = false) Long code,
+    public String adjustVault(Model model, @RequestParam Long code,
                               @RequestParam(required = false) String currency,
                               @RequestParam(required = false, defaultValue = "0") double amount,
-                              @RequestParam(required = false) String operationType) {
+                              @RequestParam(required = false) String operationType,
+                              RedirectAttributes redirect) {
 
-        List< AccountDto> vaults = List.of(
-                AccountDto.builder().branch(new BranchDto()).build(),
-                AccountDto.builder().branch(new BranchDto()).build(),
-                AccountDto.builder().branch(new BranchDto()).build()
-        );
-        List<LedgerDto> ledgers = Collections.emptyList();
+        BranchDto branchDto = branchFacadeService.findById(code);
 
         if(amount <= 0) {
-            model.addAttribute(Web.MessageTag.ERROR, "Amount must be positive !");
-            return configAttributesAndRedirectToBranchAccounts(model, vaults, ledgers);
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Amount must be positive !");
+        } else {
+            //TODO: find branch and his vault by currency
+            AccountDto vault = branchFacadeService.findVaultByBranchIdAndCurrency(branchDto.getBranchId(), currency);
+
+            //TODO: make the operation
+            if(operationType.equalsIgnoreCase("debit"))
+                accountOperationService.debit(vault, amount);
+            else accountOperationService.credit(vault, amount);
+
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful adjustment");
         }
 
-        //TODO: find vault by branch and currency
-        AccountDto vault = branchFacadeService.findVaultByBranchIdAndCurrency(code, currency);
-
-        //TODO: make the operation
-        if(operationType.equalsIgnoreCase("debit"))
-            accountOperationService.debit(vault, amount);
-        else accountOperationService.credit(vault, amount);
-
-        //TODO: retrieve info
-        vaults = branchFacadeService.findAllVaultsByBranchId(code);
-        ledgers = branchFacadeService.findAllLedgersByBranchId(code);
-
-        return configAttributesAndRedirectToBranchAccounts(model, vaults, ledgers);
-    }
-
-    private String configAttributesAndRedirectToBranchAccounts(Model model, List<AccountDto> vaults, List<LedgerDto> ledgers) {
-        configPageTitle(model, Web.Menu.Bank.Branches.ACCOUNTS);
-
-        model.addAttribute("branches", branchFacadeService.findAll());
-        model.addAttribute("vaults", vaults);
-        model.addAttribute("ledgers", ledgers);
-
-        return Web.View.BRANCH_ACCOUNTS;
+        return String.format("redirect:%s?code=%d", Web.Endpoint.BRANCH_ACCOUNTS, code);
     }
 
     private void listingAndConfigTitle(Model model) {

@@ -8,15 +8,41 @@
 		<div th:replace="~{fragments/success-error-alert}"></div>
 
 		<div class="col-md-2 mb-4">
-			<label class="form-label">Branch:</label>
-			<select data-control="select2" data-hide-search="true" id="selectBranchCode" class="form-select mb-2">
-				<option value="All">-- Select branch--</option>
-				<option th:each="branch: ${branches}" th:text="${branch.branchId + ' - ' + branch.branchName}"
-					th:value="${branch.branchId}" th:selected="${param.code == branch.branchId}">Branch Name</option>
-			</select>
+			<label class="form-label">Branch Code:</label>
+			<input type="text" id="selectBranchCode" class="form-control form-control-sm" placeholder="Branch code"
+				name="code" th:value="${param.code}">
 		</div>
 
-		<div th:unless="${param.code == null}">
+		<div th:unless="${branch == null}">
+			<div class="card card-flush mb-5 mb-xl-10">
+				<div class="card-body pt-0">
+					<div class="table-responsive">
+						<table class="table align-middle table-row-dashed gy-4 gs-9">
+							<thead>
+								<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+									<th class="min-w-25px">Branch ID</th>
+									<th class="min-w-70px">Branch Name</th>
+									<th class="min-w-90px">Branch Address</th>
+									<th class="min-w-50px">Status</th>
+								</tr>
+							</thead>
+							<tbody class="fw-6 fw-bold text-gray-600">
+								<tr>
+									<td th:text="${branch.branchId}">1202</td>
+									<td th:text="${branch.branchName}">HQ</td>
+									<td th:text="${branch.branchAddress}">Moroni, Place de la France</td>
+									<td><span th:text="${branch.status}"
+											th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(branch.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+									</td>
+								</tr>
+							</tbody>
+							<!--end::Tbody-->
+						</table>
+						<!--end::Table-->
+					</div>
+				</div>
+			</div>
+
 			<!--begin::Vaults-->
 			<div class="row gx-6 gx-xl-9">
 				<div class="col-lg-6 col-xxl-4 mb-2">
