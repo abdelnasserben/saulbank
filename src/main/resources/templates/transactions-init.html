@@ -39,20 +39,20 @@
 				<div class="col-lg-10">
 					<div class="row mb-3">
 						<div class="col-md-5">
-							<input type="text" name="initiatorAccountNumber" class="form-control mb-2"
+							<input type="text" id="transactionInputInitiatorAccountNumber" name="initiatorAccountNumber" class="form-control mb-2"
 								placeholder="Account number" />
 						</div>
 						<div class="col-md-5">
-							<input type="text" name="accountFullName" class="form-control mb-2"
+							<input type="text" id="transactionInputInitiatorAccountName" name="accountFullName" class="form-control mb-2"
 								placeholder="Account name unkown" disabled />
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-1">
-							<input type="text" class="form-control" name="accountCurrency" value="KMF" disabled>
+							<input type="text" class="form-control" id="transactionInputInitiatorAccountCurrency" name="accountCurrency" value="KMF" disabled>
 						</div>
 						<div class="col col-md-4">
-							<input type="number" name="avalaibleBalance" class="form-control mb-2" placeholder="0.00"
+							<input type="number" id="transactionInputInitiatorAccountBalance" name="avalaibleBalance" class="form-control mb-2" placeholder="0.00"
 								disabled />
 							<div class="text-muted fs-7">Avalaible balance</div>
 						</div>
@@ -60,33 +60,7 @@
 				</div>
 			</div>
 
-			<div id="receiverAccountSection" class="d-none row mb-7">
-				<label class="col-lg-2 col-form-label required fw-bold fs-6">Receiver
-					Account</label>
-				<div class="col-lg-10">
-					<div class="row mb-3">
-						<div class="col-md-5">
-							<input type="text" name="receiverAccountNumber" value="" class="form-control mb-2"
-								placeholder="Account number" />
-						</div>
-						<div class="col-md-5">
-							<input type="text" name="receiverAccountFullName" class="form-control mb-2"
-								placeholder="Account name unkown" disabled />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-1">
-							<input type="text" class="form-control" name="receiverAccountCurrency" value="KMF" disabled>
-						</div>
-						<div class="col col-md-4">
-							<input type="number" name="receiverAvalaibleBalance" class="form-control mb-2"
-								placeholder="0.00" disabled />
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row mb-4">
+			<div class="row mb-7">
 				<label class="col-lg-2 col-form-label required fw-bold fs-6">Customer</label>
 				<div class="col-lg-10">
 					<div class="row">
@@ -101,6 +75,32 @@
 								th:classappend="${#fields.hasErrors('customerFullName')} ? 'is-invalid' : ''"
 								placeholder="Full name" />
 							<div class="invalid-feedback" th:errors="*{customerFullName}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="receiverAccountSection" class="d-none row mb-7">
+				<label class="col-lg-2 col-form-label required fw-bold fs-6">Receiver
+					Account</label>
+				<div class="col-lg-10">
+					<div class="row mb-3">
+						<div class="col-md-5">
+							<input type="text" id="transactionInputReceiverAccountNumber" name="receiverAccountNumber" value="" class="form-control mb-2"
+								placeholder="Account number" />
+						</div>
+						<div class="col-md-5">
+							<input type="text" id="transactionInputReceiverAccountName" name="receiverAccountFullName" class="form-control mb-2"
+								placeholder="Account name unkown" disabled />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-1">
+							<input type="text" class="form-control" name="receiverAccountCurrency" value="KMF" disabled>
+						</div>
+						<div class="col col-md-4">
+							<input type="number" id="transactionInputReceiverAccountBalance" name="receiverAvalaibleBalance" class="form-control mb-2"
+								placeholder="0.00" disabled />
 						</div>
 					</div>
 				</div>

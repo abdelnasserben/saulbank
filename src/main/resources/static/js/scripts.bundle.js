@@ -8254,3 +8254,31 @@ $("#accountAffiliationInputAccountNumber").change(function() {
         location.replace('http://localhost:8080/accounts/affiliation?code=' + accountNumber);
 
 });
+
+$("#transactionInputInitiatorAccountNumber").change(function() {
+    $.ajax({
+        url: "http://localhost:8080/rest/account/" + $(this).val()
+    })
+    .done(function(data) {
+       $('#transactionInputInitiatorAccountName').val(data.accountName);
+       $('#transactionInputInitiatorAccountBalance').val(parseInt(data.balance));
+    })
+    .fail(function() {
+        $('#transactionInputInitiatorAccountName').val("");
+       $('#transactionInputInitiatorAccountBalance').val("");
+    });
+});
+
+$("#transactionInputReceiverAccountNumber").change(function() {
+    $.ajax({
+        url: "http://localhost:8080/rest/account/" + $(this).val()
+    })
+    .done(function(data) {
+       $('#transactionInputReceiverAccountName').val(data.accountName);
+       $('#transactionInputReceiverAccountBalance').val(parseInt(data.balance));
+    })
+    .fail(function() {
+        $('#transactionInputReceiverAccountName').val("");
+       $('#transactionInputReceiverAccountBalance').val("");
+    });
+});
