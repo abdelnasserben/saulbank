@@ -1368,7 +1368,7 @@
 											class="form-select form-select-solid form-select-lg fw-bold"
 											data-control="select2" data-placeholder="Nationality"
 											data-allow-clear="true">
-
+											<option value=""></option>
 											<option th:each="country: ${@appSpEL.countries}" th:text="${country}"
 												th:value="${country}" th:selected="${customer.nationality == country}">
 												Comoros</option>
@@ -1474,7 +1474,7 @@
 								<!--begin::Input group-->
 								<div class="row mb-6">
 									<!--begin::Label-->
-									<label class="col-lg-4 col-form-label required fw-bold fs-6">Nationality</label>
+									<label class="col-lg-4 col-form-label required fw-bold fs-6">Phone</label>
 									<!--end::Label-->
 
 									<!--begin::Col-->
@@ -1502,10 +1502,10 @@
 													class="form-select form-select-solid form-select-lg fw-bold"
 													data-control="select2" data-placeholder="Residence"
 													data-allow-clear="true">
-
+													<option value=""></option>
 													<option th:each="country: ${@appSpEL.countries}"
 														th:text="${country}" th:value="${country}"
-														th:selected="${customer.nationality == country}">Comoros
+														th:selected="${customer.residence == country}">Comoros
 													</option>
 												</select>
 											</div>

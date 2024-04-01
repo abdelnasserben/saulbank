@@ -125,12 +125,6 @@ public class CustomerController implements PageTitleConfig {
                 .anyMatch(c -> c.getStatus().equals(Status.ACTIVE.code()));
 
 
-//        List<PaymentDTO> lastTenCustomerPayments = paymentFacadeService.findAllByCustomerId(customerId).stream()
-//                .limit(10)
-//                .toList();
-//
-
-
         configPageTitle(model, "Customer Details");
         model.addAttribute("customer", StatedObjectFormatter.format(customerDto));
         model.addAttribute("trunks", customerAccounts);
@@ -144,6 +138,19 @@ public class CustomerController implements PageTitleConfig {
         model.addAttribute("totalLoan", totalLoan);
 
         return Web.View.CUSTOMER_DETAILS;
+    }
+
+    @PostMapping(value = Web.Endpoint.CUSTOMER_ROOT+ "/{customerId}")
+    public String updateCustomerGeneralInfo(@Valid CustomerDto customerDto, BindingResult binding, RedirectAttributes redirect) {
+
+        if(binding.hasErrors())
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid information !");
+        else {
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Customer information updated successfully !");
+            customerFacadeService.update(customerDto);
+        }
+
+        return String.format("redirect:%s/%d", Web.Endpoint.CUSTOMER_ROOT, customerDto.getCustomerId());
     }
 
     @Override

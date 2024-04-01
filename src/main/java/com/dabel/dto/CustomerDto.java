@@ -1,5 +1,6 @@
 package com.dabel.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,9 +16,9 @@ import java.time.LocalDate;
 public class CustomerDto extends BasicDto {
 
     private Long customerId;
-    @NotEmpty
+    @NotBlank
     private String firstName;
-    @NotEmpty
+    @NotBlank
     private String lastName;
     private String gender;
     private String identityNumber;

@@ -59,4 +59,8 @@ public class CustomerFacadeService {
         return customerService.findById(customerId);
     }
 
+    public void update(CustomerDto customerDto) {
+        customerDto.setStatus(Status.codeOf(customerDto.getStatus()));
+        customerService.save(customerDto);
+    }
 }
