@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.stream.IntStream;
 
-public class CardExpirationDateUtils {
+public final class CardExpirationDateUtils {
 
     public static int[] getMonths() {
         return IntStream.rangeClosed(1, 12).toArray();

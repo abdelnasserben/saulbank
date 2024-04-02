@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @ControllerAdvice
-public class CustomExceptionHandler {
+public final class CustomExceptionHandler {
 
     @ExceptionHandler(value = {BalanceInsufficientException.class, IllegalOperationException.class,})
     public String basicHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {

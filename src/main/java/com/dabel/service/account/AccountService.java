@@ -116,4 +116,8 @@ public class AccountService {
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
         return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account));
     }
+
+    public void deleteTrunk(TrunkDto trunkDto) {
+        trunkRepository.delete(TrunkMapper.toModel(trunkDto));
+    }
 }

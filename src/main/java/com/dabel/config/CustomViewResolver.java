@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 //@Component
-public class CustomViewResolver /*implements ErrorViewResolver*/ {
+public final class CustomViewResolver /*implements ErrorViewResolver*/ {
 //    @Override
 //    public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
 //        if(status == HttpStatus.NOT_FOUND || status == HttpStatus.FORBIDDEN)

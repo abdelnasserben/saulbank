@@ -21,9 +21,7 @@ class AppSpELTest {
                 .membership(AccountMembership.JOINTED.name())
                 .build();
 
-        AppSpEL appSpEL = new AppSpEL();
-
-        assertTrue(appSpEL.removableMember(trunkDto));
+        assertTrue(AppSpEL.removableMember(trunkDto));
     }
 
     @Test
@@ -36,9 +34,7 @@ class AppSpELTest {
                 .membership(AccountMembership.OWNER.name())
                 .build();
 
-        AppSpEL appSpEL = new AppSpEL();
-
-        assertFalse(appSpEL.removableMember(trunkDto));
+        assertFalse(AppSpEL.removableMember(trunkDto));
     }
 
     @Test
@@ -51,9 +47,7 @@ class AppSpELTest {
                 .membership(AccountMembership.ASSOCIATED.name())
                 .build();
 
-        AppSpEL appSpEL = new AppSpEL();
-
-        assertTrue(appSpEL.removableMember(trunkDto));
+        assertTrue(AppSpEL.removableMember(trunkDto));
     }
 
     @Test
@@ -66,8 +60,6 @@ class AppSpELTest {
                 .membership(AccountMembership.OWNER.name())
                 .build();
 
-        AppSpEL appSpEL = new AppSpEL();
-
-        assertFalse(appSpEL.removableMember(trunkDto));
+        assertFalse(AppSpEL.removableMember(trunkDto));
     }
 }

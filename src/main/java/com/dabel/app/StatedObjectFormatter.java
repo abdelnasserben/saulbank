@@ -5,7 +5,7 @@ import com.dabel.dto.StatedObject;
 
 import java.util.List;
 
-public class StatedObjectFormatter {
+public final class StatedObjectFormatter {
     public static <T extends StatedObject> T format(T t) {
         t.setStatus(Status.nameOf(t.getStatus()));
         return t;

@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class AppSpEL {
+public final class AppSpEL {
 
-    public String statusColor(String status) {
+    public static String statusColor(String status) {
 
         if(status.equals(Status.PENDING.name()))
             return "warning";
@@ -19,25 +19,25 @@ public class AppSpEL {
         return List.of(Status.ACTIVE.name(), Status.APPROVED.name()).contains(status) ? "success" : "danger";
     }
 
-    public Object[] countries() {
+    public static Object[] countries() {
         return Arrays.stream(Country.values())
                 .map(Country::getName)
                 .toArray();
     }
 
-    public Object[] currencies() {
+    public static Object[] currencies() {
         return Arrays.stream(Currency.values())
                 .map(Enum::name)
                 .toArray();
     }
 
-    public Object[] cardTypes() {
+    public static Object[] cardTypes() {
         return Arrays.stream(CardType.values())
                 .map(Enum::name)
                 .toArray();
     }
 
-    public boolean removableMember(TrunkDto trunkDto) {
+    public static boolean removableMember(TrunkDto trunkDto) {
 
         return trunkDto.getAccount().getAccountProfile().equals(AccountProfile.ASSOCIATIVE.name())
                 || trunkDto.getAccount().getAccountProfile().equals(AccountProfile.JOINT.name())
