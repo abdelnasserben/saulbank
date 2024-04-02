@@ -1,6 +1,7 @@
 package com.dabel.controller;
 
 import com.dabel.app.CurrencyExchanger;
+import com.dabel.constant.BankFees;
 import com.dabel.constant.Currency;
 import com.dabel.dto.AccountDto;
 import com.dabel.service.account.AccountFacadeService;
@@ -24,9 +25,21 @@ public class AppRestController {
         return ResponseEntity.ok(accountFacadeService.findByNumber(accountNumber));
     }
 
-    @GetMapping("/rest/baseCurrencyConversion/" + "{currency}-{amount}")
-    public ResponseEntity<double[]> getBaseCurrencyConversion(@PathVariable Currency currency, @PathVariable double amount) {
+    @GetMapping("/rest/baseCurrencyInfo/" + "{currency1}-{currency2}-{amount}")
+    public ResponseEntity<double[]> getCurrencyConversionBase(@PathVariable Currency currency1, @PathVariable Currency currency2, @PathVariable double amount) {
 
-        return ResponseEntity.ok(CurrencyExchanger.getBaseConversion(currency.name(), Currency.KMF.name(), amount));
+        if(currency1.equals(currency2))
+            return ResponseEntity.badRequest().build();
+
+        double conversionRate =  switch (CurrencyExchanger.getExchangeType(currency1.name(), currency2.name())) {
+            case EUR_KMF -> BankFees.Exchange.BUY_EUR;
+            case KMF_EUR -> BankFees.Exchange.SALE_EUR;
+            case USD_KMF -> BankFees.Exchange.BUY_USD;
+            case KMF_USD -> BankFees.Exchange.SALE_USD;
+        };
+
+        double conversionAmount = CurrencyExchanger.exchange(currency1.name(), currency2.name(), amount);
+
+        return ResponseEntity.ok(new double[]{conversionRate, conversionAmount});
     }
 }

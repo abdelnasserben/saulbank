@@ -53,19 +53,4 @@ public final class CurrencyExchanger {
 
         return ExchangeType.USD_KMF;
     }
-
-    public static double[] getBaseConversion(String currency1, String currency2, double amount) {
-
-        double conversionRate =  switch (getExchangeType(currency1, currency2)) {
-            case EUR_KMF -> BankFees.Exchange.BUY_EUR;
-            case KMF_EUR -> BankFees.Exchange.SALE_EUR;
-            case USD_KMF -> BankFees.Exchange.BUY_USD;
-            case KMF_USD -> BankFees.Exchange.SALE_USD;
-        };
-
-        double conversionAmount = exchange(currency1, currency2, amount);
-
-        return new double[]{conversionRate, conversionAmount};
-    }
-
 }

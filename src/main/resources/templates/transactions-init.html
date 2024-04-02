@@ -39,20 +39,20 @@
 				<div class="col-lg-10">
 					<div class="row mb-3">
 						<div class="col-md-5">
-							<input type="text" id="transactionInputInitiatorAccountNumber" name="initiatorAccountNumber" class="form-control mb-2"
+							<input type="text" id="transactionInitiatorAccountNumber" name="initiatorAccountNumber" class="form-control mb-2"
 								placeholder="Account number" />
 						</div>
 						<div class="col-md-5">
-							<input type="text" id="transactionInputInitiatorAccountName" name="accountFullName" class="form-control mb-2"
+							<input type="text" id="transactionInitiatorAccountName" name="accountFullName" class="form-control mb-2"
 								placeholder="Account name unkown" disabled />
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-1">
-							<input type="text" class="form-control" id="transactionInputInitiatorAccountCurrency" name="accountCurrency" value="KMF" disabled>
+							<input type="text" class="form-control" id="transactionInitiatorAccountCurrency" name="accountCurrency" value="KMF" disabled>
 						</div>
 						<div class="col col-md-4">
-							<input type="number" id="transactionInputInitiatorAccountBalance" name="avalaibleBalance" class="form-control mb-2" placeholder="0.00"
+							<input type="number" id="transactionInitiatorAccountBalance" name="avalaibleBalance" class="form-control mb-2" placeholder="0.0"
 								disabled />
 							<div class="text-muted fs-7">Avalaible balance</div>
 						</div>
@@ -86,11 +86,11 @@
 				<div class="col-lg-10">
 					<div class="row mb-3">
 						<div class="col-md-5">
-							<input type="text" id="transactionInputReceiverAccountNumber" name="receiverAccountNumber" value="" class="form-control mb-2"
+							<input type="text" id="transactionReceiverAccountNumber" name="receiverAccountNumber" value="" class="form-control mb-2"
 								placeholder="Account number" />
 						</div>
 						<div class="col-md-5">
-							<input type="text" id="transactionInputReceiverAccountName" name="receiverAccountFullName" class="form-control mb-2"
+							<input type="text" id="transactionReceiverAccountName" name="receiverAccountFullName" class="form-control mb-2"
 								placeholder="Account name unkown" disabled />
 						</div>
 					</div>
@@ -99,8 +99,8 @@
 							<input type="text" class="form-control" name="receiverAccountCurrency" value="KMF" disabled>
 						</div>
 						<div class="col col-md-4">
-							<input type="number" id="transactionInputReceiverAccountBalance" name="receiverAvalaibleBalance" class="form-control mb-2"
-								placeholder="0.00" disabled />
+							<input type="number" id="transactionReceiverAccountBalance" name="receiverAvalaibleBalance" class="form-control mb-2"
+								placeholder="0.0" disabled />
 						</div>
 					</div>
 				</div>
@@ -113,7 +113,7 @@
 						<div class="col-auto">
 							<select th:field="*{currency}" class="form-select mb-3"
 								th:classappend="${#fields.hasErrors('currency')} ? 'is-invalid' : ''"
-								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option" id="transactionCurrency">
 								<option th:each="currency: ${@appSpEL.currencies}" th:text="${currency}"
 									th:value="${currency}">KMF</option>
 							</select>
@@ -122,7 +122,7 @@
 						<div class="col col-md-4">
 							<input type="number" th:field="*{amount}" class="form-control mb-2"
 								th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid' : ''" step=".01"
-								placeholder="0.00" />
+								placeholder="0.00" id="transactionAmount"/>
 							<div class="invalid-feedback" th:errors="*{amount}">
 							</div>
 						</div>
@@ -136,14 +136,14 @@
 				<div class="col-lg-10">
 					<div class="row">
 						<div class="col-1">
-							<input type="text" class="form-control" name="accountCurrency" value="KMF" disabled>
+							<input type="text" class="form-control" id="transactionBaseCurrency" value="KMF" disabled>
 						</div>
 						<div class="col col-md-4">
-							<input type="number" name="baseAmountEquivalent" class="form-control mb-2" step=".01"
-								placeholder="0.00" disabled />
+							<input type="number" id="transactionBaseTotalAmount" class="form-control mb-2"
+								value="0.0" disabled />
 						</div>
 						<div class="col col-md-auto">
-							<input type="number" name="baseAmountEquivalent" class="form-control mb-2" disabled />
+							<input type="number" id="conversionRate" class="form-control mb-2" value="0.0" disabled />
 							<div class="text-muted fs-7">Conversion rate</div>
 						</div>
 					</div>

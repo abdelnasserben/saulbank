@@ -37,7 +37,8 @@
 						<div class="col-auto">
 							<select th:field="*{purchaseCurrency}" class="form-select mb-3"
 								th:classappend="${#fields.hasErrors('purchaseCurrency')} ? 'is-invalid' : ''"
-								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option"
+								id="purchaseCurrency">
 								<option th:each="currency: ${@appSpEL.currencies}" th:text="${currency}"
 									th:value="${currency}">KMF</option>
 							</select>
@@ -46,7 +47,7 @@
 						<div class="col col-md-4">
 							<input type="number" th:field="*{purchaseAmount}" class="form-control mb-2"
 								th:classappend="${#fields.hasErrors('purchaseAmount')} ? 'is-invalid' : ''" step=".01"
-								placeholder="0.00" />
+								placeholder="0.00" id="purchaseAmount" />
 							<div class="invalid-feedback" th:errors="*{purchaseAmount}">
 							</div>
 						</div>
@@ -61,18 +62,18 @@
 						<div class="col-auto">
 							<select th:field="*{saleCurrency}" class="form-select mb-3"
 								th:classappend="${#fields.hasErrors('saleCurrency')} ? 'is-invalid' : ''"
-								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option"
+								id="saleCurrency">
 								<option th:each="currency: ${@appSpEL.currencies}" th:text="${currency}"
 									th:value="${currency}">KMF</option>
 							</select>
 							<div class="invalid-feedback" th:errors="*{saleCurrency}"></div>
 						</div>
 						<div class="col col-md-4">
-							<input type="number" name="saleAmount" class="form-control mb-2" step=".01"
-								placeholder="0.00" disabled />
+							<input type="number" id="saleAmount" class="form-control mb-2" value="0.0" disabled />
 						</div>
 						<div class="col col-md-auto">
-							<input type="number" name="conversionRate" class="form-control mb-2" disabled />
+							<input type="number" id="conversionRate" value="0.0" class="form-control mb-2" disabled />
 							<div class="text-muted fs-7">Conversion rate</div>
 						</div>
 					</div>

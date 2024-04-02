@@ -8219,66 +8219,96 @@ KTUtil.onDOMContentLoaded(function () {
 });
 
 
-// **** Custom Sample Scripts *******
+// **** Own Scripts *******
 
-//Branch accounts adjustments: redirect url to selected branch code
-$("#selectBranchCode").change(function () {
-    var selectedValue = $(this).val();
+// --- Functions definition ---
 
-    if (selectedValue > 0) {
-        location.replace('http://localhost:8080/branches/accounts?code=' + selectedValue);
-    }
-})
-
-//Add new Customer: fill automatically the accountName input by firstName and lastName values
-var firstName = $("input[name = 'firstName']");
-var lastName = $("input[name = 'lastName']");
-$(firstName,lastName).change(function () {
-    $("input[name='accountName']").val(firstName.val() + " " + lastName.val());
-});
-
-//Transaction init: when type of transaction change
-$('#transactionType').change(function() {
- 
-    var selectedValue = $(this).val();
-
-    if(selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
-    else $('#receiverAccountSection').addClass('d-none');
-
-});
-
-$("#accountAffiliationInputAccountNumber").change(function() {
-    var accountNumber = $(this).val().trim().replace('/[^\w\s]/');
-
-    if (accountNumber != "")
-        location.replace('http://localhost:8080/accounts/affiliation?code=' + accountNumber);
-
-});
-
-$("#transactionInputInitiatorAccountNumber").change(function() {
-    $.ajax({
-        url: "http://localhost:8080/rest/account/" + $(this).val()
-    })
-    .done(function(data) {
-       $('#transactionInputInitiatorAccountName').val(data.accountName);
-       $('#transactionInputInitiatorAccountBalance').val(parseInt(data.balance));
-    })
-    .fail(function() {
-        $('#transactionInputInitiatorAccountName').val("");
-       $('#transactionInputInitiatorAccountBalance').val("");
+function ajaxAccountInfo(inputNumber, inputName, inputBalance) {
+    $(inputNumber).change(function () {
+        $.ajax({
+            url: "http://localhost:8080/rest/account/" + $(this).val()
+        })
+            .done(function (data) {
+                $(inputName).val(data.accountName);
+                $(inputBalance).val(parseFloat(data.balance));
+            })
+            .fail(function () {
+                $(inputName).val("");
+                $(inputBalance).val("0.0");
+            });
     });
-});
+}
 
-$("#transactionInputReceiverAccountNumber").change(function() {
-    $.ajax({
-        url: "http://localhost:8080/rest/account/" + $(this).val()
-    })
-    .done(function(data) {
-       $('#transactionInputReceiverAccountName').val(data.accountName);
-       $('#transactionInputReceiverAccountBalance').val(parseInt(data.balance));
-    })
-    .fail(function() {
-        $('#transactionInputReceiverAccountName').val("");
-       $('#transactionInputReceiverAccountBalance').val("");
+function ajaxBaseCurrency(inputCurrency1, inputCurrency2, inputAmount, inputConversionRate, inputBaseTotalAmount) {
+    $(inputCurrency1).add(inputCurrency2).add(inputAmount).change(function () {
+
+        $.ajax({
+            url: "http://localhost:8080/rest/baseCurrencyInfo/" + $(inputCurrency1).val() + '-' + $(inputCurrency2).val() + '-' + $(inputAmount).val()
+        })
+            .done(function (data) {
+                $(inputConversionRate).val(parseFloat(data[0]));
+                $(inputBaseTotalAmount).val(parseFloat(data[1]));
+            })
+            .fail(function () {
+                $(inputConversionRate).val("0.0");
+                $(inputBaseTotalAmount).val("0.0");
+            });
     });
-});
+}
+
+// --- All Page scripts ---
+
+//Branch Vaults/GL Page:
+let selectBranchCode = $("#selectBranchCode")
+if (selectBranchCode) {
+    $("#selectBranchCode").change(function () {
+        var selectedValue = $(this).val();
+
+        if (selectedValue > 0) {
+            location.replace('http://localhost:8080/branches/accounts?code=' + selectedValue);
+        }
+    })
+}
+
+//Add New Customer Page:
+let firstName = $("input[name = 'firstName']");
+let lastName = $("input[name = 'lastName']");
+
+if (firstName && lastName) {
+    $(firstName).add(lastName).change(function () {
+        $("input[name='accountName']").val(firstName.val() + " " + lastName.val());
+    });
+}
+
+//Transaction Init Page:
+let transactionType = $("#transactionType")
+if (transactionType) {
+    $(transactionType).change(function () {
+
+        var selectedValue = $(this).val();
+
+        if (selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
+        else $('#receiverAccountSection').addClass('d-none');
+
+    });
+
+    //for ajax requests
+    ajaxAccountInfo('#transactionInitiatorAccountNumber', '#transactionInitiatorAccountName', '#transactionInitiatorAccountBalance');
+    ajaxAccountInfo('#transactionReceiverAccountNumber', '#transactionReceiverAccountName', '#transactionReceiverAccountBalance');
+    ajaxBaseCurrency('#transactionCurrency', '#transactionBaseCurrency', '#transactionAmount', '#conversionRate', '#transactionBaseTotalAmount');
+}
+
+//Account Affiliation Managment Page:
+let inputAccountNumber = $("#accountAffiliationInputAccountNumber")
+if (inputAccountNumber) {
+    $(inputAccountNumber).change(function () {
+        var accountNumber = $(this).val().trim().replace('/[^\w\s]/');
+
+        if (accountNumber != "")
+            location.replace('http://localhost:8080/accounts/affiliation?code=' + accountNumber);
+
+    });
+}
+
+//Exchange Init Page:
+ajaxBaseCurrency('#purchaseCurrency', '#saleCurrency', '#purchaseAmount', '#conversionRate', '#saleAmount');
