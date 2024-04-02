@@ -8223,6 +8223,20 @@ KTUtil.onDOMContentLoaded(function () {
 
 // --- Functions definition ---
 
+function ajaxCustomerInfo(inputIdentityNumber, inputFullName) {
+    $(inputIdentityNumber).change(function () {
+        $.ajax({
+            url: "http://localhost:8080/rest/customer/" + $(this).val()
+        })
+            .done(function (data) {
+                $(inputFullName).val(data.firstName + ' ' + data.lastName);
+            })
+            .fail(function () {
+                $(inputFullName).val("");
+            });
+    });
+}
+
 function ajaxAccountInfo(inputNumber, inputName, inputBalance) {
     $(inputNumber).change(function () {
         $.ajax({
@@ -8296,6 +8310,7 @@ if (transactionType) {
     ajaxAccountInfo('#transactionInitiatorAccountNumber', '#transactionInitiatorAccountName', '#transactionInitiatorAccountBalance');
     ajaxAccountInfo('#transactionReceiverAccountNumber', '#transactionReceiverAccountName', '#transactionReceiverAccountBalance');
     ajaxBaseCurrency('#transactionCurrency', '#transactionBaseCurrency', '#transactionAmount', '#conversionRate', '#transactionBaseTotalAmount');
+    ajaxCustomerInfo('#transactionCustomerIdentity', '#transactionCustomerFullName');
 }
 
 //Account Affiliation Managment Page:
@@ -8311,4 +8326,30 @@ if (inputAccountNumber) {
 }
 
 //Exchange Init Page:
-ajaxBaseCurrency('#purchaseCurrency', '#saleCurrency', '#purchaseAmount', '#conversionRate', '#saleAmount');
+let exchangeCurrency = $('#purchaseCurrency');
+if (exchangeCurrency) {
+    ajaxBaseCurrency('#purchaseCurrency', '#saleCurrency', '#purchaseAmount', '#conversionRate', '#saleAmount');
+    ajaxCustomerInfo('#exchangeCustomerIdentity', '#exchangeCustomerFullName');
+}
+
+//Loan Init Page:
+let loanType = $("select[name = 'loanType']");
+if (loanType) {
+    ajaxCustomerInfo('#loanCustomerIdentityNumber', '#loanCustomerFullName');
+
+    let issuedAmount = $('#loanIsuedAmount');
+    let interestRate = $('#loanInterestRate');
+    let totalDue = $('#loanTotalDue');
+
+    $(issuedAmount).add(interestRate).change(function () {
+        $.ajax({
+            url: "http://localhost:8080/rest/loanTotalDue/" + $(issuedAmount).val() + '-' + $(interestRate).val()
+        })
+            .done(function (data) {
+                $(totalDue).val(parseFloat(data));
+            })
+            .fail(function () {
+                $(totalDue).val("0.0");
+            });
+    });
+}

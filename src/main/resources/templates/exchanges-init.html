@@ -17,13 +17,13 @@
 						<div class="col-md-5">
 							<input type="text" th:field="*{customerIdentityNumber}" class="form-control mb-2"
 								th:classappend="${#fields.hasErrors('customerIdentityNumber')} ? 'is-invalid' : ''"
-								placeholder="Identity Number" />
+								placeholder="Identity Number" id="exchangeCustomerIdentity"/>
 							<div class="invalid-feedback" th:errors="*{customerIdentityNumber}"></div>
 						</div>
 						<div class="col-md-5">
 							<input type="text" th:field="*{customerFullName}" class="form-control mb-2"
 								th:classappend="${#fields.hasErrors('customerFullName')} ? 'is-invalid' : ''"
-								placeholder="Full name" />
+								placeholder="Full name" id="exchangeCustomerFullName" />
 							<div class="invalid-feedback" th:errors="*{customerFullName}"></div>
 						</div>
 					</div>

@@ -27,12 +27,12 @@
 						<div class="col-md-5">
 							<label class="required form-label">Customer Identity</label>
 							<input type="text" name="customerIdentityNumber" class="form-control mb-2"
-								placeholder="Customer Identity Number" />
+								placeholder="Customer Identity Number" id="loanCustomerIdentityNumber"/>
 						</div>
 						<div class="col-md-5">
 							<label class="form-label">Customer Name</label>
 							<input type="text" name="customerFullName" class="form-control mb-2"
-								placeholder="Customer Full name" disabled />
+								placeholder="Full name" id="loanCustomerFullName" disabled />
 						</div>
 					</div>
 				</div>
@@ -49,7 +49,7 @@
 							<label class="required form-label">Amount</label>
 							<input type="number" th:field="*{issuedAmount}" class="form-control mb-2" step=".01"
 								placeholder="0.00"
-								th:classappend="${#fields.hasErrors('issuedAmount')} ? 'is-invalid' : ''" />
+								th:classappend="${#fields.hasErrors('issuedAmount')} ? 'is-invalid' : ''" id="loanIsuedAmount" />
 							<div class="invalid-feedback" th:errors="*{issuedAmount}"></div>
 						</div>
 						<div class="col-md-5">
@@ -69,7 +69,7 @@
 						<label class="required form-label">Interest (%)</label>
 						<input type="number" th:field="*{interestRate}" class="form-control mb-2" step=".01"
 							placeholder="0.00"
-							th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid' : ''" />
+							th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid' : ''" id="loanInterestRate" />
 						<div class="invalid-feedback" th:errors="*{interestRate}"></div>
 					</div>
 					<!--end::Input group-->
@@ -83,7 +83,7 @@
 				</div>
 				<div class="col-md-2">
 					<label class="form-label">Total Due</label>
-					<input type="number" name="" class="form-control mb-2" placeholder="0.00" disabled />
+					<input type="number" name="" class="form-control mb-2" placeholder="0.0" id="loanTotalDue" disabled />
 				</div>
 			</div>
 			<div class="col-md-5 mb-6">
