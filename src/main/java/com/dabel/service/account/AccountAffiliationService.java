@@ -3,6 +3,7 @@ package com.dabel.service.account;
 import com.dabel.config.AppSpEL;
 import com.dabel.constant.AccountMembership;
 import com.dabel.constant.AccountProfile;
+import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
@@ -32,23 +33,30 @@ public class AccountAffiliationService {
         //TODO: get the trunk
         TrunkDto trunkDto = accountService.findTrunkByNumber(accountNumber);
         AccountDto accountDto = trunkDto.getAccount();
-        String accountProfile = trunkDto.getAccount().getAccountProfile();
 
-        if(accountProfile.equals(AccountProfile.ASSOCIATIVE.name())) {
+        //TODO: save customer if doesn't exists
+        if(customerDto.getCustomerId() == null) {
+            customerDto.setStatus(Status.ACTIVE.code());
+            customerDto = customerService.save(customerDto);
+        }
+
+        //TODO: save new associated if it's an associative account
+        if(accountDto.getAccountProfile().equals(AccountProfile.ASSOCIATIVE.name())) {
             accountService.save(TrunkDto.builder()
                     .account(accountDto)
                     .customer(customerDto)
-                    .membership(AccountMembership.JOINTED.name())
+                    .membership(AccountMembership.ASSOCIATED.name())
                     .build());
             return;
         }
 
-
-        if(accountProfile.equals(AccountProfile.PERSONAL.name())) {
+        //TODO: update account profile to JOINT if is PERSONAL
+        if(accountDto.getAccountProfile().equals(AccountProfile.PERSONAL.name())) {
             accountDto.setAccountProfile(AccountProfile.JOINT.name());
             accountService.save(accountDto);
         }
 
+        //TODO: save new jointed
         accountService.save(TrunkDto.builder()
                 .account(accountDto)
                 .customer(customerDto)
@@ -56,8 +64,7 @@ public class AccountAffiliationService {
                 .build());
     }
 
-    public void remove(String customerIdentityNumber, String accountNumber) {
-        CustomerDto customerDto = customerService.findByIdentity(customerIdentityNumber);
+    public void remove(CustomerDto customerDto, String accountNumber) {
         TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
         if(AppSpEL.removableMember(trunkDto))
             accountService.deleteTrunk(trunkDto);

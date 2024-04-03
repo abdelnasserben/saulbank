@@ -1,0 +1,371 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+		<!--begin::Layout-->
+		<div class="d-flex flex-column flex-xl-row">
+			<!--begin::Sidebar-->
+			<div class="flex-column flex-lg-row-auto w-100 w-xl-350px mb-10">
+
+				<!--begin::Card-->
+				<div class="card mb-5 mb-xl-8">
+					<!--begin::Card body-->
+					<div class="card-body pt-15">
+
+						<!--begin::Details toggle-->
+						<div class="d-flex flex-stack fs-4 py-3">
+							<div class="fw-bold text-uppercase">
+								Account Details
+							</div>
+
+							<!--begin::Badge-->
+							<div th:text="${trunk.account.status}"
+								th:class="${'badge d-inline badge-light-' + @appSpEL.statusColor(trunk.account.status)}">
+								ACTIVE</div>
+							<!--begin::Badge-->
+						</div>
+						<!--end::Details toggle-->
+
+						<div class="separator separator-dashed my-3"></div>
+
+						<!--begin::Details content-->
+						<div class="pb-5 fs-6">
+							<!--begin::Details item-->
+							<div class="fw-bold mt-5">#ID</div>
+							<div class="text-gray-600" th:text="${trunk.account.accountId}">45453423</div>
+							<!--begin::Details item-->
+							<!--begin::Details item-->
+							<div class="fw-bold mt-5">Number</div>
+							<div class="text-gray-600" th:text="${trunk.account.accountNumber}">0071589756</div>
+							<!--begin::Details item-->
+							<!--begin::Details item-->
+							<div class="fw-bold mt-5">Name</div>
+							<div class="text-gray-600" th:text="${trunk.account.accountName}">John Doe</div>
+							<!--begin::Details item-->
+							<!--begin::Details item-->
+							<div class="fw-bold mt-5">Type</div>
+							<div class="text-gray-600" th:text="${trunk.account.accountType}">BUSINESS</div>
+							<!--begin::Details item-->
+							<!--begin::Details item-->
+							<div class="fw-bold mt-5">Profile</div>
+							<div class="text-gray-600" th:text="${trunk.account.accountProfile}">PERSONNAL</div>
+							<!--begin::Details item-->
+						</div>
+						<!--end::Details content-->
+					</div>
+					<!--end::Card body-->
+				</div>
+				<!--end::Card-->
+			</div>
+			<!--end::Sidebar-->
+
+			<!--begin::Content-->
+			<div class="flex-lg-row-fluid ms-lg-15">
+				<div class="card pt-4 mb-6 mb-xl-9">
+					<!--begin::Card header-->
+					<div class="card-header border-0">
+						<!--begin::Card title-->
+						<div class="card-title flex-column">
+							<h2 class="mb-1">Customer Member</h2>
+
+							<div class="fs-7 text-muted">For an existing customer, simply enter his identity number</div>
+						</div>
+						<!--end::Card title-->
+
+						<!--begin::Card toolbar-->
+						<div class="card-toolbar">
+							<input type="text" class="form-control form-control-sm bg-light-primary border-0"
+								placeholder="Customer Identity Number" th:value="${param.member}" id="accountAffiliateMemberCustomerIdentity" />
+						</div>
+						<!--end::Card toolbar-->
+					</div>
+					<!--end::Card header-->
+				</div>
+
+				<div class="card pt-4 mb-6 mb-xl-9">
+					<div class="card-body pt-0">
+						<form method="post" th:action="@{/accounts/affiliation/{code}?member={identity}(code=${trunk.account.accountNumber}, identity=${customer.identityNumber})}"
+							th:object="${customer}" class="form">
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Full
+									Name</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9">
+									<!--begin::Row-->
+									<div class="row">
+										<!--begin::Col-->
+										<div class="col-lg-6 fv-row">
+											<input type="text" th:field="*{firstName}"
+												class="form-control form-control-solid mb-3 mb-lg-0"
+												th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
+												placeholder="First name" />
+											<div class="invalid-feedback" th:errors="*{firstName}">
+											</div>
+										</div>
+										<!--end::Col-->
+
+										<!--begin::Col-->
+										<div class="col-lg-6 fv-row">
+											<input type="text" th:field="*{lastName}"
+												class="form-control form-control-solid mb-3 mb-lg-0"
+												th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
+												placeholder="Last name" />
+											<div class="invalid-feedback" th:errors="*{lastName}">
+											</div>
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Row-->
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Identity</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9 fv-row">
+
+									<div class="row">
+										<div class="col-lg-3 fv-row">
+											<select th:field="*{identityType}"
+												class="form-select form-select-solid mb-3 mb-lg-0"
+												th:classappend="${#fields.hasErrors('identityType')} ? 'is-invalid' : ''"
+												data-control="select2" data-hide-search="true"
+												data-placeholder="Select an option">
+												<option value=""></option>
+												<option value="Card" th:selected="${customer.identityType} == 'Card'">
+													Card</option>
+												<option value="Passport"
+													th:selected="${customer.identityType} == 'Passport'">
+													Passport
+												</option>
+											</select>
+											<div class="invalid-feedback" th:errors="*{identityType}">
+											</div>
+										</div>
+
+										<div class="col-lg-3 fv-row">
+											<input type="text" th:field="*{identityNumber}"
+												class="form-control form-control-solid mb-3 mb-lg-0"
+												placeholder="Identity Number" th:value="${customer.identityNumber}" />
+										</div>
+
+										<div class="col-lg-3 fv-row">
+											<input type="text" th:field="*{identityIssue}"
+												class="form-control form-control-solid mb-3 mb-lg-0"
+												placeholder="Identity Issue" th:value="${customer.identityIssue}" />
+										</div>
+
+										<div class="col-lg-3 fv-row">
+											<input name="identityExpiration" placeholder="Epiration date"
+												class="form-control form-control-solid mb-3 mb-lg-0 kt_flatpickr"
+												th:value="${customer.identityExpiration}" />
+										</div>
+									</div>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Gender
+									/ Nationality</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9">
+									<!--begin::Row-->
+									<div class="row">
+										<!--begin::Col-->
+										<div class="col-lg-4 fv-row">
+											<select th:field="*{gender}" class="form-select form-select-solid fw-bold"
+												th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid' : ''"
+												data-control="select2" data-hide-search="true"
+												data-placeholder="Select an option">
+												<option value=""></option>
+												<option value="MALE" th:selected="${customer.gender} == 'MALE'">
+													Male
+												</option>
+												<option value="FEMALE" th:selected="${customer.gender} == 'FEMALE'">
+													Female
+												</option>
+											</select>
+											<div class="invalid-feedback" th:errors="*{gender}">
+											</div>
+										</div>
+										<!--end::Col-->
+
+										<!--begin::Col-->
+										<div class="col-lg-8 fv-row">
+											<select th:field="*{nationality}"
+												class="form-select form-select-solid fw-bold" data-control="select2"
+												data-placeholder="Nationality" data-allow-clear="true">
+												<option value=""></option>
+												<option th:each="country: ${@appSpEL.countries}" th:text="${country}"
+													th:value="${country}"
+													th:selected="${customer.nationality == country}">
+													Comoros</option>
+											</select>
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Row-->
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Birth
+									Date / Place</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9">
+									<!--begin::Row-->
+									<div class="row">
+										<!--begin::Col-->
+										<div class="col-lg-4 fv-row">
+											<input name="birthDate" placeholder="Select a date"
+												class="form-control form-control-solid mb-3 mb-lg-0 kt_flatpickr"
+												th:value="${customer.birthDate}" />
+										</div>
+										<!--end::Col-->
+
+										<!--begin::Col-->
+										<div class="col-lg-8 fv-row">
+											<input type="text" th:field="*{birthPlace}"
+												class="form-control form-control-solid mb-3 mb-lg-0"
+												th:classappend="${#fields.hasErrors('birthPlace')} ? 'is-invalid' : ''"
+												placeholder="Birth Place" />
+											<div class="invalid-feedback" th:errors="*{birthPlace}">
+											</div>
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Row-->
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Profession</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9 fv-row">
+									<input type="text" th:field="*{profession}" class="form-control form-control-solid"
+										placeholder="Profession" th:value="${customer.profession}" />
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Contacts</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9">
+									<!--begin::Row-->
+									<div class="row">
+										<!--begin::Col-->
+										<div class="col-lg-6 fv-row">
+											<input type="email" th:field="*{email}"
+												class="form-control form-control-solid" placeholder="Address Email"
+												th:value="${customer.email}" />
+										</div>
+										<!--end::Col-->
+
+										<!--begin::Col-->
+										<div class="col-lg-6 fv-row">
+											<input type="tel" th:field="*{phone}"
+												class="form-control form-control-solid" placeholder="Phone Number"
+												th:value="${customer.phone}" />
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Row-->
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Input group-->
+							<div class="row mb-6">
+								<!--begin::Label-->
+								<label class="col-lg-3 col-form-label required fw-bold fs-6">Residence</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-9 fv-row">
+									<div class="row">
+										<div class="col-lg-4">
+											<select th:field="*{residence}"
+												class="form-select form-select-solid fw-bold" data-control="select2"
+												data-placeholder="Residence" data-allow-clear="true">
+												<option value=""></option>
+												<option th:each="country: ${@appSpEL.countries}" th:text="${country}"
+													th:value="${country}"
+													th:selected="${customer.residence == country}">
+													Comoros
+												</option>
+											</select>
+										</div>
+										<div class="col-lg-4">
+											<input type="text" th:field="*{address}"
+												class="form-control form-control-solid" placeholder="Address"
+												th:value="${customer.address}" />
+										</div>
+										<div class="col-lg-4">
+											<input type="text" th:field="*{postCode}"
+												class="form-control form-control-solid" placeholder="Post code"
+												th:value="${customer.postCode}" />
+										</div>
+									</div>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
+
+							<!--begin::Actions-->
+							<button type="submit" class="btn btn-primary">Save Affiliation</button>
+							<!--end::Actions-->
+						</form>
+					</div>
+				</div>
+			</div>
+			<!--end::Content-->
+		</div>
+		<!--end::Layout-->
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+
+<div th:replace="~{fragments/footer}"></div>

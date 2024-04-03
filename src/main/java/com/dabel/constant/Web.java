@@ -67,7 +67,8 @@ public final class Web {
 
         String ACCOUNT_LIST = "accounts";
         String ACCOUNT_DETAILS = "accounts-details";
-        String ACCOUNT_AFFILIATION = "accounts-affiliation";
+        String ACCOUNT_AFFILIATION = "accounts-affiliations";
+        String ACCOUNT_AFFILIATION_ADD = "accounts-affiliations-add";
 
         String PAGE_404 = "page404";
     }
@@ -127,7 +128,8 @@ public final class Web {
         interface Account {
             String MENU = "Accounts";
             String ROOT = "All Accounts";
-            String MANAGE_AFFILIATION = "Manage Affiliation";
+            String AFFILIATION = "Manage Affiliation";
+            String AFFILIATION_ADD = "Add Affiliate";
         }
     }
 }

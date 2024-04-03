@@ -27,7 +27,7 @@
 									<th class="min-w-70px">Balance</th>
 									<th class="min-w-70px">Profile</th>
 									<th class="min-w-70px">Status</th>
-									<th class="min-w-70px">Action</th>
+									<th class="min-w-70px text-end">Action</th>
 								</tr>
 							</thead>
 							<tbody class="fw-6 fw-bold text-gray-600">
@@ -43,8 +43,8 @@
 											Active</div>
 									</td>
 									<td class="text-end">
-										<a th:href="@{/customers/add?join={code}(code=${account.accountNumber})}" class="btn btn-sm btn-primary">
-											Affiliate
+										<a th:href="@{/accounts/affiliation/{code}(code=${account.accountNumber})}" class="btn btn-sm btn-primary">
+											Add Member
 										</button>
 									</td>
 								</tr>

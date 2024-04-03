@@ -8353,3 +8353,17 @@ if (loanType) {
             });
     });
 }
+
+//Account Add Affiliate Page:
+let memberIdentityNumber = $('#accountAffiliateMemberCustomerIdentity');
+if (memberIdentityNumber) {
+    $(memberIdentityNumber).change(function () {
+        var identityNumber = $(this).val().trim().replace('/[^\w\s]/');
+
+        if (identityNumber != "") {
+            var pageURL = $(location).attr("href");
+            location.replace(pageURL + '?member=' + identityNumber);
+        }
+
+    });
+}
