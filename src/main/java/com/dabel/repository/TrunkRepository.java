@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TrunkRepository extends JpaRepository<Trunk, Long> {
-    Optional<Trunk> findByAccount(Account account);
 
     List<Trunk> findAllByCustomer(Customer customer);
 

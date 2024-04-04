@@ -1,5 +1,6 @@
 package com.dabel.service.account;
 
+import com.dabel.app.Helper;
 import com.dabel.config.AppSpEL;
 import com.dabel.constant.AccountMembership;
 import com.dabel.constant.AccountProfile;
@@ -10,6 +11,8 @@ import com.dabel.dto.TrunkDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.customer.CustomerService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountAffiliationService {
@@ -26,7 +29,7 @@ public class AccountAffiliationService {
 
         //TODO: check whether the customer is already affiliated to this account
         try {
-            TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
+            accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
             throw new IllegalOperationException("Account already exists");
         }catch (Exception ignored) {}
 
@@ -68,5 +71,15 @@ public class AccountAffiliationService {
         TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
         if(AppSpEL.removableMember(trunkDto))
             accountService.deleteTrunk(trunkDto);
+
+        AccountDto accountDto = trunkDto.getAccount();
+
+        if(!Helper.isAssociativeAccount(accountDto)) {
+            List<TrunkDto> trunks = accountService.findAllTrunks(accountDto);
+            if(trunks.size() == 1) {
+                accountDto.setAccountProfile(AccountProfile.PERSONAL.name());
+                accountService.save(accountDto);
+            }
+        }
     }
 }

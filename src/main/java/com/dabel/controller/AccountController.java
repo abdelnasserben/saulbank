@@ -15,7 +15,10 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -143,10 +146,15 @@ public class AccountController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{trunkId}/" + "remove/" + "{customerIdentityNumber}")
-    @ResponseBody
-    public String manageTrunkAffiliation(Model model, @PathVariable Long trunkId, @PathVariable String customerIdentityNumber) {
+    public String manageTrunkAffiliation(@PathVariable Long trunkId, @PathVariable String customerIdentityNumber, RedirectAttributes redirect) {
 
-        return String.format("remove trunkId=%d for customer=%s", trunkId, customerIdentityNumber);
+        TrunkDto trunkDto = accountFacadeService.findTrunkById(trunkId);
+        CustomerDto customerDto = customerFacadeService.findByIdentity(customerIdentityNumber);
+
+        accountAffiliationService.remove(customerDto, trunkDto.getAccount().getAccountNumber());
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Affiliate removed successfully");
+
+        return String.format("redirect:%s?code=%s", Web.Endpoint.ACCOUNT_AFFILIATION, trunkDto.getAccount().getAccountNumber());
     }
 
 

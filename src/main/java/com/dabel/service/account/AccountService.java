@@ -4,12 +4,14 @@ import com.dabel.dto.*;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.*;
 import com.dabel.model.Account;
+import com.dabel.model.Trunk;
 import com.dabel.repository.AccountRepository;
 import com.dabel.repository.LedgerRepository;
 import com.dabel.repository.TrunkRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -90,8 +92,10 @@ public class AccountService {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
-        return TrunkMapper.toDto(trunkRepository.findByAccount(account)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer account not found")));
+        Trunk trunk = Optional.ofNullable(trunkRepository.findAllByAccount(account).get(0))
+                .orElseThrow(() -> new ResourceNotFoundException("Customer account not found"));
+
+        return TrunkMapper.toDto(trunk);
     }
 
     public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
