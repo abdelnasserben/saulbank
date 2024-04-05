@@ -5,9 +5,7 @@ import com.dabel.model.Customer;
 import com.dabel.model.Trunk;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public interface TrunkRepository extends JpaRepository<Trunk, Long> {
 

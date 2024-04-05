@@ -5,6 +5,7 @@ import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.*;
 import com.dabel.dto.*;
+import com.dabel.service.StorageService;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collection;
@@ -65,6 +67,7 @@ public class CustomerController implements PageTitleConfig {
                                  @RequestParam String accountName,
                                  @RequestParam AccountType accountType,
                                  @RequestParam AccountProfile accountProfile,
+                                 @RequestParam MultipartFile avatar,
                                  BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
@@ -76,6 +79,10 @@ public class CustomerController implements PageTitleConfig {
         //TODO: set branch - We'll replace this automatically by user authenticated
         BranchDto branchDto = branchFacadeService.findById(1L);
         customerDto.setBranch(branchDto);
+
+        //TODO: save customer profile picture
+        String pictureName = StorageService.save(avatar, customerDto.getIdentityNumber());
+        customerDto.setProfilePicture(pictureName);
 
         customerFacadeService.create(customerDto, accountName, accountType, accountProfile);
 

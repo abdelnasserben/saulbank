@@ -3,7 +3,6 @@ package com.dabel.app.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class AffiliationTypeValidator implements ConstraintValidator<CardType, String> {

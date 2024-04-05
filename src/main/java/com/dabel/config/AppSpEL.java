@@ -1,7 +1,6 @@
 package com.dabel.config;
 
 import com.dabel.constant.*;
-import com.dabel.dto.AccountDto;
 import com.dabel.dto.TrunkDto;
 import org.springframework.stereotype.Component;
 

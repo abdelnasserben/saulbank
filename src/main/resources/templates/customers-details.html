@@ -15,7 +15,7 @@
 					<!--begin: Pic-->
 					<div class="me-7 mb-4">
 						<div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-							<img th:src="@{'/uploads/' + ${customer.profilePicture}}" alt="image">
+							<img th:src="@{'/uploads/' + ${customer.profilePicture}}" alt="Customer Image">
 						</div>
 					</div>
 					<!--end::Pic-->
@@ -895,12 +895,14 @@
 											<table class="table table-flush fw-bold gy-1">
 												<tr>
 													<td class="text-muted min-w-125px w-125px">Account number</td>
-													<td th:text="${card.account.accountNumber}" class="text-gray-800">0071001997
+													<td th:text="${card.account.accountNumber}" class="text-gray-800">
+														0071001997
 													</td>
 												</tr>
 												<tr>
 													<td class="text-muted min-w-125px w-125px">Account name</td>
-													<td th:text="${card.account.accountName}" class="text-gray-800">John Doe</td>
+													<td th:text="${card.account.accountName}" class="text-gray-800">John
+														Doe</td>
 												</tr>
 												<tr>
 													<td class="text-muted min-w-125px w-125px">CVC
@@ -1223,7 +1225,7 @@
 											style="background-image: url('/assets/svg/blank-image.svg')">
 											<!--begin::Preview existing avatar-->
 											<div class="image-input-wrapper w-125px h-125px"
-												style="background-image: url('/assets/avatars/300-2.jpg')">
+												th:style="'background:url(' + @{'/uploads/' + ${customer.profilePicture}} + '); background-size: cover;'">
 											</div>
 											<!--end::Preview existing avatar-->
 
