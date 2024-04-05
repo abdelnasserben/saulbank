@@ -11,7 +11,6 @@ import com.dabel.repository.TrunkRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -92,7 +91,8 @@ public class AccountService {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
-        Trunk trunk = Optional.ofNullable(trunkRepository.findAllByAccount(account).get(0))
+        Trunk trunk = trunkRepository.findAllByAccount(account).stream()
+                .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Customer account not found"));
 
         return TrunkMapper.toDto(trunk);

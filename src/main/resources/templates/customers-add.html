@@ -7,7 +7,7 @@
 
 		<div th:replace="~{fragments/success-error-alert}"></div>
 
-		<form method="post" th:action="@{/customers/add}" th:object="${customerDto}"
+		<form method="post" th:action="@{/customers/add}" th:object="${customerDto}" enctype="multipart/form-data"
 			class="form d-flex flex-column flex-lg-row">
 			<div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
 				<!--begin::Profile Photo settings-->
@@ -50,7 +50,7 @@
 										class="path2"></span></i>
 								<!--begin::Inputs-->
 								<input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
-								<input type="hidden" name="avatar_remove" />
+								<input type="hidden" name="avatar" />
 								<!--end::Inputs-->
 							</label>
 							<!--end::Label-->
@@ -499,7 +499,7 @@
 
 										<!--begin::Input-->
 										<input type="text" name="accountName"
-											class="form-control form-control-solid mb-2" placeholder="John Doe"/>
+											class="form-control form-control-solid mb-2" placeholder="John Doe" />
 										<!--end::Input-->
 									</div>
 									<!--end::Input group-->
@@ -618,8 +618,8 @@
 										<!--end::Label-->
 
 										<!--begin::Input-->
-										<select name="accountProfile" class="form-select mb-3"
-											data-control="select2" data-hide-search="true">
+										<select name="accountProfile" class="form-select mb-3" data-control="select2"
+											data-hide-search="true">
 											<option value="PERSONAL">Personal</option>
 											<option value="ASSOCIATIVE">Association</option>
 										</select>
