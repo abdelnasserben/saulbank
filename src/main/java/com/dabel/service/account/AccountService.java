@@ -1,5 +1,6 @@
 package com.dabel.service.account;
 
+import com.dabel.app.JpaHelper;
 import com.dabel.dto.*;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.*;
@@ -83,6 +84,7 @@ public class AccountService {
 
     public List<TrunkDto> findAllTrunks() {
         return trunkRepository.findAll().stream()
+                .filter(JpaHelper.distinctByKey(Trunk::getAccount))
                 .map(TrunkMapper::toDto)
                 .toList();
     }
@@ -118,7 +120,8 @@ public class AccountService {
     public TrunkDto findTrunkByCustomerAndAccountNumber(CustomerDto customerDto, String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
-        return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account));
+        return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found")));
     }
 
     public void deleteTrunk(TrunkDto trunkDto) {

@@ -6,6 +6,7 @@ import com.dabel.model.Trunk;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrunkRepository extends JpaRepository<Trunk, Long> {
 
@@ -13,6 +14,6 @@ public interface TrunkRepository extends JpaRepository<Trunk, Long> {
 
     List<Trunk> findAllByAccount(Account account);
 
-    Trunk findByCustomerAndAccount(Customer customer, Account account);
+    Optional<Trunk> findByCustomerAndAccount(Customer customer, Account account);
 
 }

@@ -69,6 +69,7 @@ public class CustomerController implements PageTitleConfig {
                                  @RequestParam AccountType accountType,
                                  @RequestParam AccountProfile accountProfile,
                                  @RequestParam MultipartFile avatar,
+                                 @RequestParam MultipartFile signature,
                                  BindingResult binding, RedirectAttributes redirect) throws IOException {
 
         if(binding.hasErrors()) {
@@ -81,9 +82,11 @@ public class CustomerController implements PageTitleConfig {
         BranchDto branchDto = branchFacadeService.findById(1L);
         customerDto.setBranch(branchDto);
 
-        //TODO: save customer profile picture
-        String savedFileName = FileStorageService.save(avatar, customerDto.getIdentityNumber());
-        customerDto.setProfilePicture(savedFileName);
+        //TODO: save customer pictures
+        String savedAvatarName = FileStorageService.save(avatar, customerDto.getIdentityNumber());
+        String savedSignatureName = FileStorageService.save(signature, customerDto.getIdentityNumber() + "-signature");
+        customerDto.setProfilePicture(savedAvatarName);
+        customerDto.setSignaturePicture(savedSignatureName);
 
         customerFacadeService.create(customerDto, accountName, accountType, accountProfile);
 

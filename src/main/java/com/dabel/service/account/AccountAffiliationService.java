@@ -28,24 +28,32 @@ public class AccountAffiliationService {
 
     public void add(CustomerDto customerDto, String accountNumber) {
 
+        //TODO: get the account
+        AccountDto accountDto = accountService.findTrunkByNumber(accountNumber).getAccount();
+
+        if(Helper.isInactiveAccount(accountDto))
+            throw new IllegalOperationException("Account must be active");
+
         //TODO: check if is exists customer
         if(customerDto.getCustomerId() != null) {
 
+            if (Helper.isInactiveCustomer(customerDto))
+                throw new IllegalOperationException(customerDto.getFirstName() + " is inactive");
+
             //TODO: check if customer is already affiliated
+            TrunkDto trunkDto = null;
             try {
-                accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
+                trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
             }catch (ResourceNotFoundException ignored) {}
 
-            throw new IllegalOperationException(customerDto.getFirstName() + " is already member");
+            if(trunkDto != null)
+                throw new IllegalOperationException(customerDto.getFirstName() + " is already member");
 
         } else {
             //TODO: save new customer
             customerDto.setStatus(Status.ACTIVE.code());
             customerDto = customerService.save(customerDto);
         }
-
-        //TODO: get the account
-        AccountDto accountDto = accountService.findTrunkByNumber(accountNumber).getAccount();
 
         //TODO: save the new trunk
         TrunkDto newTrunk = TrunkDto.builder()
