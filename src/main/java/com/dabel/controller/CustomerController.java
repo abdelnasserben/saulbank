@@ -5,7 +5,7 @@ import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.*;
 import com.dabel.dto.*;
-import com.dabel.service.StorageService;
+import com.dabel.service.FileStorageService;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class CustomerController implements PageTitleConfig {
                                  @RequestParam AccountType accountType,
                                  @RequestParam AccountProfile accountProfile,
                                  @RequestParam MultipartFile avatar,
-                                 BindingResult binding, RedirectAttributes redirect) {
+                                 BindingResult binding, RedirectAttributes redirect) throws IOException {
 
         if(binding.hasErrors()) {
             configPageTitle(model, Web.Menu.Customer.ADD);
@@ -81,8 +82,8 @@ public class CustomerController implements PageTitleConfig {
         customerDto.setBranch(branchDto);
 
         //TODO: save customer profile picture
-        String pictureName = StorageService.save(avatar, customerDto.getIdentityNumber());
-        customerDto.setProfilePicture(pictureName);
+        String savedFileName = FileStorageService.save(avatar, customerDto.getIdentityNumber());
+        customerDto.setProfilePicture(savedFileName);
 
         customerFacadeService.create(customerDto, accountName, accountType, accountProfile);
 

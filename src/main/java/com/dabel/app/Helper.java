@@ -22,6 +22,10 @@ public final class Helper {
         return !customerDto.getStatus().equals(Status.ACTIVE.name()) && !customerDto.getStatus().equals(Status.ACTIVE.code());
     }
 
+    public static boolean isPersonalAccount(AccountDto accountDto) {
+        return accountDto.getAccountProfile().equals(AccountProfile.PERSONAL.name());
+    }
+
     public static boolean isAssociativeAccount(AccountDto accountDto) {
         return accountDto.getAccountProfile().equals(AccountProfile.ASSOCIATIVE.name());
     }

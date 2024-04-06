@@ -11,6 +11,6 @@ public class SaulBankApplication {
 	}
 
 }
-//continue account manage affiliation
-//review services test
+//continue upload customer files (on update info, documents upload). see the spring boot tutorial
+//correction of account affiliation (only active account and active customer can make affiliation)
 //begin cheques futures implementation

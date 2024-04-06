@@ -9,6 +9,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.exception.IllegalOperationException;
+import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.customer.CustomerService;
 import org.springframework.stereotype.Service;
 
@@ -27,44 +28,39 @@ public class AccountAffiliationService {
 
     public void add(CustomerDto customerDto, String accountNumber) {
 
-        //TODO: check whether the customer is already affiliated to this account
-        try {
-            accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
-            throw new IllegalOperationException("Account already exists");
-        }catch (Exception ignored) {}
+        //TODO: check if is exists customer
+        if(customerDto.getCustomerId() != null) {
 
-        //TODO: get the trunk
-        TrunkDto trunkDto = accountService.findTrunkByNumber(accountNumber);
-        AccountDto accountDto = trunkDto.getAccount();
+            //TODO: check if customer is already affiliated
+            try {
+                accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
+            }catch (ResourceNotFoundException ignored) {}
 
-        //TODO: save customer if doesn't exists
-        if(customerDto.getCustomerId() == null) {
+            throw new IllegalOperationException(customerDto.getFirstName() + " is already member");
+
+        } else {
+            //TODO: save new customer
             customerDto.setStatus(Status.ACTIVE.code());
             customerDto = customerService.save(customerDto);
         }
 
-        //TODO: save new associated if it's an associative account
-        if(accountDto.getAccountProfile().equals(AccountProfile.ASSOCIATIVE.name())) {
-            accountService.save(TrunkDto.builder()
-                    .account(accountDto)
-                    .customer(customerDto)
-                    .membership(AccountMembership.ASSOCIATED.name())
-                    .build());
-            return;
-        }
+        //TODO: get the account
+        AccountDto accountDto = accountService.findTrunkByNumber(accountNumber).getAccount();
+
+        //TODO: save the new trunk
+        TrunkDto newTrunk = TrunkDto.builder()
+                .customer(customerDto)
+                .account(accountDto)
+                .membership(Helper.isAssociativeAccount(accountDto) ? AccountMembership.ASSOCIATED.name() : AccountMembership.JOINTED.name())
+                .build();
+        accountService.save(newTrunk);
 
         //TODO: update account profile to JOINT if is PERSONAL
-        if(accountDto.getAccountProfile().equals(AccountProfile.PERSONAL.name())) {
+        if(Helper.isPersonalAccount(accountDto)) {
             accountDto.setAccountProfile(AccountProfile.JOINT.name());
             accountService.save(accountDto);
         }
 
-        //TODO: save new jointed
-        accountService.save(TrunkDto.builder()
-                .account(accountDto)
-                .customer(customerDto)
-                .membership(AccountMembership.JOINTED.name())
-                .build());
     }
 
     public void remove(CustomerDto customerDto, String accountNumber) {
