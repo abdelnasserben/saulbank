@@ -1,4 +1,4 @@
-package com.dabel.service;
+package com.dabel.service.storage;
 
 import com.dabel.exception.IllegalOperationException;
 import org.springframework.util.StringUtils;
@@ -11,12 +11,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
-public class FileStorageService {
+public interface FileStorageService {
 
-    private static final String UPLOAD_DIR = "./src/main/resources/static/uploads/";
+    Path getLocation();
 
-    public static String save(MultipartFile file, String prefixFilename) throws IOException {
-
+    default String store(MultipartFile file, String prefixFilename) {
         try {
 
             //TODO: check if file is empty
@@ -28,7 +27,7 @@ public class FileStorageService {
             String uploadedFilename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
             String normalizedFilename = prefixFilename + uploadedFilename.substring(uploadedFilename.lastIndexOf("."));
 
-            Path destinationFile = Paths.get(UPLOAD_DIR + normalizedFilename)
+            Path destinationFile = Paths.get(getLocation() + "/" + normalizedFilename)
                     .normalize().toAbsolutePath();
 
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);

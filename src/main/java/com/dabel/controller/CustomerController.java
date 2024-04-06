@@ -5,13 +5,14 @@ import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.*;
 import com.dabel.dto.*;
-import com.dabel.service.FileStorageService;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.exchange.ExchangeFacadeService;
 import com.dabel.service.loan.LoanFacadeService;
+import com.dabel.service.storage.ProfileFileStorageService;
+import com.dabel.service.storage.SignatureFileStorageService;
 import com.dabel.service.transaction.TransactionFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -83,8 +84,8 @@ public class CustomerController implements PageTitleConfig {
         customerDto.setBranch(branchDto);
 
         //TODO: save customer pictures
-        String savedAvatarName = FileStorageService.save(avatar, customerDto.getIdentityNumber());
-        String savedSignatureName = FileStorageService.save(signature, customerDto.getIdentityNumber() + "-signature");
+        String savedAvatarName = new ProfileFileStorageService().store(avatar, customerDto.getIdentityNumber());
+        String savedSignatureName = new SignatureFileStorageService().store(signature, customerDto.getIdentityNumber());
         customerDto.setProfilePicture(savedAvatarName);
         customerDto.setSignaturePicture(savedSignatureName);
 

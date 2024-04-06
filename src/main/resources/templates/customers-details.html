@@ -15,7 +15,7 @@
 					<!--begin: Pic-->
 					<div class="me-7 mb-4">
 						<div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-							<img th:src="@{${'/uploads/' + customer.profilePicture}}" alt="Customer Image">
+							<img th:src="@{${'/assets/avatars/' + customer.profilePicture}}" alt="Customer Image">
 						</div>
 					</div>
 					<!--end::Pic-->
@@ -1225,7 +1225,7 @@
 											style="background-image: url('/assets/svg/blank-image.svg')">
 											<!--begin::Preview existing avatar-->
 											<div class="image-input-wrapper w-125px h-125px"
-												th:style="'background:url(' + @{'/uploads/' + ${customer.profilePicture}} + '); background-size: cover;'">
+												th:style="'background:url(' + @{'/assets/avatars/' + ${customer.profilePicture}} + '); background-size: cover;'">
 											</div>
 											<!--end::Preview existing avatar-->
 
