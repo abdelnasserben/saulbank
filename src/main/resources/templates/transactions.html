@@ -78,7 +78,7 @@
 							<td th:text="${transaction.amount}">65000</td>
 							<td>
 								<img th:unless="${transaction.sourceType} == 'ONLINE'"
-									th:src="${transaction.sourceType == 'Visa'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
+									th:src="${transaction.sourceType == 'VISA'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
 									class="w-35px me-3" alt="" />
 								<span th:text="${transaction.sourceValue}">**** 3840</span>
 							</td>
