@@ -6,7 +6,7 @@ import com.dabel.constant.Web;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.exception.ResourceNotFoundException;
-import com.dabel.service.account.AccountOperationService;
+import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -21,11 +21,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BranchController implements PageTitleConfig {
 
     private final BranchFacadeService branchFacadeService;
-    private final AccountOperationService accountOperationService;
+    private final AccountFacadeService accountFacadeService;
 
-    public BranchController(BranchFacadeService branchFacadeService, AccountOperationService accountOperationService) {
+    public BranchController(BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService) {
         this.branchFacadeService = branchFacadeService;
-        this.accountOperationService = accountOperationService;
+        this.accountFacadeService = accountFacadeService;
     }
 
     @GetMapping(value = Web.Endpoint.BRANCH_ROOT)
@@ -90,8 +90,8 @@ public class BranchController implements PageTitleConfig {
 
             //TODO: make the operation
             if(operationType.equalsIgnoreCase("debit"))
-                accountOperationService.debit(vault, amount);
-            else accountOperationService.credit(vault, amount);
+                accountFacadeService.debit(vault, amount);
+            else accountFacadeService.credit(vault, amount);
 
             redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful adjustment");
         }
