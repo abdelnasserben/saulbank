@@ -7,11 +7,14 @@ import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
 import com.dabel.dto.AccountDto;
+import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
+import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.account.AccountOperationService;
 import com.dabel.service.account.AccountService;
+import com.dabel.service.customer.CustomerService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +22,14 @@ import org.springframework.stereotype.Service;
 public class Withdraw extends Transaction {
 
     private final FeeService feeService;
+    private final CustomerService customerService;
+    private final AccountFacadeService accountFacadeService;
 
-    public Withdraw(FeeService feeService, TransactionService transactionService, AccountService accountService, AccountOperationService accountOperationService) {
+    public Withdraw(FeeService feeService, TransactionService transactionService, AccountService accountService, AccountOperationService accountOperationService, CustomerService customerService, AccountFacadeService accountFacadeService) {
         super(transactionService, accountService, accountOperationService);
         this.feeService = feeService;
+        this.customerService = customerService;
+        this.accountFacadeService = accountFacadeService;
     }
 
     @Override
@@ -31,6 +38,13 @@ public class Withdraw extends Transaction {
 
         if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Account must be active");
+
+        if(!transactionDto.getInitiatorAccount().getCurrency().equals(transactionDto.getCurrency()))
+            throw new IllegalOperationException(String.format("The transaction currency must match that of the account (%s)", transactionDto.getInitiatorAccount().getCurrency()));
+
+        //TODO: check if initiator customer is affiliate on the account
+        CustomerDto customerDto = customerService.findByIdentity(transactionDto.getCustomerIdentity());
+        accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
         //TODO: for withdraw, debit account is the initiator account of transaction so we interchange nothing, we set only the receiver
         AccountDto receiverAccount = accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());

@@ -8223,16 +8223,18 @@ KTUtil.onDOMContentLoaded(function () {
 
 // --- Functions definition ---
 
-function ajaxCustomerInfo(inputIdentityNumber, inputFullName) {
+function ajaxCustomerInfo(inputIdentityNumber, inputFullName, inputSignature) {
     $(inputIdentityNumber).change(function () {
         $.ajax({
             url: "http://localhost:8080/rest/customer/" + $(this).val()
         })
             .done(function (data) {
                 $(inputFullName).val(data.firstName + ' ' + data.lastName);
+                $(inputSignature).attr('src', '/assets/signatures/' + data.signaturePicture)
             })
             .fail(function () {
                 $(inputFullName).val("");
+                $(inputSignature).attr('src', '/assets/svg/blank-image.svg')
             });
     });
 }
@@ -8304,13 +8306,16 @@ if (transactionType) {
         if (selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
         else $('#receiverAccountSection').addClass('d-none');
 
+        if(selectedValue != "DEPOSIT") $('#transactionCustomerSignatureSection').removeClass('d-none')
+        else $('#transactionCustomerSignatureSection').addClass('d-none')
+
     });
 
     //for ajax requests
     ajaxAccountInfo('#transactionInitiatorAccountNumber', '#transactionInitiatorAccountName', '#transactionInitiatorAccountBalance');
     ajaxAccountInfo('#transactionReceiverAccountNumber', '#transactionReceiverAccountName', '#transactionReceiverAccountBalance');
     ajaxBaseCurrency('#transactionCurrency', '#transactionBaseCurrency', '#transactionAmount', '#conversionRate', '#transactionBaseTotalAmount');
-    ajaxCustomerInfo('#transactionCustomerIdentity', '#transactionCustomerFullName');
+    ajaxCustomerInfo('#transactionCustomerIdentity', '#transactionCustomerFullName', '#transactionInputSignature');
 }
 
 //Account Affiliation Managment Page:

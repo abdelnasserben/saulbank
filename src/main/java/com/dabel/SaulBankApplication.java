@@ -11,6 +11,5 @@ public class SaulBankApplication {
 	}
 
 }
-//continue upload customer files (on update info, documents upload). see the spring boot tutorial
-//correction of account affiliation (only active account and active customer can make affiliation)
+//withdraw future(only owner customer can init / display signature picture on init transaction)
 //begin cheques futures implementation

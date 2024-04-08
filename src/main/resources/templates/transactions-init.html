@@ -150,12 +150,18 @@
 				</div>
 			</div>
 
-			<div class="col-lg-6 mb-6">
-				<label for="exampleFormControlTextarea1" class="form-label fw-bold fs-6">Remarks</label>
-				<textarea th:field="*{reason}" class="form-control"
-					th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''" id="exampleFormControlTextarea1"
-					rows="4"></textarea>
-				<div class="invalid-feedback" th:errors="*{reason}"></div>
+			<div class="row mb-6">
+				<div class="col-lg-6">
+					<label for="exampleFormControlTextarea1" class="form-label fw-bold fs-6">Remarks</label>
+					<textarea th:field="*{reason}" class="form-control"
+						th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''" id="exampleFormControlTextarea1"
+						rows="5"></textarea>
+					<div class="invalid-feedback" th:errors="*{reason}"></div>
+				</div>
+				<div class="col-lg-auto d-none text-lg-center" id="transactionCustomerSignatureSection">
+					<img id="transactionInputSignature" th:src="@{/assets/svg/blank-image.svg}" height="150" alt="Customer Signature" style="background-size: cover;">
+					<div class="text-muted fs-7">Signature</div>
+				</div>
 			</div>
 
 			<button type="submit" id="kt_submit_button" class="btn btn-primary">Init Transaction</button>
