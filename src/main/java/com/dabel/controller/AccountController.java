@@ -8,7 +8,6 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,7 @@ public class AccountController implements PageTitleConfig {
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
 
-    public AccountController(BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
+    public AccountController(AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
     }

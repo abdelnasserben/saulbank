@@ -134,7 +134,7 @@
 										<!--end::Text-->
 										<div class="fw-bold fs-6 text-gray-800 d-flex align-items-center">
 											<span th:text="${transaction.sourceType}">Mastercard</span>
-											<img th:unless="${transaction.sourceType} == 'ONLINE'"
+											<img th:unless="${transaction.sourceType == 'ONLINE'}"
 												th:src="${transaction.sourceType} == 'VISA' ? '/assets/svg/visa.svg' : '/assets/svg/mastercard.svg'"
 												class="w-35px ms-2" alt="">
 										</div>

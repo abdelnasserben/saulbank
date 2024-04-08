@@ -5,7 +5,7 @@ import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.LedgerDto;
-import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.account.AccountService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +14,11 @@ import java.util.List;
 public class BranchFacadeService {
 
     private final BranchService branchService;
-    private final AccountFacadeService accountFacadeService;
+    private final AccountService accountService;
 
-    public BranchFacadeService(BranchService branchService, AccountFacadeService accountFacadeService) {
+    public BranchFacadeService(BranchService branchService, AccountService accountService) {
         this.branchService = branchService;
-        this.accountFacadeService = accountFacadeService;
+        this.accountService = accountService;
     }
 
     public void create(BranchDto branchDto, double[] vaultsAsset) {
@@ -42,7 +42,7 @@ public class BranchFacadeService {
     }
 
     private void createGL(BranchDto savedBranch) {
-        AccountDto forWithdrawLedger = accountFacadeService.save(AccountDto.builder()
+        AccountDto forWithdrawLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Withdraw Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -52,7 +52,7 @@ public class BranchFacadeService {
                 .status(savedBranch.getStatus())
                 .build());
 
-        AccountDto forTransferLedger = accountFacadeService.save(AccountDto.builder()
+        AccountDto forTransferLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Transfer Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -62,7 +62,7 @@ public class BranchFacadeService {
                 .status(savedBranch.getStatus())
                 .build());
 
-        AccountDto forLoanLedger = accountFacadeService.save(AccountDto.builder()
+        AccountDto forLoanLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Loan Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -72,7 +72,7 @@ public class BranchFacadeService {
                 .status(savedBranch.getStatus())
                 .build());
 
-        AccountDto forCardApplicationLedger = accountFacadeService.save(AccountDto.builder()
+        AccountDto forCardApplicationLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Card Application Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -82,7 +82,7 @@ public class BranchFacadeService {
                 .status(savedBranch.getStatus())
                 .build());
 
-        AccountDto forChequeApplicationLedger = accountFacadeService.save(AccountDto.builder()
+        AccountDto forChequeApplicationLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Cheque Application Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -92,27 +92,27 @@ public class BranchFacadeService {
                 .status(savedBranch.getStatus())
                 .build());
 
-        accountFacadeService.save(LedgerDto.builder()
+        accountService.save(LedgerDto.builder()
                 .ledgerType(LedgerType.WITHDRAW.name())
                 .account(forWithdrawLedger)
                 .build());
 
-        accountFacadeService.save(LedgerDto.builder()
+        accountService.save(LedgerDto.builder()
                 .ledgerType(LedgerType.TRANSFER.name())
                 .account(forTransferLedger)
                 .build());
 
-        accountFacadeService.save(LedgerDto.builder()
+        accountService.save(LedgerDto.builder()
                 .ledgerType(LedgerType.LOAN.name())
                 .account(forLoanLedger)
                 .build());
 
-        accountFacadeService.save(LedgerDto.builder()
+        accountService.save(LedgerDto.builder()
                 .ledgerType(LedgerType.CARD_REQUEST.name())
                 .account(forCardApplicationLedger)
                 .build());
 
-        accountFacadeService.save(LedgerDto.builder()
+        accountService.save(LedgerDto.builder()
                 .ledgerType(LedgerType.CHEQUE_REQUEST.name())
                 .account(forChequeApplicationLedger)
                 .build());
@@ -121,7 +121,7 @@ public class BranchFacadeService {
     private void createVaults(BranchDto savedBranch, double[] vaultsAsset) {
 
         //TODO: build and save vault kmf
-        accountFacadeService.save(AccountDto.builder()
+        accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault KMF %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -134,7 +134,7 @@ public class BranchFacadeService {
                 .build());
 
         //TODO: build and save vault eur
-        accountFacadeService.save(AccountDto.builder()
+        accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault EUR %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -147,7 +147,7 @@ public class BranchFacadeService {
                 .build());
 
         //TODO: build and save vault usd
-        accountFacadeService.save(AccountDto.builder()
+        accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault USD %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
@@ -162,16 +162,16 @@ public class BranchFacadeService {
 
     public List<AccountDto> findAllVaultsByBranchId(Long branchId) {
         BranchDto branchDto = branchService.findById(branchId);
-        return accountFacadeService.findAllVault(branchDto);
+        return accountService.findAllVault(branchDto);
     }
 
     public List<LedgerDto> findAllLedgersByBranchId(Long branchId) {
         BranchDto branchDto = branchService.findById(branchId);
-        return accountFacadeService.findAllLedgers(branchDto);
+        return accountService.findAllLedgers(branchDto);
     }
 
     public AccountDto findVaultByBranchIdAndCurrency(Long branchId, String currency) {
         BranchDto branchDto = branchService.findById(branchId);
-        return accountFacadeService.findVault(branchDto, currency);
+        return accountService.findVault(branchDto, currency);
     }
 }

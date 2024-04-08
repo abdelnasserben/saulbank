@@ -7,7 +7,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.LoanDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
-import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.account.AccountService;
 import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,12 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
 
     @Getter
     private final LoanService loanService;
-    private final AccountFacadeService accountFacadeService;
+    private final AccountService accountService;
     private final FeeService feeService;
 
-    public LoanOperationService(LoanService loanService, AccountFacadeService accountFacadeService, FeeService feeService) {
+    public LoanOperationService(LoanService loanService, AccountService accountService, FeeService feeService) {
         this.loanService = loanService;
-        this.accountFacadeService = accountFacadeService;
+        this.accountService = accountService;
         this.feeService = feeService;
     }
 
@@ -35,7 +35,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
         double loanAmount = Helper.calculateTotalAmountOfLoan(loanDto.getIssuedAmount(), loanDto.getInterestRate());
 
         //TODO: create account of loan
-        AccountDto savedAccount = accountFacadeService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.save(AccountDto.builder()
                 .accountName(String.format("%s %s", loanDto.getBorrower().getFirstName(), loanDto.getBorrower().getLastName()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.LOAN.name())
@@ -66,7 +66,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
         AccountDto loanAccount = loanDto.getAccount();
         loanAccount.setStatus(Status.ACTIVE.code());
         //we'll make updated account info later...
-        accountFacadeService.save(loanAccount);
+        accountService.save(loanAccount);
 
         //TODO: apply withdraw fees
         Fee fee = new Fee(loanDto.getBranch(), loanDto.getApplicationFees(), "Loan");
@@ -85,7 +85,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
         AccountDto loanAccount = loanDto.getAccount();
         loanAccount.setStatus(Status.REJECTED.code());
         //we'll make updated account info later...
-        accountFacadeService.save(loanAccount);
+        accountService.save(loanAccount);
 
         loanService.save(loanDto);
     }

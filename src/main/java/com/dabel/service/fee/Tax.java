@@ -5,23 +5,24 @@ import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TransactionDto;
-import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.account.AccountService;
 import com.dabel.service.transaction.TransactionFacadeService;
+import com.dabel.service.transaction.TransactionService;
 
 public abstract class Tax {
 
-    private final AccountFacadeService accountFacadeService;
-    private final TransactionFacadeService transactionFacadeService;
+    private final AccountService accountService;
+    private final TransactionService transactionService;
 
-    public Tax(AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService) {
-        this.accountFacadeService = accountFacadeService;
-        this.transactionFacadeService = transactionFacadeService;
+    public Tax(AccountService accountService, TransactionService transactionService) {
+        this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 
     public void apply(AccountDto accountDto, Fee fee) {
-        LedgerDto ledgerDto = accountFacadeService.findLedgerByBranchAndType(fee.branchDto(), getLedgerType().name());
+        LedgerDto ledgerDto = accountService.findLedgerByBranchAndType(fee.branchDto(), getLedgerType().name());
 
-        transactionFacadeService.save(
+        transactionService.save(
                 TransactionDto.builder()
                         .transactionType(TransactionType.FEE.name())
                         .initiatorAccount(accountDto)
@@ -34,8 +35,8 @@ public abstract class Tax {
                         .status(Status.APPROVED.code())
                         .build());
 
-        accountFacadeService.debit(accountDto, fee.value());
-        accountFacadeService.credit(ledgerDto.getAccount(), fee.value());
+        accountService.debit(accountDto, fee.value());
+        accountService.credit(ledgerDto.getAccount(), fee.value());
     }
 
     abstract LedgerType getLedgerType();

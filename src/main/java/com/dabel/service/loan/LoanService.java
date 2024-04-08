@@ -6,7 +6,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.CustomerMapper;
 import com.dabel.mapper.LoanMapper;
 import com.dabel.repository.LoanRepository;
-import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.customer.CustomerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 public class LoanService {
 
     private final LoanRepository loanRepository;
-    private final CustomerFacadeService customerFacadeService;
+    private final CustomerService customerService;
 
-    public LoanService(LoanRepository loanRepository, CustomerFacadeService customerFacadeService) {
+    public LoanService(LoanRepository loanRepository, CustomerService customerService) {
         this.loanRepository = loanRepository;
-        this.customerFacadeService = customerFacadeService;
+        this.customerService = customerService;
     }
 
     public LoanDto save(LoanDto loanDTO) {
@@ -39,7 +39,7 @@ public class LoanService {
     }
 
     public List<LoanDto> findAllByCustomerIdentity(String customerIdentityNumber) {
-        CustomerDto customerDto = customerFacadeService.findByIdentity(customerIdentityNumber);
+        CustomerDto customerDto = customerService.findByIdentity(customerIdentityNumber);
         return loanRepository.findAllByBorrower(CustomerMapper.toModel(customerDto)).stream()
                 .map(LoanMapper::toDTO)
                 .collect(Collectors.toList());

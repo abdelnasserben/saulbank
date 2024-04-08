@@ -7,7 +7,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.ExchangeDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
-import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.account.AccountService;
 import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
 
     private final ExchangeService exchangeService;
     private final FeeService feeService;
-    private final AccountFacadeService accountFacadeService;
+    private final AccountService accountService;
 
-    public ExchangeOperationService(ExchangeService exchangeService, FeeService feeService, AccountFacadeService accountFacadeService) {
+    public ExchangeOperationService(ExchangeService exchangeService, FeeService feeService, AccountService accountService) {
         this.exchangeService = exchangeService;
         this.feeService = feeService;
-        this.accountFacadeService = accountFacadeService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -52,25 +52,25 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
 
         saleAccount = switch (CurrencyExchanger.getExchangeType(exchangeDto.getPurchaseCurrency(), exchangeDto.getSaleCurrency())) {
             case KMF_EUR -> {
-                purchaseAccount = accountFacadeService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
-                yield accountFacadeService.findVault(exchangeDto.getBranch(), Currency.EUR.name());
+                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
+                yield accountService.findVault(exchangeDto.getBranch(), Currency.EUR.name());
             }
             case EUR_KMF -> {
-                purchaseAccount = accountFacadeService.findVault(exchangeDto.getBranch(), Currency.EUR.name());
-                yield accountFacadeService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
+                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.EUR.name());
+                yield accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
             }
             case KMF_USD -> {
-                purchaseAccount = accountFacadeService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
-                yield accountFacadeService.findVault(exchangeDto.getBranch(), Currency.USD.name());
+                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
+                yield accountService.findVault(exchangeDto.getBranch(), Currency.USD.name());
             }
             case USD_KMF -> {
-                purchaseAccount = accountFacadeService.findVault(exchangeDto.getBranch(), Currency.USD.name());
-                yield accountFacadeService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
+                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.USD.name());
+                yield accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
             }
         };
 
-        accountFacadeService.debit(saleAccount, exchangeDto.getSaleAmount());
-        accountFacadeService.credit(purchaseAccount, exchangeDto.getPurchaseAmount());
+        accountService.debit(saleAccount, exchangeDto.getSaleAmount());
+        accountService.credit(purchaseAccount, exchangeDto.getPurchaseAmount());
 
         exchangeDto.setStatus(Status.APPROVED.code());
 //        we'll make updated by later

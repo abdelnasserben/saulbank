@@ -52,11 +52,11 @@ public final class Helper {
 
     public static String generateAccountNumber() {
         Random random = new Random();
-        int part1 = random.nextInt(1000);
+        int part1 = random.nextInt(100);
         int part2 = random.nextInt(10000);
         int part3 = random.nextInt(1000, 10000);
 
-        return String.format("%03d%04d%d", part1, part2, part3);
+        return String.format("%02d%04d%d", part1, part2, part3);
     }
 
     public static boolean isActiveCard(CardDto cardDto) {

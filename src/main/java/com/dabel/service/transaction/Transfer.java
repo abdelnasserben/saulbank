@@ -11,8 +11,8 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
-import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.account.AccountService;
+import com.dabel.service.customer.CustomerService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,12 @@ import org.springframework.stereotype.Service;
 public class Transfer extends Transaction{
 
     private final FeeService feeService;
-    private final CustomerFacadeService customerFacadeService;
-    private final AccountFacadeService accountFacadeService;
+    private final CustomerService customerService;
 
-    public Transfer(FeeService feeService, TransactionService transactionService, CustomerFacadeService customerFacadeService, AccountFacadeService accountFacadeService) {
-        super(transactionService, accountFacadeService);
+    public Transfer(FeeService feeService, TransactionService transactionService, CustomerService customerService, AccountService accountService) {
+        super(transactionService, accountService);
         this.feeService = feeService;
-        this.customerFacadeService = customerFacadeService;
-        this.accountFacadeService = accountFacadeService;
+        this.customerService = customerService;
     }
 
     @Override
@@ -40,8 +38,8 @@ public class Transfer extends Transaction{
             throw new IllegalOperationException(String.format("The transaction currency must match that of the account (%s)", transactionDto.getInitiatorAccount().getCurrency()));
 
         //TODO: check if initiator customer is affiliate on the account
-        CustomerDto customerDto = customerFacadeService.findByIdentity(transactionDto.getCustomerIdentity());
-        accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
+        CustomerDto customerDto = customerService.findByIdentity(transactionDto.getCustomerIdentity());
+        accountService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
 
         if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + BankFees.Basic.TRANSFER) {
@@ -66,8 +64,8 @@ public class Transfer extends Transaction{
         //TODO: exchange amount in given currency
         double creditAmount = CurrencyExchanger.exchange(transactionDto.getInitiatorAccount().getCurrency(), transactionDto.getReceiverAccount().getCurrency(), transactionDto.getAmount());
 
-        accountFacadeService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
-        accountFacadeService.credit(transactionDto.getReceiverAccount(), creditAmount);
+        accountService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
+        accountService.credit(transactionDto.getReceiverAccount(), creditAmount);
 
         //TODO: apply transfer fees
         Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.TRANSFER, "Transfer");

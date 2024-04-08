@@ -6,7 +6,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
 import com.dabel.dto.CardRequestDto;
 import com.dabel.exception.IllegalOperationException;
-import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.account.AccountService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +15,13 @@ import java.util.List;
 public class CardFacadeService {
 
     private final CardService cardService;
-    private final CardRequestService cardRequestService;
     private final CardRequestOperationService requestOperationService;
-    private final AccountFacadeService accountFacadeService;
+    private final AccountService accountService;
 
-    public CardFacadeService(CardService cardService, CardRequestService cardRequestService, CardRequestOperationService requestOperationService, AccountFacadeService accountFacadeService) {
+    public CardFacadeService(CardService cardService, CardRequestOperationService requestOperationService, AccountService accountService) {
         this.cardService = cardService;
-        this.cardRequestService = cardRequestService;
         this.requestOperationService = requestOperationService;
-        this.accountFacadeService = accountFacadeService;
+        this.accountService = accountService;
     }
 
     public void saveCard(CardDto cardDto) {
@@ -39,7 +37,7 @@ public class CardFacadeService {
     }
 
     public List<CardDto> findAllCardsOfAnAccount(String accountNumber) {
-        AccountDto accountDto = accountFacadeService.findByNumber(accountNumber);
+        AccountDto accountDto = accountService.findByNumber(accountNumber);
         return cardService.findAllByAccount(accountDto);
     }
 
@@ -96,7 +94,7 @@ public class CardFacadeService {
     }
 
     public CardRequestDto findRequestById(Long requestId) {
-        return cardRequestService.findById(requestId);
+        return requestOperationService.getCardRequestService().findById(requestId);
     }
 
     public List<CardDto> findAllAccountCards(AccountDto accountDto) {

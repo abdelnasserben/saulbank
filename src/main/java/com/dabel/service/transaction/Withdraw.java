@@ -11,8 +11,8 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
-import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.account.AccountService;
+import com.dabel.service.customer.CustomerService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,12 @@ import org.springframework.stereotype.Service;
 public class Withdraw extends Transaction {
 
     private final FeeService feeService;
-    private final CustomerFacadeService customerService;
-    private final AccountFacadeService accountFacadeService;
+    private final CustomerService customerService;
 
-    public Withdraw(FeeService feeService, TransactionService transactionService, CustomerFacadeService customerFacadeService, AccountFacadeService accountFacadeService) {
-        super(transactionService, accountFacadeService);
+    public Withdraw(FeeService feeService, TransactionService transactionService, CustomerService customerFacadeService, AccountService accountService) {
+        super(transactionService, accountService);
         this.feeService = feeService;
         this.customerService = customerFacadeService;
-        this.accountFacadeService = accountFacadeService;
     }
 
     @Override
@@ -42,10 +40,10 @@ public class Withdraw extends Transaction {
 
         //TODO: check if initiator customer is affiliate on the account
         CustomerDto customerDto = customerService.findByIdentity(transactionDto.getCustomerIdentity());
-        accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
+        accountService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
         //TODO: for withdraw, debit account is the initiator account of transaction so we interchange nothing, we set only the receiver
-        AccountDto receiverAccount = this.accountFacadeService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
+        AccountDto receiverAccount = this.accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
 
         //TODO: set receiver account of transaction
         transactionDto.setReceiverAccount(receiverAccount);
@@ -70,8 +68,8 @@ public class Withdraw extends Transaction {
             return;
 
         //TODO: debit and credit accounts
-        accountFacadeService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
-        accountFacadeService.credit(transactionDto.getReceiverAccount(), transactionDto.getAmount());
+        accountService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
+        accountService.credit(transactionDto.getReceiverAccount(), transactionDto.getAmount());
 
         //TODO: apply withdraw fees
         Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.WITHDRAW, "Withdraw");

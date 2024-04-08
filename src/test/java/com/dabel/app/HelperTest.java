@@ -87,7 +87,7 @@ class HelperTest {
 
     @Test
     void generateAccountNumber() {
-        assertThat(Helper.generateAccountNumber().length()).isEqualTo(11);
+        assertThat(Helper.generateAccountNumber().length()).isEqualTo(10);
     }
 
     @Test

@@ -7,14 +7,14 @@ import com.dabel.constant.TransactionType;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.exception.IllegalOperationException;
-import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.account.AccountService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class Deposit extends Transaction {
 
-    public Deposit(TransactionService transactionService, AccountFacadeService accountFacadeService) {
-        super(transactionService, accountFacadeService);
+    public Deposit(TransactionService transactionService, AccountService accountService) {
+        super(transactionService, accountService);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Deposit extends Transaction {
             throw new IllegalOperationException("Account must be active");
 
         //TODO: for deposit, initiator account is the beneficiary account so we interchange initiator as the vault and beneficiary as receiver
-        AccountDto initiatorAccount = accountFacadeService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
+        AccountDto initiatorAccount = accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
         AccountDto receiverAccount = transactionDto.getInitiatorAccount();
 
         //TODO: we update transaction details
@@ -43,8 +43,8 @@ public class Deposit extends Transaction {
         //TODO: exchange amount in given currency
         double creditAmount = CurrencyExchanger.exchange(transactionDto.getCurrency(), transactionDto.getReceiverAccount().getCurrency(), transactionDto.getAmount());
 
-        accountFacadeService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
-        accountFacadeService.credit(transactionDto.getReceiverAccount(), creditAmount);
+        accountService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
+        accountService.credit(transactionDto.getReceiverAccount(), creditAmount);
 
         //TODO: update transactionDto info and save it
         transactionDto.setStatus(Status.APPROVED.code());

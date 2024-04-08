@@ -12,12 +12,10 @@ public class AccountFacadeService {
 
     private final AccountService accountService;
     private final AccountAffiliationService accountAffiliationService;
-    private final AccountOperationService accountOperationService;
 
-    public AccountFacadeService(AccountService accountService, AccountAffiliationService accountAffiliationService, AccountOperationService accountOperationService) {
-        this.accountService = accountService;
+    public AccountFacadeService(AccountAffiliationService accountAffiliationService) {
         this.accountAffiliationService = accountAffiliationService;
-        this.accountOperationService = accountOperationService;
+        this.accountService = this.accountAffiliationService.getAccountService();
     }
 
     public AccountDto save(AccountDto accountDto) {
@@ -106,10 +104,10 @@ public class AccountFacadeService {
     }
 
     public void debit(AccountDto accountDto, double amount) {
-        accountOperationService.debit(accountDto, amount);
+        accountService.debit(accountDto, amount);
     }
 
     public void credit(AccountDto accountDto, double amount) {
-        accountOperationService.debit(accountDto, amount);
+        accountService.credit(accountDto, amount);
     }
 }

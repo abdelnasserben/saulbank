@@ -1,5 +1,6 @@
 package com.dabel.service.account;
 
+import com.dabel.app.Helper;
 import com.dabel.app.JpaHelper;
 import com.dabel.dto.*;
 import com.dabel.exception.ResourceNotFoundException;
@@ -126,5 +127,15 @@ public class AccountService {
 
     public void deleteTrunk(TrunkDto trunkDto) {
         trunkRepository.delete(TrunkMapper.toModel(trunkDto));
+    }
+
+    public void debit(AccountDto accountDto, double amount) {
+        accountDto.setBalance(accountDto.getBalance() - Helper.formatAmount(amount));
+        accountRepository.save(AccountMapper.toModel(accountDto));
+    }
+
+    public void credit(AccountDto accountDto, double amount) {
+        accountDto.setBalance(accountDto.getBalance() + Helper.formatAmount(amount));
+        accountRepository.save(AccountMapper.toModel(accountDto));
     }
 }

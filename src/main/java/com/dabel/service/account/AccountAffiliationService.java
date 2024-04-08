@@ -10,7 +10,8 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.exception.ResourceNotFoundException;
-import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.customer.CustomerService;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +19,13 @@ import java.util.List;
 @Service
 public class AccountAffiliationService {
 
-    protected final AccountService accountService;
-    protected final CustomerFacadeService customerFacadeService;
+    @Getter
+    private final AccountService accountService;
+    private final CustomerService customerService;
 
-    protected AccountAffiliationService(AccountService accountService, CustomerFacadeService customerFacadeService) {
+    public AccountAffiliationService(AccountService accountService, CustomerService customerService) {
         this.accountService = accountService;
-        this.customerFacadeService = customerFacadeService;
+        this.customerService = customerService;
     }
 
     public void add(CustomerDto customerDto, String accountNumber) {
@@ -52,7 +54,7 @@ public class AccountAffiliationService {
         } else {
             //TODO: save new customer
             customerDto.setStatus(Status.ACTIVE.code());
-            customerDto = customerFacadeService.save(customerDto);
+            customerDto = customerService.save(customerDto);
         }
 
         //TODO: save the new trunk
