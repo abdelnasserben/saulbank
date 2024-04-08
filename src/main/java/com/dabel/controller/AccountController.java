@@ -7,7 +7,6 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.exception.ResourceNotFoundException;
-import com.dabel.service.account.AccountAffiliationService;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
@@ -27,16 +26,12 @@ import java.util.stream.Stream;
 @Controller
 public class AccountController implements PageTitleConfig {
 
-    private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
-    private final AccountAffiliationService accountAffiliationService;
 
-    public AccountController(BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService, AccountAffiliationService accountAffiliationService) {
-        this.branchFacadeService = branchFacadeService;
+    public AccountController(BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
-        this.accountAffiliationService = accountAffiliationService;
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_ROOT)
@@ -140,7 +135,7 @@ public class AccountController implements PageTitleConfig {
         } else nextAffiliate = customerFacadeService.findByIdentity(customerIdentity);
 
 
-        accountAffiliationService.add(nextAffiliate, accountNumber);
+        accountFacadeService.addAffiliate(nextAffiliate, accountNumber);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful affiliation");
 
         return String.format("redirect:%s/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
@@ -152,7 +147,7 @@ public class AccountController implements PageTitleConfig {
         TrunkDto trunkDto = accountFacadeService.findTrunkById(trunkId);
         CustomerDto customerDto = customerFacadeService.findByIdentity(customerIdentityNumber);
 
-        accountAffiliationService.remove(customerDto, trunkDto.getAccount().getAccountNumber());
+        accountFacadeService.removeAffiliate(customerDto, trunkDto.getAccount().getAccountNumber());
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Affiliate removed successfully");
 
         return String.format("redirect:%s?code=%s", Web.Endpoint.ACCOUNT_AFFILIATION, trunkDto.getAccount().getAccountNumber());

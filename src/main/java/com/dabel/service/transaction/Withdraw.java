@@ -12,7 +12,7 @@ import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.customer.CustomerService;
+import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 public class Withdraw extends Transaction {
 
     private final FeeService feeService;
-    private final CustomerService customerService;
+    private final CustomerFacadeService customerService;
     private final AccountFacadeService accountFacadeService;
 
-    public Withdraw(FeeService feeService, TransactionService transactionService, CustomerService customerService, AccountFacadeService accountFacadeService) {
+    public Withdraw(FeeService feeService, TransactionService transactionService, CustomerFacadeService customerFacadeService, AccountFacadeService accountFacadeService) {
         super(transactionService, accountFacadeService);
         this.feeService = feeService;
-        this.customerService = customerService;
+        this.customerService = customerFacadeService;
         this.accountFacadeService = accountFacadeService;
     }
 

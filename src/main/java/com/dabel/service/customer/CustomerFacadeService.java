@@ -21,6 +21,10 @@ public class CustomerFacadeService {
         this.accountFacadeService = accountFacadeService;
     }
 
+    public CustomerDto save(CustomerDto customerDto) {
+        return customerService.save(customerDto);
+    }
+
     public void create(CustomerDto customerDto, String accountName, AccountType accountType, AccountProfile accountProfile) {
 
         if (customerDto.getCustomerId() != null)

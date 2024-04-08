@@ -17,6 +17,10 @@ public class TransactionFacadeService {
         this.transactionContext = transactionContext;
     }
 
+    public void save(TransactionDto transactionDto) {
+        transactionService.save(transactionDto);
+    }
+
     public void init(TransactionDto transactionDto) {
         transactionContext.setContext(transactionDto.getTransactionType()).init(transactionDto);
     }

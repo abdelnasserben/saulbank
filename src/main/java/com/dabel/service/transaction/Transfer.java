@@ -12,7 +12,7 @@ import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.customer.CustomerService;
+import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 public class Transfer extends Transaction{
 
     private final FeeService feeService;
-    private final CustomerService customerService;
+    private final CustomerFacadeService customerFacadeService;
     private final AccountFacadeService accountFacadeService;
 
-    public Transfer(FeeService feeService, TransactionService transactionService, CustomerService customerService, AccountFacadeService accountFacadeService) {
+    public Transfer(FeeService feeService, TransactionService transactionService, CustomerFacadeService customerFacadeService, AccountFacadeService accountFacadeService) {
         super(transactionService, accountFacadeService);
         this.feeService = feeService;
-        this.customerService = customerService;
+        this.customerFacadeService = customerFacadeService;
         this.accountFacadeService = accountFacadeService;
     }
 
@@ -40,7 +40,7 @@ public class Transfer extends Transaction{
             throw new IllegalOperationException(String.format("The transaction currency must match that of the account (%s)", transactionDto.getInitiatorAccount().getCurrency()));
 
         //TODO: check if initiator customer is affiliate on the account
-        CustomerDto customerDto = customerService.findByIdentity(transactionDto.getCustomerIdentity());
+        CustomerDto customerDto = customerFacadeService.findByIdentity(transactionDto.getCustomerIdentity());
         accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
 

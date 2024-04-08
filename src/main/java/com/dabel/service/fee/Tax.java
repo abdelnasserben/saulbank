@@ -6,22 +6,22 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.transaction.TransactionService;
+import com.dabel.service.transaction.TransactionFacadeService;
 
 public abstract class Tax {
 
     private final AccountFacadeService accountFacadeService;
-    private final TransactionService transactionService;
+    private final TransactionFacadeService transactionFacadeService;
 
-    public Tax(AccountFacadeService accountFacadeService, TransactionService transactionService) {
+    public Tax(AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService) {
         this.accountFacadeService = accountFacadeService;
-        this.transactionService = transactionService;
+        this.transactionFacadeService = transactionFacadeService;
     }
 
     public void apply(AccountDto accountDto, Fee fee) {
         LedgerDto ledgerDto = accountFacadeService.findLedgerByBranchAndType(fee.branchDto(), getLedgerType().name());
 
-        transactionService.save(
+        transactionFacadeService.save(
                 TransactionDto.builder()
                         .transactionType(TransactionType.FEE.name())
                         .initiatorAccount(accountDto)
