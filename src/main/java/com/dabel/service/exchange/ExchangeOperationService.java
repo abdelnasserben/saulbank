@@ -8,7 +8,6 @@ import com.dabel.dto.ExchangeDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.account.AccountOperationService;
 import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
@@ -20,13 +19,11 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
     private final ExchangeService exchangeService;
     private final FeeService feeService;
     private final AccountFacadeService accountFacadeService;
-    private final AccountOperationService accountOperationService;
 
-    public ExchangeOperationService(ExchangeService exchangeService, FeeService feeService, AccountFacadeService accountFacadeService, AccountOperationService accountOperationService) {
+    public ExchangeOperationService(ExchangeService exchangeService, FeeService feeService, AccountFacadeService accountFacadeService) {
         this.exchangeService = exchangeService;
         this.feeService = feeService;
         this.accountFacadeService = accountFacadeService;
-        this.accountOperationService = accountOperationService;
     }
 
     @Override
@@ -72,8 +69,8 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
             }
         };
 
-        accountOperationService.debit(saleAccount, exchangeDto.getSaleAmount());
-        accountOperationService.credit(purchaseAccount, exchangeDto.getPurchaseAmount());
+        accountFacadeService.debit(saleAccount, exchangeDto.getSaleAmount());
+        accountFacadeService.credit(purchaseAccount, exchangeDto.getPurchaseAmount());
 
         exchangeDto.setStatus(Status.APPROVED.code());
 //        we'll make updated by later

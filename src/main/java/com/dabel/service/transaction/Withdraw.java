@@ -12,8 +12,6 @@ import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.account.AccountOperationService;
-import com.dabel.service.account.AccountService;
 import com.dabel.service.customer.CustomerService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
@@ -25,8 +23,8 @@ public class Withdraw extends Transaction {
     private final CustomerService customerService;
     private final AccountFacadeService accountFacadeService;
 
-    public Withdraw(FeeService feeService, TransactionService transactionService, AccountService accountService, AccountOperationService accountOperationService, CustomerService customerService, AccountFacadeService accountFacadeService) {
-        super(transactionService, accountService, accountOperationService);
+    public Withdraw(FeeService feeService, TransactionService transactionService, CustomerService customerService, AccountFacadeService accountFacadeService) {
+        super(transactionService, accountFacadeService);
         this.feeService = feeService;
         this.customerService = customerService;
         this.accountFacadeService = accountFacadeService;
@@ -47,7 +45,7 @@ public class Withdraw extends Transaction {
         accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
         //TODO: for withdraw, debit account is the initiator account of transaction so we interchange nothing, we set only the receiver
-        AccountDto receiverAccount = accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
+        AccountDto receiverAccount = this.accountFacadeService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
 
         //TODO: set receiver account of transaction
         transactionDto.setReceiverAccount(receiverAccount);
@@ -72,8 +70,8 @@ public class Withdraw extends Transaction {
             return;
 
         //TODO: debit and credit accounts
-        accountOperationService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
-        accountOperationService.credit(transactionDto.getReceiverAccount(), transactionDto.getAmount());
+        accountFacadeService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
+        accountFacadeService.credit(transactionDto.getReceiverAccount(), transactionDto.getAmount());
 
         //TODO: apply withdraw fees
         Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.WITHDRAW, "Withdraw");

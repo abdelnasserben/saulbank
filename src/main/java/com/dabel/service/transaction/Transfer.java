@@ -12,8 +12,6 @@ import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.account.AccountOperationService;
-import com.dabel.service.account.AccountService;
 import com.dabel.service.customer.CustomerService;
 import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
@@ -25,8 +23,8 @@ public class Transfer extends Transaction{
     private final CustomerService customerService;
     private final AccountFacadeService accountFacadeService;
 
-    public Transfer(FeeService feeService, TransactionService transactionService, AccountService accountService, AccountOperationService accountOperationService, CustomerService customerService, AccountFacadeService accountFacadeService) {
-        super(transactionService, accountService, accountOperationService);
+    public Transfer(FeeService feeService, TransactionService transactionService, CustomerService customerService, AccountFacadeService accountFacadeService) {
+        super(transactionService, accountFacadeService);
         this.feeService = feeService;
         this.customerService = customerService;
         this.accountFacadeService = accountFacadeService;
@@ -68,8 +66,8 @@ public class Transfer extends Transaction{
         //TODO: exchange amount in given currency
         double creditAmount = CurrencyExchanger.exchange(transactionDto.getInitiatorAccount().getCurrency(), transactionDto.getReceiverAccount().getCurrency(), transactionDto.getAmount());
 
-        accountOperationService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
-        accountOperationService.credit(transactionDto.getReceiverAccount(), creditAmount);
+        accountFacadeService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
+        accountFacadeService.credit(transactionDto.getReceiverAccount(), creditAmount);
 
         //TODO: apply transfer fees
         Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.TRANSFER, "Transfer");

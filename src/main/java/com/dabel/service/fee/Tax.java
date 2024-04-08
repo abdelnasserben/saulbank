@@ -5,24 +5,21 @@ import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TransactionDto;
-import com.dabel.service.account.AccountOperationService;
-import com.dabel.service.account.AccountService;
+import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.transaction.TransactionService;
 
 public abstract class Tax {
 
-    private final AccountService accountService;
-    private final AccountOperationService accountOperationService;
+    private final AccountFacadeService accountFacadeService;
     private final TransactionService transactionService;
 
-    public Tax(AccountService accountService, AccountOperationService accountOperationService, TransactionService transactionService) {
-        this.accountService = accountService;
-        this.accountOperationService = accountOperationService;
+    public Tax(AccountFacadeService accountFacadeService, TransactionService transactionService) {
+        this.accountFacadeService = accountFacadeService;
         this.transactionService = transactionService;
     }
 
     public void apply(AccountDto accountDto, Fee fee) {
-        LedgerDto ledgerDto = accountService.findLedgerByBranchAndType(fee.branchDto(), getLedgerType().name());
+        LedgerDto ledgerDto = accountFacadeService.findLedgerByBranchAndType(fee.branchDto(), getLedgerType().name());
 
         transactionService.save(
                 TransactionDto.builder()
@@ -37,8 +34,8 @@ public abstract class Tax {
                         .status(Status.APPROVED.code())
                         .build());
 
-        accountOperationService.debit(accountDto, fee.value());
-        accountOperationService.credit(ledgerDto.getAccount(), fee.value());
+        accountFacadeService.debit(accountDto, fee.value());
+        accountFacadeService.credit(ledgerDto.getAccount(), fee.value());
     }
 
     abstract LedgerType getLedgerType();

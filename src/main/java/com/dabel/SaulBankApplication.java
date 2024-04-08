@@ -11,5 +11,4 @@ public class SaulBankApplication {
 	}
 
 }
-//withdraw future(only owner customer can init / display signature picture on init transaction)
 //begin cheques futures implementation

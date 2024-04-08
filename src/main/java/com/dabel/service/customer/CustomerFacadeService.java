@@ -5,7 +5,7 @@ import com.dabel.constant.*;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
-import com.dabel.service.account.AccountService;
+import com.dabel.service.account.AccountFacadeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +14,11 @@ import java.util.List;
 public class CustomerFacadeService {
 
     private final CustomerService customerService;
-    private final AccountService accountService;
+    private final AccountFacadeService accountFacadeService;
 
-    public CustomerFacadeService(CustomerService customerService, AccountService accountService) {
+    public CustomerFacadeService(CustomerService customerService, AccountFacadeService accountFacadeService) {
         this.customerService = customerService;
-        this.accountService = accountService;
+        this.accountFacadeService = accountFacadeService;
     }
 
     public void create(CustomerDto customerDto, String accountName, AccountType accountType, AccountProfile accountProfile) {
@@ -32,7 +32,7 @@ public class CustomerFacadeService {
 
         //TODO: define the membership and save trunk
         String accountMembership = accountProfile.equals(AccountProfile.ASSOCIATIVE) ? AccountMembership.ASSOCIATED.name() : AccountMembership.OWNER.name();
-        accountService.save(TrunkDto.builder()
+        accountFacadeService.save(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(AccountDto.builder()
                         .accountName(accountName)

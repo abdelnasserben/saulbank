@@ -11,9 +11,13 @@ import java.util.List;
 public class AccountFacadeService {
 
     private final AccountService accountService;
+    private final AccountAffiliationService accountAffiliationService;
+    private final AccountOperationService accountOperationService;
 
-    public AccountFacadeService(AccountService accountService) {
+    public AccountFacadeService(AccountService accountService, AccountAffiliationService accountAffiliationService, AccountOperationService accountOperationService) {
         this.accountService = accountService;
+        this.accountAffiliationService = accountAffiliationService;
+        this.accountOperationService = accountOperationService;
     }
 
     public AccountDto save(AccountDto accountDto) {
@@ -91,5 +95,21 @@ public class AccountFacadeService {
 
         accountDto.setStatus(Status.DEACTIVATED.code());
         accountService.save(accountDto);
+    }
+
+    public void addAffiliate(CustomerDto customerDto, String accountNumber) {
+        accountAffiliationService.add(customerDto, accountNumber);
+    }
+
+    public void removeAffiliate(CustomerDto customerDto, String accountNumber) {
+        accountAffiliationService.remove(customerDto, accountNumber);
+    }
+
+    public void debit(AccountDto accountDto, double amount) {
+        accountOperationService.debit(accountDto, amount);
+    }
+
+    public void credit(AccountDto accountDto, double amount) {
+        accountOperationService.debit(accountDto, amount);
     }
 }

@@ -4,19 +4,16 @@ import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.EvaluableOperation;
-import com.dabel.service.account.AccountOperationService;
-import com.dabel.service.account.AccountService;
+import com.dabel.service.account.AccountFacadeService;
 
 public abstract class Transaction implements EvaluableOperation<TransactionDto> {
 
     protected TransactionService transactionService;
-    protected AccountService accountService;
-    protected AccountOperationService accountOperationService;
+    protected AccountFacadeService accountFacadeService;
 
-    public Transaction(TransactionService transactionService, AccountService accountService, AccountOperationService accountOperationService) {
+    public Transaction(TransactionService transactionService, AccountFacadeService accountFacadeService) {
         this.transactionService = transactionService;
-        this.accountService = accountService;
-        this.accountOperationService = accountOperationService;
+        this.accountFacadeService = accountFacadeService;
     }
 
     @Override

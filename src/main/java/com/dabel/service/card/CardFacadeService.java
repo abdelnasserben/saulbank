@@ -6,7 +6,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
 import com.dabel.dto.CardRequestDto;
 import com.dabel.exception.IllegalOperationException;
-import com.dabel.service.account.AccountService;
+import com.dabel.service.account.AccountFacadeService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,13 +17,13 @@ public class CardFacadeService {
     private final CardService cardService;
     private final CardRequestService cardRequestService;
     private final CardRequestOperationService requestOperationService;
-    private final AccountService accountService;
+    private final AccountFacadeService accountFacadeService;
 
-    public CardFacadeService(CardService cardService, CardRequestService cardRequestService, CardRequestOperationService requestOperationService, AccountService accountService) {
+    public CardFacadeService(CardService cardService, CardRequestService cardRequestService, CardRequestOperationService requestOperationService, AccountFacadeService accountFacadeService) {
         this.cardService = cardService;
         this.cardRequestService = cardRequestService;
         this.requestOperationService = requestOperationService;
-        this.accountService = accountService;
+        this.accountFacadeService = accountFacadeService;
     }
 
     public void saveCard(CardDto cardDto) {
@@ -39,7 +39,7 @@ public class CardFacadeService {
     }
 
     public List<CardDto> findAllCardsOfAnAccount(String accountNumber) {
-        AccountDto accountDto = accountService.findByNumber(accountNumber);
+        AccountDto accountDto = accountFacadeService.findByNumber(accountNumber);
         return cardService.findAllByAccount(accountDto);
     }
 
