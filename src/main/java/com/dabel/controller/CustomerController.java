@@ -128,7 +128,7 @@ public class CustomerController implements PageTitleConfig {
                 .sum();
 
         List<CardDto> customerCards = customerAccounts.stream()
-                .map(trunkDto -> cardFacadeService.findAllAccountCards(trunkDto.getAccount()))
+                .map(trunkDto -> cardFacadeService.findAllByCustomer(trunkDto.getCustomer()))
                 .flatMap(Collection::stream)
                 .peek(c -> c.setCardNumber(Helper.hideCardNumber(c.getCardNumber())))
                 .toList();

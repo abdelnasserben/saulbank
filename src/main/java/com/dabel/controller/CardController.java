@@ -134,6 +134,7 @@ public class CardController implements PageTitleConfig {
                 .cardName(postCardDto.getCardName())
                 .cardNumber(postCardDto.getCardNumber())
                 .account(requestDto.getTrunk().getAccount())
+                .customer(requestDto.getTrunk().getCustomer())
                 .expirationDate(CardExpirationDateUtils.getDate(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth())))
                 .status(Status.PENDING.code())
                 .branch(requestDto.getBranch())

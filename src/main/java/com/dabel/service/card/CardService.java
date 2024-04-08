@@ -2,9 +2,11 @@ package com.dabel.service.card;
 
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
+import com.dabel.dto.CustomerDto;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.AccountMapper;
 import com.dabel.mapper.CardMapper;
+import com.dabel.mapper.CustomerMapper;
 import com.dabel.repository.CardRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,12 @@ public class CardService {
     public List<CardDto> findAllByAccount(AccountDto accountDto) {
 
         return cardRepository.findAllByAccount(AccountMapper.toModel(accountDto)).stream()
+                .map(CardMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<CardDto> findAllByCustomer(CustomerDto customerDto) {
+        return cardRepository.findAllByCustomer(CustomerMapper.toModel(customerDto)).stream()
                 .map(CardMapper::toDTO)
                 .collect(Collectors.toList());
     }

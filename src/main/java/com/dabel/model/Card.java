@@ -21,6 +21,10 @@ public class Card {
     @JoinColumn(name = "accountId")
     private Account account;
 
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    private Customer customer;
+
     private String cardType;
     private String cardNumber;
     private String cardName;

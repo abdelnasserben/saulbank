@@ -5,6 +5,7 @@ import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
 import com.dabel.dto.CardRequestDto;
+import com.dabel.dto.CustomerDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,11 @@ public class CardFacadeService {
         return requestOperationService.getCardRequestService().findById(requestId);
     }
 
-    public List<CardDto> findAllAccountCards(AccountDto accountDto) {
+    public List<CardDto> findAllByAccount(AccountDto accountDto) {
         return cardService.findAllByAccount(accountDto);
+    }
+
+    public List<CardDto> findAllByCustomer(CustomerDto customerDto) {
+        return cardService.findAllByCustomer(customerDto);
     }
 }

@@ -6,7 +6,6 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.account.AccountService;
-import com.dabel.service.transaction.TransactionFacadeService;
 import com.dabel.service.transaction.TransactionService;
 
 public abstract class Tax {
