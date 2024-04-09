@@ -28,14 +28,14 @@ public class BranchController implements PageTitleConfig {
         this.accountFacadeService = accountFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.BRANCH_ROOT)
+    @GetMapping(value = Web.Endpoint.BRANCHES)
     public String listBranches(Model model, BranchDto branchDTO) {
 
         listingAndConfigTitle(model);
-        return Web.View.BRANCH_LIST;
+        return Web.View.BRANCHES;
     }
 
-    @PostMapping(value = Web.Endpoint.BRANCH_ROOT)
+    @PostMapping(value = Web.Endpoint.BRANCHES)
     public String addNewBranch(Model model, @Valid BranchDto branchDto, BindingResult binding,
                                @RequestParam(required = false, defaultValue = "0") double assetKMF,
                                @RequestParam(required = false, defaultValue = "0") double assetEUR,
@@ -45,14 +45,14 @@ public class BranchController implements PageTitleConfig {
         if(binding.hasErrors() || assetKMF < 0 || assetEUR < 0 || assetUSD < 0) {
             listingAndConfigTitle(model);
             model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
-            return Web.View.BRANCH_LIST;
+            return Web.View.BRANCHES;
         }
 
         double[] vaultsAssets = new double[]{assetKMF, assetEUR, assetUSD};
         branchFacadeService.create(branchDto, vaultsAssets);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "New branch added successfully !");
 
-        return "redirect:" + Web.View.BRANCH_LIST;
+        return "redirect:" + Web.View.BRANCHES;
     }
 
     @GetMapping(value = Web.Endpoint.BRANCH_ACCOUNTS)

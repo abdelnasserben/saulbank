@@ -24,13 +24,13 @@ public final class CustomExceptionHandler {
     public String resourceNotFoundHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
 
         List<String> infiniteRedirectionUrl = List.of(
-                Web.Endpoint.CUSTOMER_ROOT,
-                Web.Endpoint.TRANSACTION_ROOT,
-                Web.Endpoint.EXCHANGE_ROOT,
-                Web.Endpoint.CARD_ROOT,
-                Web.Endpoint.CARD_REQUEST_ROOT,
-                Web.Endpoint.LOAN_ROOT,
-                Web.Endpoint.ACCOUNT_ROOT
+                Web.Endpoint.CUSTOMERS,
+                Web.Endpoint.TRANSACTIONS,
+                Web.Endpoint.EXCHANGES,
+                Web.Endpoint.CARDS,
+                Web.Endpoint.CARD_REQUESTS,
+                Web.Endpoint.LOANS,
+                Web.Endpoint.ACCOUNTS
         );
 
         String suspectedUrl = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));

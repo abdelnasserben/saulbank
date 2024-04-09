@@ -33,7 +33,7 @@ public class AccountController implements PageTitleConfig {
         this.customerFacadeService = customerFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.ACCOUNT_ROOT)
+    @GetMapping(value = Web.Endpoint.ACCOUNTS)
     public String listingTrunks(Model model) {
 
         List<TrunkDto> customerAccounts = accountFacadeService.findAllTrunks().stream()
@@ -43,10 +43,10 @@ public class AccountController implements PageTitleConfig {
 
         configPageTitle(model, Web.Menu.Account.ROOT);
         model.addAttribute("trunks", customerAccounts);
-        return Web.View.ACCOUNT_LIST;
+        return Web.View.ACCOUNTS;
     }
 
-    @GetMapping(value = Web.Endpoint.ACCOUNT_ROOT + "/{trunkId}")
+    @GetMapping(value = Web.Endpoint.ACCOUNTS + "/{trunkId}")
     public String trunkDetails(Model model, @PathVariable Long trunkId) {
 
         TrunkDto trunkDto = Stream.of(accountFacadeService.findTrunkById(trunkId))
@@ -65,7 +65,7 @@ public class AccountController implements PageTitleConfig {
         accountFacadeService.activateTrunk(trunkId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Account successfully activated !");
 
-        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNT_ROOT , trunkId);
+        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNTS, trunkId);
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_DEACTIVATE + "/{trunkId}")
@@ -74,7 +74,7 @@ public class AccountController implements PageTitleConfig {
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Account successfully deactivated!");
         accountFacadeService.deactivateTrunk(trunkId);
 
-        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNT_ROOT , trunkId);
+        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNTS, trunkId);
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION)

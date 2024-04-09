@@ -32,15 +32,15 @@ public class LoanController implements PageTitleConfig {
         this.customerFacadeService = customerFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.LOAN_ROOT)
+    @GetMapping(value = Web.Endpoint.LOANS)
     public String listingLoans(Model model) {
         configPageTitle(model, Web.Menu.Loan.ROOT);
         model.addAttribute("loans", StatedObjectFormatter.format(loanFacadeService.findAll()));
 
-        return Web.View.LOAN_LIST;
+        return Web.View.LOANS;
     }
 
-    @GetMapping(value = Web.Endpoint.LOAN_ROOT + "/{loanId}")
+    @GetMapping(value = Web.Endpoint.LOANS + "/{loanId}")
     public String loanDetails(@PathVariable Long loanId, Model model) {
 
         LoanDto loanDto = loanFacadeService.findById(loanId);
@@ -88,7 +88,7 @@ public class LoanController implements PageTitleConfig {
         loanFacadeService.approve(loanId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Loan successfully approved!");
 
-        return "redirect:" + Web.Endpoint.LOAN_ROOT + "/" + loanId;
+        return "redirect:" + Web.Endpoint.LOANS + "/" + loanId;
     }
 
     @PostMapping(value = Web.Endpoint.LOAN_REJECT + "/{loanId}")
@@ -101,7 +101,7 @@ public class LoanController implements PageTitleConfig {
             loanFacadeService.reject(loanId, rejectReason);
         }
 
-        return "redirect:" + Web.Endpoint.LOAN_ROOT + "/" + loanId;
+        return "redirect:" + Web.Endpoint.LOANS + "/" + loanId;
     }
 
 

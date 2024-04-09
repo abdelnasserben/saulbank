@@ -50,12 +50,12 @@ public class CustomerController implements PageTitleConfig {
         this.cardFacadeService = cardFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.CUSTOMER_ROOT)
+    @GetMapping(value = Web.Endpoint.CUSTOMERS)
     public String listingCustomers(Model model) {
 
         configPageTitle(model, Web.Menu.Customer.ROOT);
         model.addAttribute("customers", StatedObjectFormatter.format(customerFacadeService.findAll()));
-        return Web.View.CUSTOMER_LIST;
+        return Web.View.CUSTOMERS;
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMER_ADD)
@@ -95,7 +95,7 @@ public class CustomerController implements PageTitleConfig {
         return "redirect:" + Web.Endpoint.CUSTOMER_ADD;
     }
 
-    @GetMapping(value = Web.Endpoint.CUSTOMER_ROOT + "/{customerId}")
+    @GetMapping(value = Web.Endpoint.CUSTOMERS + "/{customerId}")
     public String customerDetails(@PathVariable Long customerId, Model model) {
 
         CustomerDto customerDto = customerFacadeService.findById(customerId);
@@ -152,7 +152,7 @@ public class CustomerController implements PageTitleConfig {
         return Web.View.CUSTOMER_DETAILS;
     }
 
-    @PostMapping(value = Web.Endpoint.CUSTOMER_ROOT+ "/{customerId}")
+    @PostMapping(value = Web.Endpoint.CUSTOMERS + "/{customerId}")
     public String updateCustomerGeneralInfo(@Valid CustomerDto customerDto, BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors())
@@ -162,7 +162,7 @@ public class CustomerController implements PageTitleConfig {
             customerFacadeService.update(customerDto);
         }
 
-        return String.format("redirect:%s/%d", Web.Endpoint.CUSTOMER_ROOT, customerDto.getCustomerId());
+        return String.format("redirect:%s/%d", Web.Endpoint.CUSTOMERS, customerDto.getCustomerId());
     }
 
     @Override

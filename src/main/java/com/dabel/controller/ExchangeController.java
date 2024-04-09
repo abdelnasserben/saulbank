@@ -28,15 +28,15 @@ public class ExchangeController implements PageTitleConfig {
         this.branchFacadeService = branchFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.EXCHANGE_ROOT)
+    @GetMapping(value = Web.Endpoint.EXCHANGES)
     public String listingExchanges(Model model) {
         configPageTitle(model, Web.Menu.Exchange.ROOT);
         model.addAttribute("exchanges", StatedObjectFormatter.format(exchangeFacadeService.findAll()));
 
-        return Web.View.EXCHANGE_LIST;
+        return Web.View.EXCHANGES;
     }
 
-    @GetMapping(value = Web.Endpoint.EXCHANGE_ROOT + "/{exchangeId}")
+    @GetMapping(value = Web.Endpoint.EXCHANGES + "/{exchangeId}")
     public String exchangeDetails(@PathVariable Long exchangeId, Model model) {
 
         ExchangeDto exchange = exchangeFacadeService.findById(exchangeId);
@@ -77,7 +77,7 @@ public class ExchangeController implements PageTitleConfig {
         exchangeFacadeService.approve(exchangeId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully approved!");
 
-        return "redirect:" + Web.Endpoint.EXCHANGE_ROOT + "/" + exchangeId;
+        return "redirect:" + Web.Endpoint.EXCHANGES + "/" + exchangeId;
     }
 
     @PostMapping(value = Web.Endpoint.EXCHANGE_REJECT + "/{exchangeId}")
@@ -90,7 +90,7 @@ public class ExchangeController implements PageTitleConfig {
             exchangeFacadeService.reject(exchangeId, rejectReason);
         }
 
-        return "redirect:" + Web.Endpoint.EXCHANGE_ROOT + "/" + exchangeId;
+        return "redirect:" + Web.Endpoint.EXCHANGES + "/" + exchangeId;
     }
 
 

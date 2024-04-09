@@ -35,15 +35,15 @@ public class CardController implements PageTitleConfig {
         this.customerFacadeService = customerFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.CARD_ROOT)
+    @GetMapping(value = Web.Endpoint.CARDS)
     public String listingCards(Model model) {
 
         configPageTitle(model, Web.Menu.Card.ROOT);
         model.addAttribute("cards", StatedObjectFormatter.format(cardFacadeService.findAllCards()));
-        return Web.View.CARD_LIST;
+        return Web.View.CARDS;
     }
 
-    @GetMapping(value = Web.Endpoint.CARD_ROOT + "/{cardId}")
+    @GetMapping(value = Web.Endpoint.CARDS + "/{cardId}")
     public String cardDetails(@PathVariable Long cardId, Model model) {
 
         CardDto card = cardFacadeService.findCardById(cardId);
@@ -58,7 +58,7 @@ public class CardController implements PageTitleConfig {
         cardFacadeService.activateCard(cardId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Card successfully activated !");
 
-        return String.format("redirect:%s/%d", Web.Endpoint.CARD_ROOT , cardId);
+        return String.format("redirect:%s/%d", Web.Endpoint.CARDS, cardId);
     }
 
     @PostMapping(value = Web.Endpoint.CARD_DEACTIVATE + "/{cardId}")
@@ -71,24 +71,24 @@ public class CardController implements PageTitleConfig {
             cardFacadeService.deactivateCard(cardId, rejectReason);
         }
 
-        return String.format("redirect:%s/%d", Web.Endpoint.CARD_ROOT , cardId);
+        return String.format("redirect:%s/%d", Web.Endpoint.CARDS, cardId);
     }
 
-    @GetMapping(value = Web.Endpoint.CARD_REQUEST_ROOT)
+    @GetMapping(value = Web.Endpoint.CARD_REQUESTS)
     public String listingRequests(Model model, PostCardRequestDto postCardRequestDto) {
-        configPageTitle(model, Web.Menu.Card.REQUEST_ROOT);
+        configPageTitle(model, Web.Menu.Card.REQUESTS);
         model.addAttribute("cardRequests", StatedObjectFormatter.format(cardFacadeService.findAllCardRequests()));
 
-        return Web.View.CARD_REQUEST_LIST;
+        return Web.View.CARD_REQUESTS;
     }
 
-    @PostMapping(value = Web.Endpoint.CARD_REQUEST_ROOT)
+    @PostMapping(value = Web.Endpoint.CARD_REQUESTS)
     public String sendRequest(Model model, @Valid PostCardRequestDto postCardRequestDto, BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
-            configPageTitle(model, Web.Menu.Card.REQUEST_ROOT);
+            configPageTitle(model, Web.Menu.Card.REQUESTS);
             model.addAttribute(Web.MessageTag.ERROR, "Invalid request application information !");
-            return Web.View.CARD_REQUEST_LIST;
+            return Web.View.CARD_REQUESTS;
         }
 
         //TODO: get branch, customer and his account
@@ -104,16 +104,16 @@ public class CardController implements PageTitleConfig {
         cardFacadeService.sendRequest(requestDto);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Card request successfully sent !");
 
-        return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT;
+        return "redirect:" + Web.Endpoint.CARD_REQUESTS;
     }
 
-    @GetMapping(value = Web.Endpoint.CARD_REQUEST_ROOT + "/{requestId}")
+    @GetMapping(value = Web.Endpoint.CARD_REQUESTS + "/{requestId}")
     public String requestDetails(Model model, @PathVariable Long requestId, PostCardDto postCardDto) {
 
         CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
 
         configCardRequestAttributesPage(model, requestDto);
-        return Web.View.CARD_APPLICATION_DETAILS;
+        return Web.View.CARD_REQUEST_DETAILS;
     }
 
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_APPROVE + "/{requestId}")
@@ -124,7 +124,7 @@ public class CardController implements PageTitleConfig {
         if(binding.hasErrors() || !CardExpirationDateUtils.isValidExpiryDate(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth()))) {
             configCardRequestAttributesPage(model, requestDto);
             model.addAttribute(Web.MessageTag.ERROR, "Invalid card information. Check expiration date if no error indication has displayed");
-            return Web.View.CARD_APPLICATION_DETAILS;
+            return Web.View.CARD_REQUEST_DETAILS;
         }
 
 
@@ -149,7 +149,7 @@ public class CardController implements PageTitleConfig {
         cardFacadeService.approveRequest(requestId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Request approved successfully !");
 
-        return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
+        return "redirect:" + Web.Endpoint.CARD_REQUESTS + "/" + requestId;
     }
 
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_REJECT + "/{requestId}")
@@ -162,7 +162,7 @@ public class CardController implements PageTitleConfig {
             cardFacadeService.rejectRequest(requestId, rejectReason);
         }
 
-        return "redirect:" + Web.Endpoint.CARD_REQUEST_ROOT + "/" + requestId;
+        return "redirect:" + Web.Endpoint.CARD_REQUESTS + "/" + requestId;
     }
 
     private void configCardRequestAttributesPage(Model model, CardRequestDto requestDto) {

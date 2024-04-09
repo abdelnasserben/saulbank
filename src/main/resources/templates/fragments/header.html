@@ -572,7 +572,7 @@
 							</div>
 							<!--end:Menu item-->
 							<!--begin:Menu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentMenu == 'Cheques' ? 'show' : ''}">
 								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
@@ -607,6 +607,18 @@
 												<span class="bullet bullet-dot"></span>
 											</span>
 											<span class="menu-title">Cheque Requests</span>
+										</a>
+										<!--end:Menu link-->
+									</div>
+									<!--end:Menu item-->
+									<!--begin:Menu item-->
+									<div class="menu-item">
+										<!--begin:Menu link-->
+										<a class="menu-link" th:href="@{/cheques/pay}" th:classappend="${currentPage == 'Pay A Cheque' ? 'active' : ''}">
+											<span class="menu-bullet">
+												<span class="bullet bullet-dot"></span>
+											</span>
+											<span class="menu-title">Pay A Cheque</span>
 										</a>
 										<!--end:Menu link-->
 									</div>

@@ -3,72 +3,80 @@ package com.dabel.constant;
 public final class Web {
 
     public interface Endpoint {
-        String BRANCH_ROOT = "/branches";
-        String BRANCH_ACCOUNTS = BRANCH_ROOT + "/accounts";
+        String BRANCHES = "/branches";
+        String BRANCH_ACCOUNTS = BRANCHES + "/accounts";
 
-        String CUSTOMER_ROOT = "/customers";
-        String CUSTOMER_ADD = CUSTOMER_ROOT + "/add";
+        String CUSTOMERS = "/customers";
+        String CUSTOMER_ADD = CUSTOMERS + "/add";
 
-        String TRANSACTION_ROOT = "/transactions";
-        String TRANSACTION_INIT = TRANSACTION_ROOT + "/init";
-        String TRANSACTION_APPROVE = TRANSACTION_ROOT + "/approve";
-        String TRANSACTION_REJECT = TRANSACTION_ROOT + "/reject";
+        String TRANSACTIONS = "/transactions";
+        String TRANSACTION_INIT = TRANSACTIONS + "/init";
+        String TRANSACTION_APPROVE = TRANSACTIONS + "/approve";
+        String TRANSACTION_REJECT = TRANSACTIONS + "/reject";
 
-        String EXCHANGE_ROOT = "/exchanges";
-        String EXCHANGE_INIT = EXCHANGE_ROOT + "/init";
-        String EXCHANGE_APPROVE = EXCHANGE_ROOT + "/approve";
-        String EXCHANGE_REJECT = EXCHANGE_ROOT + "/reject";
+        String EXCHANGES = "/exchanges";
+        String EXCHANGE_INIT = EXCHANGES + "/init";
+        String EXCHANGE_APPROVE = EXCHANGES + "/approve";
+        String EXCHANGE_REJECT = EXCHANGES + "/reject";
 
-        String LOAN_ROOT = "/loans";
-        String LOAN_INIT = LOAN_ROOT + "/init";
-        String LOAN_APPROVE = LOAN_ROOT + "/approve";
-        String LOAN_REJECT = LOAN_ROOT + "/reject";
+        String LOANS = "/loans";
+        String LOAN_INIT = LOANS + "/init";
+        String LOAN_APPROVE = LOANS + "/approve";
+        String LOAN_REJECT = LOANS + "/reject";
 
-        String CARD_ROOT = "/cards";
-        String CARD_ACTIVATE = CARD_ROOT + "/activate";
-        String CARD_DEACTIVATE = CARD_ROOT + "/deactivate";
-        String CARD_REQUEST_ROOT = CARD_ROOT + "/requests";
-        String CARD_REQUEST_APPROVE = CARD_REQUEST_ROOT + "/approve";
-        String CARD_REQUEST_REJECT = CARD_REQUEST_ROOT + "/reject";
+        String CARDS = "/cards";
+        String CARD_ACTIVATE = CARDS + "/activate";
+        String CARD_DEACTIVATE = CARDS + "/deactivate";
+        String CARD_REQUESTS = CARDS + "/requests";
+        String CARD_REQUEST_APPROVE = CARD_REQUESTS + "/approve";
+        String CARD_REQUEST_REJECT = CARD_REQUESTS + "/reject";
 
-        String ACCOUNT_ROOT = "/accounts";
-        String ACCOUNT_ACTIVATE = ACCOUNT_ROOT + "/activate";
-        String ACCOUNT_DEACTIVATE = ACCOUNT_ROOT + "/deactivate";
-        String ACCOUNT_AFFILIATION = ACCOUNT_ROOT + "/affiliation";
+        String ACCOUNTS = "/accounts";
+        String ACCOUNT_ACTIVATE = ACCOUNTS + "/activate";
+        String ACCOUNT_DEACTIVATE = ACCOUNTS + "/deactivate";
+        String ACCOUNT_AFFILIATION = ACCOUNTS + "/affiliation";
+
+        String CHEQUES = "/cheques";
+        String CHEQUE_PAY = CHEQUES + "/pay";
+        String CHEQUE_REQUESTS = CHEQUES + "/requests";
 
         String PAGE_404 = "/404";
     }
 
     public interface View {
-        String BRANCH_LIST = "branches";
+        String BRANCHES = "branches";
         String BRANCH_ACCOUNTS = "branches-accounts";
         String DASHBOARD = "dashboard";
 
-        String CUSTOMER_LIST = "customers";
+        String CUSTOMERS = "customers";
         String CUSTOMER_ADD = "customers-add";
         String CUSTOMER_DETAILS = "customers-details";
 
-        String TRANSACTION_LIST = "transactions";
+        String TRANSACTIONS = "transactions";
         String TRANSACTION_INIT = "transactions-init";
         String TRANSACTION_DETAILS = "transactions-details";
 
-        String EXCHANGE_LIST = "exchanges";
+        String EXCHANGES = "exchanges";
         String EXCHANGE_INIT = "exchanges-init";
         String EXCHANGE_DETAILS = "exchanges-details";
 
-        String LOAN_LIST = "loans";
+        String LOANS = "loans";
         String LOAN_INIT = "loans-init";
         String LOAN_DETAILS = "loans-details";
 
-        String CARD_LIST = "cards";
+        String CARDS = "cards";
         String CARD_DETAILS = "cards-details";
-        String CARD_REQUEST_LIST = "cards-requests";
-        String CARD_APPLICATION_DETAILS = "cards-requests-details";
+        String CARD_REQUESTS = "cards-requests";
+        String CARD_REQUEST_DETAILS = "cards-requests-details";
 
-        String ACCOUNT_LIST = "accounts";
+        String ACCOUNTS = "accounts";
         String ACCOUNT_DETAILS = "accounts-details";
         String ACCOUNT_AFFILIATION = "accounts-affiliations";
         String ACCOUNT_AFFILIATION_ADD = "accounts-affiliations-add";
+
+        String CHEQUES = "cheques";
+        String CHEQUE_REQUESTS = "cheques-requests";
+        String CHEQUE_PAY = "cheques-pay";
 
         String PAGE_404 = "page404";
     }
@@ -122,7 +130,7 @@ public final class Web {
         interface Card {
             String MENU = "Cards";
             String ROOT = "All Cards";
-            String REQUEST_ROOT = "Card Requests";
+            String REQUESTS = "Card Requests";
         }
 
         interface Account {
@@ -130,6 +138,13 @@ public final class Web {
             String ROOT = "All Accounts";
             String AFFILIATION = "Manage Affiliation";
             String AFFILIATION_ADD = "Add Affiliate";
+        }
+
+        interface Cheque {
+            String MENU = "Cheques";
+            String ROOT = "All Cheques";
+            String PAY = "Pay A Cheque";
+            String REQUESTS = "Cheque Requests";
         }
     }
 }

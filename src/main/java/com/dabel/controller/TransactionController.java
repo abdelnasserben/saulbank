@@ -33,7 +33,7 @@ public class TransactionController implements PageTitleConfig {
         this.accountFacadeService = accountFacadeService;
     }
 
-    @GetMapping(value = Web.Endpoint.TRANSACTION_ROOT)
+    @GetMapping(value = Web.Endpoint.TRANSACTIONS)
     public String listingTransaction(Model model) {
 
         configPageTitle(model, Web.Menu.Transaction.ROOT);
@@ -43,10 +43,10 @@ public class TransactionController implements PageTitleConfig {
                         .toList())
         );
 
-        return Web.View.TRANSACTION_LIST;
+        return Web.View.TRANSACTIONS;
     }
 
-    @GetMapping(value = Web.Endpoint.TRANSACTION_ROOT + "/{transactionId}")
+    @GetMapping(value = Web.Endpoint.TRANSACTIONS + "/{transactionId}")
     public String transactionDetails(@PathVariable Long transactionId, Model model) {
 
         TransactionDto transactionDto = transactionFacadeService.findById(transactionId);
@@ -103,7 +103,7 @@ public class TransactionController implements PageTitleConfig {
         transactionFacadeService.approve(transactionId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Transaction successfully approved!");
 
-        return "redirect:" + Web.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
+        return "redirect:" + Web.Endpoint.TRANSACTIONS + "/" + transactionId;
     }
 
     @PostMapping(value = Web.Endpoint.TRANSACTION_REJECT + "/{transactionId}")
@@ -116,7 +116,7 @@ public class TransactionController implements PageTitleConfig {
             transactionFacadeService.reject(transactionId, rejectReason);
         }
 
-        return "redirect:" + Web.Endpoint.TRANSACTION_ROOT + "/" + transactionId;
+        return "redirect:" + Web.Endpoint.TRANSACTIONS + "/" + transactionId;
     }
 
 
