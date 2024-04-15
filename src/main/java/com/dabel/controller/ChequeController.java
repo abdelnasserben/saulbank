@@ -4,6 +4,7 @@ package com.dabel.controller;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
+import com.dabel.dto.ChequeDto;
 import com.dabel.dto.ChequeRequestDto;
 import com.dabel.dto.PostChequeDto;
 import com.dabel.dto.PostChequeRequestDto;
@@ -27,12 +28,23 @@ public class ChequeController implements PageTitleConfig {
         this.chequeFacadeService = chequeFacadeService;
     }
 
+    /*** FOR CHEQUES ***/
+
     @GetMapping(value = Web.Endpoint.CHEQUES)
     public String listingCheques(Model model) {
 
         configPageTitle(model, Web.Menu.Cheque.ROOT);
-//        model.addAttribute("cheques", StatedObjectFormatter.format(cardFacadeService.findAllCards()));
+        model.addAttribute("cheques", StatedObjectFormatter.format(chequeFacadeService.findAllCheques()));
         return Web.View.CHEQUES;
+    }
+
+    @GetMapping(value = Web.Endpoint.CHEQUES + "/{chequeId}")
+    public String chequeDetails(@PathVariable Long chequeId, Model model) {
+
+        ChequeDto chequeDto = chequeFacadeService.findChequeById(chequeId);
+        configPageTitle(model, "Cheque Details");
+        model.addAttribute("cheque", StatedObjectFormatter.format(chequeDto));
+        return Web.View.CHEQUE_DETAILS;
     }
 
     @GetMapping(value = Web.Endpoint.CHEQUE_PAY)
@@ -41,6 +53,31 @@ public class ChequeController implements PageTitleConfig {
 
         return Web.View.CHEQUE_PAY;
     }
+
+    @PostMapping(value = Web.Endpoint.CHEQUE_ACTIVATE + "/{chequeId}")
+    public String activateCheque(@PathVariable Long chequeId, RedirectAttributes redirect) {
+
+        chequeFacadeService.activateCheque(chequeId);
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque successfully activated !");
+
+        return String.format("redirect:%s/%d", Web.Endpoint.CHEQUES, chequeId);
+    }
+
+    @PostMapping(value = Web.Endpoint.CHEQUE_DEACTIVATE + "/{chequeId}")
+    public String deactivateCheque(@PathVariable Long chequeId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+
+        if(rejectReason.isBlank())
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Deactivate reason is mandatory !");
+        else {
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque successfully deactivated!");
+            chequeFacadeService.deactivateCheque(chequeId, rejectReason);
+        }
+
+        return String.format("redirect:%s/%d", Web.Endpoint.CHEQUES, chequeId);
+    }
+
+
+    /*** FOR CHEQUES PAYMENTS ***/
 
     @PostMapping(value = Web.Endpoint.CHEQUE_PAY)
     public String handleInitChequePayment(Model model, @Valid PostChequeDto postChequeDto, BindingResult binding, RedirectAttributes redirect) {
@@ -59,11 +96,14 @@ public class ChequeController implements PageTitleConfig {
         return "redirect:" + Web.Endpoint.CHEQUE_PAY;
     }
 
+
+    /*** FOR CHEQUES REQUESTS ***/
+
     @GetMapping(value = Web.Endpoint.CHEQUE_REQUESTS)
     public String listingRequests(Model model, PostChequeRequestDto postChequeRequestDto) {
 
         configPageTitle(model, Web.Menu.Cheque.REQUESTS);
-        model.addAttribute("chequeRequests", StatedObjectFormatter.format(chequeFacadeService.findAllChequeRequests()));
+        model.addAttribute("chequeRequests", StatedObjectFormatter.format(chequeFacadeService.findAllRequests()));
 
         return Web.View.CHEQUE_REQUESTS;
     }
@@ -97,7 +137,7 @@ public class ChequeController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.CHEQUE_REQUEST_APPROVE + "/{requestId}")
-    public String handleApproveTransaction(@PathVariable Long requestId, RedirectAttributes redirect) {
+    public String approveChequeRequest(@PathVariable Long requestId, RedirectAttributes redirect) {
 
         chequeFacadeService.approveRequest(requestId);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque request successfully approved!");
@@ -106,7 +146,7 @@ public class ChequeController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.CHEQUE_REQUEST_REJECT + "/{requestId}")
-    public String rejectTransaction(@PathVariable Long requestId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+    public String rejectChequeRequest(@PathVariable Long requestId, @RequestParam String rejectReason, RedirectAttributes redirect) {
 
         if(rejectReason.isBlank())
             redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");

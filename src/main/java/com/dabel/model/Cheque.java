@@ -26,10 +26,6 @@ public class Cheque {
 
     private String chequeNumber;
 
-    private double amount;
-
-    private String currency;
-
     private String failureReason;
 
     private String status;

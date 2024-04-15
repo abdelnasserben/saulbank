@@ -2,6 +2,7 @@ package com.dabel.controller;
 
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
+import com.dabel.constant.SourceType;
 import com.dabel.constant.TransactionType;
 import com.dabel.constant.Web;
 import com.dabel.dto.AccountDto;
@@ -89,6 +90,7 @@ public class TransactionController implements PageTitleConfig {
         //TODO: set branch - We'll replace this automatically by user authenticated
         BranchDto branchDto = branchFacadeService.findById(1L);
         transactionDto.setBranch(branchDto);
+        transactionDto.setSourceType(SourceType.ONLINE.name());
         transactionDto.setSourceValue(branchDto.getBranchName());
 
         transactionFacadeService.init(transactionDto);

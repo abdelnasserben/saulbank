@@ -6,6 +6,7 @@ import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
 import com.dabel.dto.CustomerDto;
+import com.dabel.dto.StatedObject;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -14,6 +15,10 @@ import java.util.Locale;
 import java.util.Random;
 
 public final class Helper {
+
+    public static <T extends StatedObject> boolean isActiveStatedObject(T t) {
+        return t.getStatus().equals(Status.ACTIVE.code()) || t.getStatus().equals(Status.ACTIVE.name());
+    }
 
     public static boolean isInactiveAccount(AccountDto accountDto) {
         return !accountDto.getStatus().equals(Status.ACTIVE.name()) && !accountDto.getStatus().equals(Status.ACTIVE.code());
@@ -70,5 +75,14 @@ public final class Helper {
 
     public static boolean isActiveCard(CardDto cardDto) {
         return cardDto.getStatus().equals(Status.ACTIVE.code()) || cardDto.getStatus().equals(Status.ACTIVE.name());
+    }
+
+    public static String generateChequeNumber() {
+        Random random = new Random();
+        int part1 = random.nextInt(100);
+        int part2 = random.nextInt(1000);
+        int part3 = random.nextInt(100, 1000);
+
+        return String.format("%02d%03d%03d", part1, part2, part3);
     }
 }

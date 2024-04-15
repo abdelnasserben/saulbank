@@ -37,10 +37,12 @@ public final class Web {
         String ACCOUNT_AFFILIATION = ACCOUNTS + "/affiliation";
 
         String CHEQUES = "/cheques";
-        String CHEQUE_PAY = CHEQUES + "/pay";
+        String CHEQUE_ACTIVATE = CHEQUES + "/activate";
+        String CHEQUE_DEACTIVATE = CHEQUES + "/deactivate";
         String CHEQUE_REQUESTS = CHEQUES + "/requests";
         String CHEQUE_REQUEST_APPROVE = CHEQUE_REQUESTS + "/approve";
         String CHEQUE_REQUEST_REJECT = CHEQUE_REQUESTS + "/reject";
+        String CHEQUE_PAY = CHEQUES + "/pay";
 
         String PAGE_404 = "/404";
     }
@@ -77,6 +79,7 @@ public final class Web {
         String ACCOUNT_AFFILIATION_ADD = "accounts-affiliations-add";
 
         String CHEQUES = "cheques";
+        String CHEQUE_DETAILS = "cheques-details";
         String CHEQUE_REQUESTS = "cheques-requests";
         String CHEQUES_REQUEST_DETAILS = "cheques-requests-details";
         String CHEQUE_PAY = "cheques-pay";

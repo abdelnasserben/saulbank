@@ -1,10 +1,13 @@
 package com.dabel.service.cheque;
 
+import com.dabel.app.Fee;
 import com.dabel.app.Helper;
 import com.dabel.constant.AccountType;
 import com.dabel.constant.BankFees;
+import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
+import com.dabel.dto.ChequeDto;
 import com.dabel.dto.ChequeRequestDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
@@ -14,8 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SavingChequeApplication extends ChequeApplication {
 
-    public SavingChequeApplication(ChequeRequestService chequeRequestService, FeeService feeService) {
-        super(chequeRequestService, feeService);
+
+    public SavingChequeApplication(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
+        super(chequeService, chequeRequestService, feeService);
     }
 
     @Override
@@ -43,6 +47,30 @@ public class SavingChequeApplication extends ChequeApplication {
     @Override
     public void approve(ChequeRequestDto chequeRequestDto) {
 
+        if(!chequeRequestDto.getStatus().equals(Status.PENDING.code()))
+            return;
+
+        chequeRequestDto.setStatus(Status.APPROVED.code());
+        //we'll make update by info later...
+
+        //TODO: apply fees
+        Fee fee = new Fee(chequeRequestDto.getBranch(), BankFees.Basic.SAVING_CHEQUE, "Cheque application request");
+        feeService.apply(chequeRequestDto.getTrunk().getAccount(), LedgerType.CHEQUE_REQUEST, fee);
+
+        chequeRequestService.save(chequeRequestDto);
+
+        //TODO: generate 25 cheques for this trunk
+        for (int i = 0; i < 25; i++) {
+            ChequeDto chequeDto = ChequeDto.builder()
+                    .trunk(chequeRequestDto.getTrunk())
+                    .serial(chequeRequestDto)
+                    .chequeNumber(Helper.generateChequeNumber())
+                    .status(Status.ACTIVE.code())
+                    .branch(chequeRequestDto.getBranch())
+                    .build();
+
+            chequeService.save(chequeDto);
+        }
     }
 
     @Override

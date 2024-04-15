@@ -1,9 +1,9 @@
 package com.dabel.service.cheque;
 
-import com.dabel.dto.ChequeRequestDto;
-import com.dabel.dto.CustomerDto;
-import com.dabel.dto.PostChequeRequestDto;
-import com.dabel.dto.TrunkDto;
+import com.dabel.app.Helper;
+import com.dabel.constant.Status;
+import com.dabel.dto.*;
+import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
 import com.dabel.service.customer.CustomerService;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,26 @@ public class ChequeFacadeService {
         this.customerService = customerService;
     }
 
+    public List<ChequeDto> findAllCheques() {
+        return chequeService.findAll();
+    }
+
+    public ChequeDto findChequeById(Long chequeId) {
+        return chequeService.findById(chequeId);
+    }
+
+
     /**
      * For cheque requests
      */
+
+    public List<ChequeRequestDto> findAllRequests() {
+        return chequeRequestService.findAll();
+    }
+
+    public ChequeRequestDto findRequestById(Long requestId) {
+        return chequeRequestService.findById(requestId);
+    }
 
     public void sendRequest(PostChequeRequestDto postChequeRequestDto) {
 
@@ -52,11 +69,31 @@ public class ChequeFacadeService {
         chequeApplicationContext.setContext(requestDto.getTrunk().getAccount().getAccountType()).reject(requestDto, remarks);
     }
 
-    public List<ChequeRequestDto> findAllChequeRequests() {
-        return chequeRequestService.findAll();
+    public void activateCheque(Long chequeId) {
+
+        ChequeDto chequeDto = chequeService.findById(chequeId);
+
+        if(Helper.isActiveStatedObject(chequeDto))
+            throw new IllegalOperationException("Cheque already active");
+
+        chequeDto.setStatus(Status.ACTIVE.code());
+        chequeDto.setFailureReason("Activation");
+        //we'll set update info later...
+
+        chequeService.save(chequeDto);
     }
 
-    public ChequeRequestDto findRequestById(Long requestId) {
-        return chequeRequestService.findById(requestId);
+    public void deactivateCheque(Long chequeId, String remarks) {
+
+        ChequeDto chequeDto = chequeService.findById(chequeId);
+
+        if(!Helper.isActiveStatedObject(chequeDto))
+            throw new IllegalOperationException("Unable to deactivate an inactive cheque");
+
+        chequeDto.setStatus(Status.DEACTIVATED.code());
+        chequeDto.setFailureReason(remarks);
+        //we'll set update info later...
+
+        chequeService.save(chequeDto);
     }
 }

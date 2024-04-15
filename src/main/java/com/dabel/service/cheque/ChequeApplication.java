@@ -5,15 +5,15 @@ import com.dabel.constant.Status;
 import com.dabel.dto.ChequeRequestDto;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.fee.FeeService;
-import lombok.Getter;
 
 public abstract class ChequeApplication implements EvaluableOperation<ChequeRequestDto> {
 
-    @Getter
+    protected ChequeService chequeService;
     protected ChequeRequestService chequeRequestService;
     protected FeeService feeService;
 
-    public ChequeApplication(ChequeRequestService chequeRequestService, FeeService feeService) {
+    public ChequeApplication(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
+        this.chequeService = chequeService;
         this.chequeRequestService = chequeRequestService;
         this.feeService = feeService;
     }

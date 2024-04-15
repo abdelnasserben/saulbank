@@ -30,6 +30,8 @@ public final class CustomExceptionHandler {
                 Web.Endpoint.CARDS,
                 Web.Endpoint.CARD_REQUESTS,
                 Web.Endpoint.LOANS,
+                Web.Endpoint.CHEQUES,
+                Web.Endpoint.CHEQUE_REQUESTS,
                 Web.Endpoint.ACCOUNTS
         );
 

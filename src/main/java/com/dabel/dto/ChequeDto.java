@@ -19,9 +19,5 @@ public class ChequeDto extends BasicDto {
 
     private String chequeNumber;
 
-    private String currency;
-
-    private double amount;
-
     private String failureReason;
 }
