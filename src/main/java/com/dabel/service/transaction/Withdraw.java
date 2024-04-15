@@ -32,7 +32,7 @@ public class Withdraw extends Transaction {
     public void init(TransactionDto transactionDto) {
 
 
-        if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
+        if(!Helper.isActiveStatedObject(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Account must be active");
 
         if(!transactionDto.getInitiatorAccount().getCurrency().equals(transactionDto.getCurrency()))

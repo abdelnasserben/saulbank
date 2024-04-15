@@ -80,7 +80,7 @@ public class AccountFacadeService {
 
     public void activateTrunk(Long trunkId) {
         AccountDto accountDto = findTrunkById(trunkId).getAccount();
-        if(Helper.isInactiveAccount(accountDto)) {
+        if(!Helper.isActiveStatedObject(accountDto)) {
             accountDto.setStatus(Status.ACTIVE.code());
             accountService.save(accountDto);
         }
@@ -88,7 +88,7 @@ public class AccountFacadeService {
 
     public void deactivateTrunk(Long trunkId) {
         AccountDto accountDto = findTrunkById(trunkId).getAccount();
-        if(Helper.isInactiveAccount(accountDto))
+        if(!Helper.isActiveStatedObject(accountDto))
             return;
 
         accountDto.setStatus(Status.DEACTIVATED.code());

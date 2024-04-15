@@ -33,13 +33,13 @@ public class AccountAffiliationService {
         //TODO: get the account
         AccountDto accountDto = accountService.findTrunkByNumber(accountNumber).getAccount();
 
-        if(Helper.isInactiveAccount(accountDto))
+        if(!Helper.isActiveStatedObject(accountDto))
             throw new IllegalOperationException("Account must be active");
 
         //TODO: check if is exists customer
         if(customerDto.getCustomerId() != null) {
 
-            if (Helper.isInactiveCustomer(customerDto))
+            if (!Helper.isActiveStatedObject(customerDto))
                 throw new IllegalOperationException(customerDto.getFirstName() + " is inactive");
 
             //TODO: check if customer is already affiliated

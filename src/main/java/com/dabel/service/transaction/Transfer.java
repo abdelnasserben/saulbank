@@ -31,7 +31,7 @@ public class Transfer extends Transaction{
     @Override
     public void init(TransactionDto transactionDto) {
 
-        if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
+        if(!Helper.isActiveStatedObject(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Initiator account must be active");
 
         if(!transactionDto.getInitiatorAccount().getCurrency().equals(transactionDto.getCurrency()))

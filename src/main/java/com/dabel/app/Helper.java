@@ -4,8 +4,6 @@ import com.dabel.constant.AccountProfile;
 import com.dabel.constant.AccountType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
-import com.dabel.dto.CardDto;
-import com.dabel.dto.CustomerDto;
 import com.dabel.dto.StatedObject;
 
 import java.math.RoundingMode;
@@ -18,14 +16,6 @@ public final class Helper {
 
     public static <T extends StatedObject> boolean isActiveStatedObject(T t) {
         return t.getStatus().equals(Status.ACTIVE.code()) || t.getStatus().equals(Status.ACTIVE.name());
-    }
-
-    public static boolean isInactiveAccount(AccountDto accountDto) {
-        return !accountDto.getStatus().equals(Status.ACTIVE.name()) && !accountDto.getStatus().equals(Status.ACTIVE.code());
-    }
-
-    public static boolean isInactiveCustomer(CustomerDto customerDto) {
-        return !customerDto.getStatus().equals(Status.ACTIVE.name()) && !customerDto.getStatus().equals(Status.ACTIVE.code());
     }
 
     public static boolean isSavingAccount(AccountDto accountDto) {
@@ -71,10 +61,6 @@ public final class Helper {
         int part3 = random.nextInt(1000, 10000);
 
         return String.format("%02d%04d%d", part1, part2, part3);
-    }
-
-    public static boolean isActiveCard(CardDto cardDto) {
-        return cardDto.getStatus().equals(Status.ACTIVE.code()) || cardDto.getStatus().equals(Status.ACTIVE.name());
     }
 
     public static String generateChequeNumber() {

@@ -30,7 +30,7 @@ public class SavingChequeApplication extends ChequeApplication {
         if(!Helper.isSavingAccount(accountDto))
             throw new IllegalOperationException("Only saving account is eligible for this operation");
 
-        if(Helper.isInactiveAccount(accountDto) || Helper.isInactiveCustomer(chequeRequestDto.getTrunk().getCustomer()))
+        if(!Helper.isActiveStatedObject(accountDto) || !Helper.isActiveStatedObject(chequeRequestDto.getTrunk().getCustomer()))
             throw new IllegalOperationException("The account and its owner must be active for this operation");
 
         if(accountDto.getBalance() < BankFees.Basic.SAVING_CHEQUE) {

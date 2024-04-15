@@ -50,7 +50,7 @@ public class CardFacadeService {
 
         CardDto card = cardService.findById(cardId);
 
-        if(Helper.isActiveCard(card))
+        if(Helper.isActiveStatedObject(card))
             throw new IllegalOperationException("Card already active");
 
         card.setStatus(Status.ACTIVE.code());
@@ -64,7 +64,7 @@ public class CardFacadeService {
 
         CardDto card = cardService.findById(cardId);
 
-        if(!Helper.isActiveCard(card))
+        if(!Helper.isActiveStatedObject(card))
             throw new IllegalOperationException("Unable to deactivate an inactive card");
 
         card.setStatus(Status.DEACTIVATED.code());

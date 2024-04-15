@@ -21,7 +21,7 @@ class HelperTest {
                 .status(Status.PENDING.code())
                 .build();
 
-        assertTrue(Helper.isInactiveAccount(accountDto));
+        assertFalse(Helper.isActiveStatedObject(accountDto));
     }
 
     @Test
@@ -32,7 +32,7 @@ class HelperTest {
                 .status(Status.ACTIVE.code())
                 .build();
 
-        assertFalse(Helper.isInactiveAccount(accountDto));
+        assertTrue(Helper.isActiveStatedObject(accountDto));
     }
 
     @Test
@@ -43,7 +43,7 @@ class HelperTest {
                 .status(Status.DEACTIVATED.code())
                 .build();
 
-        assertTrue(Helper.isInactiveCustomer(customerDto));
+        assertFalse(Helper.isActiveStatedObject(customerDto));
     }
 
     @Test
@@ -54,7 +54,7 @@ class HelperTest {
                 .status(Status.ACTIVE.code())
                 .build();
 
-        assertFalse(Helper.isInactiveCustomer(customerDto));
+        assertTrue(Helper.isActiveStatedObject(customerDto));
     }
 
     @Test
@@ -98,7 +98,7 @@ class HelperTest {
                 .status(Status.ACTIVE.code())
                 .build();
 
-        assertTrue(Helper.isActiveCard(cardDto));
+        assertTrue(Helper.isActiveStatedObject(cardDto));
     }
 
     @Test
@@ -109,6 +109,6 @@ class HelperTest {
                 .status(Status.PENDING.code())
                 .build();
 
-        assertFalse(Helper.isActiveCard(cardDto));
+        assertFalse(Helper.isActiveStatedObject(cardDto));
     }
 }

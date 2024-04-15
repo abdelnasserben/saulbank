@@ -20,7 +20,7 @@ public class Deposit extends Transaction {
     @Override
     public void init(TransactionDto transactionDto) {
 
-        if(Helper.isInactiveAccount(transactionDto.getInitiatorAccount()))
+        if(!Helper.isActiveStatedObject(transactionDto.getInitiatorAccount()))
             throw new IllegalOperationException("Account must be active");
 
         //TODO: for deposit, initiator account is the beneficiary account so we interchange initiator as the vault and beneficiary as receiver
