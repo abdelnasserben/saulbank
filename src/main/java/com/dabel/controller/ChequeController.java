@@ -1,20 +1,31 @@
 package com.dabel.controller;
 
 
+import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
+import com.dabel.dto.ChequeRequestDto;
 import com.dabel.dto.PostChequeDto;
 import com.dabel.dto.PostChequeRequestDto;
+import com.dabel.service.cheque.ChequeFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ChequeController implements PageTitleConfig {
+
+    private final ChequeFacadeService chequeFacadeService;
+
+    public ChequeController(ChequeFacadeService chequeFacadeService) {
+        this.chequeFacadeService = chequeFacadeService;
+    }
 
     @GetMapping(value = Web.Endpoint.CHEQUES)
     public String listingCheques(Model model) {
@@ -52,7 +63,7 @@ public class ChequeController implements PageTitleConfig {
     public String listingRequests(Model model, PostChequeRequestDto postChequeRequestDto) {
 
         configPageTitle(model, Web.Menu.Cheque.REQUESTS);
-//        model.addAttribute("chequeRequests", StatedObjectFormatter.format(cardFacadeService.findAllCardRequests()));
+        model.addAttribute("chequeRequests", StatedObjectFormatter.format(chequeFacadeService.findAllChequeRequests()));
 
         return Web.View.CHEQUE_REQUESTS;
     }
@@ -67,10 +78,44 @@ public class ChequeController implements PageTitleConfig {
         }
 
         //TODO: save sending request
+        chequeFacadeService.sendRequest(postChequeRequestDto);
 
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque request successfully sent !");
 
         return "redirect:" + Web.Endpoint.CHEQUE_REQUESTS;
+    }
+
+    @GetMapping(value = Web.Endpoint.CHEQUE_REQUESTS + "/{requestId}")
+    public String requestDetails(Model model, @PathVariable Long requestId) {
+
+        ChequeRequestDto requestDto = chequeFacadeService.findRequestById(requestId);
+
+        configPageTitle(model, "Request Details");
+        model.addAttribute("requestDto", StatedObjectFormatter.format(requestDto));
+
+        return Web.View.CHEQUES_REQUEST_DETAILS;
+    }
+
+    @PostMapping(value = Web.Endpoint.CHEQUE_REQUEST_APPROVE + "/{requestId}")
+    public String handleApproveTransaction(@PathVariable Long requestId, RedirectAttributes redirect) {
+
+        chequeFacadeService.approveRequest(requestId);
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque request successfully approved!");
+
+        return "redirect:" + Web.Endpoint.CHEQUE_REQUESTS + "/" + requestId;
+    }
+
+    @PostMapping(value = Web.Endpoint.CHEQUE_REQUEST_REJECT + "/{requestId}")
+    public String rejectTransaction(@PathVariable Long requestId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+
+        if(rejectReason.isBlank())
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");
+        else {
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque request successfully rejected!");
+            chequeFacadeService.rejectRequest(requestId, rejectReason);
+        }
+
+        return "redirect:" + Web.Endpoint.CHEQUE_REQUESTS + "/" + requestId;
     }
 
 

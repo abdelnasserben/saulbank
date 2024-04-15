@@ -3,9 +3,11 @@ package com.dabel.constant;
 public final class BankFees {
 
     public interface Basic {
-        double CARD_APPLICATION_REQUEST = 5000;
+        double CARD_REQUEST = 5000;
         double TRANSFER = 525;
         double WITHDRAW = 200;
+        double SAVING_CHEQUE = 1750;
+        double BUSINESS_CHEQUE = 3500;
     }
 
     public interface Exchange {

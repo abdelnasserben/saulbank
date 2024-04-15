@@ -13,6 +13,8 @@ public class ChequeDto extends BasicDto {
 
     private Long chequeId;
 
+    private ChequeRequestDto serial;
+
     private TrunkDto trunk;
 
     private String chequeNumber;

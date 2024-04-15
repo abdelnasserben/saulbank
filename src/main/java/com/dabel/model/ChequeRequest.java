@@ -21,6 +21,7 @@ public class ChequeRequest {
     private Trunk trunk;
 
     private String failureReason;
+
     private String status;
 
     @ManyToOne

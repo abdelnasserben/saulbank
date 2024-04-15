@@ -61,14 +61,18 @@
 						</tr>
 					</thead>
 					<tbody class="fw-semibold text-gray-600">
-						<tr th:each="chequeApp: ${cardRequests}">
+						<tr th:each="chequeApp: ${chequeRequests}">
 							<td>
 								<a th:href="@{/cheques/requests/{id}(id=${chequeApp.requestId})}"
 									th:text="${chequeApp.requestId}"
 									class="text-gray-800 text-hover-primary mb-1">1202</a>
 							</td>
-							<td th:text="${chequeApp.trunk.customer.firstName + ' ' + chequeApp.trunk.customer.lastName}">
-								John Doe</td>
+							<td>
+								<a th:href="@{/cheques/requests/{id}(id=${chequeApp.requestId})}"
+									th:text="${chequeApp.trunk.customer.firstName + ' ' + chequeApp.trunk.customer.lastName}"
+									class="text-gray-800 text-hover-primary mb-1">
+									John Doe</a>
+							</td>
 							<td th:text="${chequeApp.trunk.customer.identityNumber}">NBE234557</td>
 							<td th:text="${chequeApp.trunk.account.accountNumber}">0071001997</td>
 							<td><span th:text="${chequeApp.status}"

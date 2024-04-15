@@ -1,6 +1,7 @@
 package com.dabel.app;
 
 import com.dabel.constant.AccountProfile;
+import com.dabel.constant.AccountType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
@@ -20,6 +21,14 @@ public final class Helper {
 
     public static boolean isInactiveCustomer(CustomerDto customerDto) {
         return !customerDto.getStatus().equals(Status.ACTIVE.name()) && !customerDto.getStatus().equals(Status.ACTIVE.code());
+    }
+
+    public static boolean isSavingAccount(AccountDto accountDto) {
+        return accountDto.getAccountType().equals(AccountType.SAVING.name());
+    }
+
+    public static boolean isBusinessAccount(AccountDto accountDto) {
+        return accountDto.getAccountType().equals(AccountType.BUSINESS.name());
     }
 
     public static boolean isPersonalAccount(AccountDto accountDto) {

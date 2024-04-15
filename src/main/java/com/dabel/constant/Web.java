@@ -39,6 +39,8 @@ public final class Web {
         String CHEQUES = "/cheques";
         String CHEQUE_PAY = CHEQUES + "/pay";
         String CHEQUE_REQUESTS = CHEQUES + "/requests";
+        String CHEQUE_REQUEST_APPROVE = CHEQUE_REQUESTS + "/approve";
+        String CHEQUE_REQUEST_REJECT = CHEQUE_REQUESTS + "/reject";
 
         String PAGE_404 = "/404";
     }
@@ -76,6 +78,7 @@ public final class Web {
 
         String CHEQUES = "cheques";
         String CHEQUE_REQUESTS = "cheques-requests";
+        String CHEQUES_REQUEST_DETAILS = "cheques-requests-details";
         String CHEQUE_PAY = "cheques-pay";
 
         String PAGE_404 = "page404";

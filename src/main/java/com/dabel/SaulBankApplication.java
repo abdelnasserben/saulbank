@@ -11,5 +11,7 @@ public class SaulBankApplication {
 	}
 
 }
+//begin cheques futures implementation ....
+//card request, make card depend on trunk instead customer and account repeat
+//card request and cheque request. only account and customer actives can send request
 //remove test to check all unnecessary methods on service classes
-//begin cheques futures implementation
