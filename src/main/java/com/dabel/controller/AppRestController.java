@@ -5,8 +5,10 @@ import com.dabel.app.Helper;
 import com.dabel.constant.BankFees;
 import com.dabel.constant.Currency;
 import com.dabel.dto.AccountDto;
+import com.dabel.dto.ChequeDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.service.account.AccountFacadeService;
+import com.dabel.service.cheque.ChequeFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +20,12 @@ public class AppRestController {
 
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
+    private final ChequeFacadeService chequeFacadeService;
 
-    public AppRestController(AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
+    public AppRestController(AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService, ChequeFacadeService chequeFacadeService) {
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
+        this.chequeFacadeService = chequeFacadeService;
     }
 
     @GetMapping("/rest/customer/" + "{identityNumber}")
@@ -58,5 +62,10 @@ public class AppRestController {
     public ResponseEntity<Double> getLoanTotalDueAmount(@PathVariable double amount, @PathVariable double interestRate) {
 
         return ResponseEntity.ok(Helper.calculateTotalAmountOfLoan(amount, interestRate));
+    }
+
+    @GetMapping("/rest/cheque/" + "{chequeNumber}")
+    ResponseEntity<ChequeDto> getChequeInformation(@PathVariable String chequeNumber) {
+        return ResponseEntity.ok(chequeFacadeService.findChequeByNumber(chequeNumber));
     }
 }

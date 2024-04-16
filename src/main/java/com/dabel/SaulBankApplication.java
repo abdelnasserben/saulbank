@@ -11,6 +11,7 @@ public class SaulBankApplication {
 	}
 
 }
-//make cheque payment futures, init, approve, reject, and ajax queries on form
-//card request only account and customer actives can send request
+//transaction details, make image of cheque or card or anything by sourceType
+//customer details page: make transaction correct
+//transaction details, display initiator and receiver account
 //remove test to check all unnecessary methods on service classes

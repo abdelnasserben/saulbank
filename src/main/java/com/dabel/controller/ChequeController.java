@@ -9,6 +9,7 @@ import com.dabel.dto.ChequeRequestDto;
 import com.dabel.dto.PostChequeDto;
 import com.dabel.dto.PostChequeRequestDto;
 import com.dabel.service.cheque.ChequeFacadeService;
+import com.dabel.service.transaction.TransactionFacadeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +24,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ChequeController implements PageTitleConfig {
 
     private final ChequeFacadeService chequeFacadeService;
+    private final TransactionFacadeService transactionFacadeService;
 
-    public ChequeController(ChequeFacadeService chequeFacadeService) {
+    public ChequeController(ChequeFacadeService chequeFacadeService, TransactionFacadeService transactionFacadeService) {
         this.chequeFacadeService = chequeFacadeService;
+        this.transactionFacadeService = transactionFacadeService;
     }
 
     /*** FOR CHEQUES ***/
@@ -90,6 +93,7 @@ public class ChequeController implements PageTitleConfig {
         }
 
         //TODO: save init cheque payment
+        transactionFacadeService.init(chequeFacadeService.initPay(postChequeDto));
 
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque payment successfully initiated.");
 

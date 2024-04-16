@@ -6,13 +6,13 @@ import com.dabel.dto.ChequeRequestDto;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.fee.FeeService;
 
-public abstract class ChequeApplication implements EvaluableOperation<ChequeRequestDto> {
+public abstract class ChequeRequest implements EvaluableOperation<ChequeRequestDto> {
 
     protected ChequeService chequeService;
     protected ChequeRequestService chequeRequestService;
     protected FeeService feeService;
 
-    public ChequeApplication(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
+    public ChequeRequest(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
         this.chequeService = chequeService;
         this.chequeRequestService = chequeRequestService;
         this.feeService = feeService;

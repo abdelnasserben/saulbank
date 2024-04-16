@@ -8306,7 +8306,7 @@ if (transactionType) {
         if (selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
         else $('#receiverAccountSection').addClass('d-none');
 
-        if(selectedValue != "DEPOSIT") $('#transactionCustomerSignatureSection').removeClass('d-none')
+        if (selectedValue != "DEPOSIT") $('#transactionCustomerSignatureSection').removeClass('d-none')
         else $('#transactionCustomerSignatureSection').addClass('d-none')
 
     });
@@ -8349,13 +8349,12 @@ if (loanType) {
     $(issuedAmount).add(interestRate).change(function () {
         $.ajax({
             url: "http://localhost:8080/rest/loanTotalDue/" + $(issuedAmount).val() + '-' + $(interestRate).val()
-        })
-            .done(function (data) {
-                $(totalDue).val(parseFloat(data));
-            })
-            .fail(function () {
-                $(totalDue).val("0.0");
-            });
+
+        }).done(function (data) {
+            $(totalDue).val(parseFloat(data));
+        }).fail(function () {
+            $(totalDue).val("0.0");
+        });
     });
 }
 
@@ -8371,4 +8370,42 @@ if (memberIdentityNumber) {
         }
 
     });
+}
+
+//Cheque Payment Page:
+let inputChequeNumber = $("#inputChequeNumber")
+if (inputChequeNumber) {
+    $(inputChequeNumber).change(function () {
+
+        var chequeNumber = $(this).val().trim().replace('/[^\w\s]/');
+
+        if (chequeNumber != "") {
+
+            $.ajax({
+                url: "http://localhost:8080/rest/cheque/" + chequeNumber
+
+            }).done(function (data) {
+                $('#chequeOwnerAccountNumber').val(data.trunk.account.accountNumber);
+                $('#chequeOwnerAccountName').val(data.trunk.account.accountName);
+                $('#chequeOwnerAccountBalance').val(parseFloat(data.trunk.account.balance));
+
+                $('#chequeOwnerCustomerIdentity').val(data.trunk.customer.identityNumber);
+                $('#chequeOwnerCustomerFullName').val(data.trunk.customer.firstName + ' ' + data.trunk.customer.lastName);
+                $('#chequeOwnerInputSignature').attr('src', '/assets/signatures/' + data.trunk.customer.signaturePicture)
+
+            }).fail(function () {
+                $('#chequeOwnerAccountNumber').val("");
+                $('#chequeOwnerAccountName').val("");
+                $('#chequeOwnerAccountBalance').val(0.0);
+
+                $('#chequeOwnerCustomerIdentity').val("");
+                $('#chequeOwnerCustomerFullName').val("");
+                $('#chequeOwnerInputSignature').attr('src', '/assets/svg/blank-image.svg')
+            });
+        }
+
+    });
+
+    //for ajax requests
+    ajaxAccountInfo('#chequeBeneficiaryAccountNumber', '#chequeBeneficiaryAccountName', null);
 }

@@ -1,7 +1,9 @@
 package com.dabel.service.cheque;
 
 import com.dabel.app.Helper;
+import com.dabel.constant.SourceType;
 import com.dabel.constant.Status;
+import com.dabel.constant.TransactionType;
 import com.dabel.dto.*;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
@@ -15,14 +17,14 @@ public class ChequeFacadeService {
 
     private final ChequeService chequeService;
     private final ChequeRequestService chequeRequestService;
-    private final ChequeApplicationContext chequeApplicationContext;
+    private final ChequeRequestContext chequeRequestContext;
     private final AccountService accountService;
     private final CustomerService customerService;
 
-    public ChequeFacadeService(ChequeService chequeService, ChequeRequestService chequeRequestService, ChequeApplicationContext chequeApplicationContext, AccountService accountService, CustomerService customerService) {
+    public ChequeFacadeService(ChequeService chequeService, ChequeRequestService chequeRequestService, ChequeRequestContext chequeRequestContext, AccountService accountService, CustomerService customerService) {
         this.chequeService = chequeService;
         this.chequeRequestService = chequeRequestService;
-        this.chequeApplicationContext = chequeApplicationContext;
+        this.chequeRequestContext = chequeRequestContext;
         this.accountService = accountService;
         this.customerService = customerService;
     }
@@ -56,17 +58,17 @@ public class ChequeFacadeService {
                 .trunk(trunkDto)
                 .branch(trunkDto.getAccount().getBranch())
                 .build();
-        chequeApplicationContext.setContext(trunkDto.getAccount().getAccountType()).init(chequeRequestDto);
+        chequeRequestContext.setContext(trunkDto.getAccount().getAccountType()).init(chequeRequestDto);
     }
 
     public void approveRequest(Long requestId) {
         ChequeRequestDto requestDto = chequeRequestService.findById(requestId);
-        chequeApplicationContext.setContext(requestDto.getTrunk().getAccount().getAccountType()).approve(requestDto);
+        chequeRequestContext.setContext(requestDto.getTrunk().getAccount().getAccountType()).approve(requestDto);
     }
 
     public void rejectRequest(Long requestId, String remarks) {
         ChequeRequestDto requestDto = chequeRequestService.findById(requestId);
-        chequeApplicationContext.setContext(requestDto.getTrunk().getAccount().getAccountType()).reject(requestDto, remarks);
+        chequeRequestContext.setContext(requestDto.getTrunk().getAccount().getAccountType()).reject(requestDto, remarks);
     }
 
     public void activateCheque(Long chequeId) {
@@ -95,5 +97,33 @@ public class ChequeFacadeService {
         //we'll set update info later...
 
         chequeService.save(chequeDto);
+    }
+
+    public ChequeDto findChequeByNumber(String chequeNumber) {
+        return chequeService.findByChequeNumber(chequeNumber);
+    }
+
+    public TransactionDto initPay(PostChequeDto postChequeDto) {
+
+        ChequeDto chequeDto = chequeService.findByChequeNumber(postChequeDto.getChequeNumber());
+
+        if(!Helper.isActiveStatedObject(chequeDto))
+            throw new IllegalOperationException("Cheque must be active");
+
+        AccountDto receiverAccount = accountService.findByNumber(postChequeDto.getBeneficiaryAccountNumber());
+
+        return TransactionDto.builder()
+                .initiatorAccount(chequeDto.getTrunk().getAccount())
+                .receiverAccount(receiverAccount)
+                .transactionType(TransactionType.CHEQUE_PAYMENT.name())
+                .currency(chequeDto.getTrunk().getAccount().getCurrency())
+                .amount(postChequeDto.getAmount())
+                .customerIdentity(chequeDto.getTrunk().getCustomer().getIdentityNumber())
+                .customerFullName(chequeDto.getTrunk().getCustomer().getFirstName() + " " + chequeDto.getTrunk().getCustomer().getLastName())
+                .reason(postChequeDto.getReason())
+                .sourceType(SourceType.CHEQUE.name())
+                .sourceValue(chequeDto.getChequeNumber())
+                .branch(chequeDto.getBranch())
+                .build();
     }
 }

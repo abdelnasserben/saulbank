@@ -17,10 +17,9 @@ public class PostChequeDto {
     @NotBlank
     private String beneficiaryAccountNumber;
 
-    @NotBlank
-    private String beneficiaryCustomerIdentity;
-
     @Positive
     private double amount;
+
+    private String reason;
 
 }

@@ -31,7 +31,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
 
         AccountDto accountDto = cardRequestDto.getTrunk().getAccount();
 
-        if(!Helper.isActiveStatedObject(accountDto) || Helper.isAssociativeAccount(accountDto))
+        if(!Helper.isActiveStatedObject(accountDto) || Helper.isAssociativeAccount(accountDto) || !Helper.isActiveStatedObject(cardRequestDto.getTrunk().getCustomer()))
             throw new IllegalOperationException("The account is not eligible for this operation");
 
         if(accountDto.getBalance() < BankFees.Basic.CARD_REQUEST) {

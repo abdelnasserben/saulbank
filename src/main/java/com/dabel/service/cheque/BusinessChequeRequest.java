@@ -15,10 +15,10 @@ import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SavingChequeApplication extends ChequeApplication {
+public class BusinessChequeRequest extends ChequeRequest {
 
 
-    public SavingChequeApplication(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
+    public BusinessChequeRequest(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
         super(chequeService, chequeRequestService, feeService);
     }
 
@@ -27,13 +27,13 @@ public class SavingChequeApplication extends ChequeApplication {
 
         AccountDto accountDto = chequeRequestDto.getTrunk().getAccount();
 
-        if(!Helper.isSavingAccount(accountDto))
-            throw new IllegalOperationException("Only saving account is eligible for this operation");
+        if(!Helper.isBusinessAccount(accountDto))
+            throw new IllegalOperationException("Only business account is eligible for this operation");
 
         if(!Helper.isActiveStatedObject(accountDto) || !Helper.isActiveStatedObject(chequeRequestDto.getTrunk().getCustomer()))
             throw new IllegalOperationException("The account and its owner must be active for this operation");
 
-        if(accountDto.getBalance() < BankFees.Basic.SAVING_CHEQUE) {
+        if(accountDto.getBalance() < BankFees.Basic.BUSINESS_CHEQUE) {
             chequeRequestDto.setStatus(Status.FAILED.code());
             chequeRequestDto.setFailureReason("Account balance is insufficient for cheque request fees");
             chequeRequestService.save(chequeRequestDto);
@@ -54,16 +54,15 @@ public class SavingChequeApplication extends ChequeApplication {
         //we'll make update by info later...
 
         //TODO: apply fees
-        Fee fee = new Fee(chequeRequestDto.getBranch(), BankFees.Basic.SAVING_CHEQUE, "Cheque application request");
+        Fee fee = new Fee(chequeRequestDto.getBranch(), BankFees.Basic.BUSINESS_CHEQUE, "Cheque application request");
         feeService.apply(chequeRequestDto.getTrunk().getAccount(), LedgerType.CHEQUE_REQUEST, fee);
 
         chequeRequestService.save(chequeRequestDto);
 
         //TODO: generate 25 cheques for this trunk
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 50; i++) {
             ChequeDto chequeDto = ChequeDto.builder()
                     .trunk(chequeRequestDto.getTrunk())
-                    .serial(chequeRequestDto)
                     .chequeNumber(Helper.generateChequeNumber())
                     .status(Status.ACTIVE.code())
                     .branch(chequeRequestDto.getBranch())
@@ -75,6 +74,6 @@ public class SavingChequeApplication extends ChequeApplication {
 
     @Override
     AccountType getType() {
-        return AccountType.SAVING;
+        return AccountType.BUSINESS;
     }
 }

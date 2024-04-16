@@ -6,7 +6,8 @@ public enum Status {
     FAILED(2),
     APPROVED(3),
     REJECTED(4),
-    DEACTIVATED(5);
+    DEACTIVATED(5),
+    USED(6);
 
     private final int code;
     Status(int code) {

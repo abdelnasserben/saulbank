@@ -260,15 +260,17 @@
                             </div>
                             <!--end::Item-->
 
-                            <button th:unless="${cheque.status} != 'ACTIVE'" type="button"
-                                class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
-                                data-bs-target="#deactivate_account">
-                                Deactivate
-                            </button>
-                            <button th:unless="${cheque.status} == 'ACTIVE'" type="button" data-bs-toggle="modal"
-                                data-bs-target="#activate_account" class="btn btn-sm btn-primary">
-                                Activate
-                            </button>
+                            <div th:unless="${cheque.status} == 'USED'">
+                                <button th:unless="${cheque.status} != 'ACTIVE'" type="button"
+                                    class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
+                                    data-bs-target="#deactivate_account">
+                                    Deactivate
+                                </button>
+                                <button th:unless="${cheque.status} == 'ACTIVE'" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#activate_account" class="btn btn-sm btn-primary">
+                                    Activate
+                                </button>
+                            </div>
 
                         </div>
                         <!--end::Invoice 2 sidebar-->

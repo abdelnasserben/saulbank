@@ -1,31 +1,29 @@
 package com.dabel.service.transaction;
 
 import com.dabel.app.CurrencyExchanger;
-import com.dabel.app.Fee;
 import com.dabel.app.Helper;
-import com.dabel.constant.BankFees;
-import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
+import com.dabel.dto.ChequeDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
+import com.dabel.service.cheque.ChequeService;
 import com.dabel.service.customer.CustomerService;
-import com.dabel.service.fee.FeeService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Transfer extends Transaction{
+public class ChequePayment extends Transaction{
 
-    private final FeeService feeService;
+    private final ChequeService chequeService;
     private final CustomerService customerService;
 
-    public Transfer(FeeService feeService, TransactionService transactionService, CustomerService customerService, AccountService accountService) {
+    public ChequePayment(TransactionService transactionService, CustomerService customerService, AccountService accountService, ChequeService chequeService) {
         super(transactionService, accountService);
-        this.feeService = feeService;
         this.customerService = customerService;
+        this.chequeService = chequeService;
     }
 
     @Override
@@ -45,7 +43,7 @@ public class Transfer extends Transaction{
             throw new IllegalOperationException("Can't make self transfer");
 
 
-        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + BankFees.Basic.TRANSFER) {
+        if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount()) {
 
             transactionDto.setStatus(Status.FAILED.code());
             transactionDto.setFailureReason("Insufficient balance");
@@ -70,20 +68,21 @@ public class Transfer extends Transaction{
         accountService.debit(transactionDto.getInitiatorAccount(), transactionDto.getAmount());
         accountService.credit(transactionDto.getReceiverAccount(), creditAmount);
 
-        //TODO: apply transfer fees
-        Fee fee = new Fee(transactionDto.getBranch(), BankFees.Basic.TRANSFER, "Transfer");
-        feeService.apply(transactionDto.getInitiatorAccount(), LedgerType.TRANSFER, fee);
-
         //TODO: update transaction info and save it
         transactionDto.setStatus(Status.APPROVED.code());
         transactionDto.setFailureReason("Approved");
         //we'll set updatedBy later...
 
         transactionService.save(transactionDto);
+
+        //TODO: save used cheque
+        ChequeDto chequeDto = chequeService.findByChequeNumber(transactionDto.getSourceValue());
+        chequeDto.setStatus(Status.USED.code());
+        chequeService.save(chequeDto);
     }
 
     @Override
     TransactionType getType() {
-        return TransactionType.TRANSFER;
+        return TransactionType.CHEQUE_PAYMENT;
     }
 }

@@ -1,5 +1,5 @@
 package com.dabel.constant;
 
 public enum TransactionType {
-    DEPOSIT, WITHDRAW, TRANSFER, FEE
+    DEPOSIT, WITHDRAW, TRANSFER, CHEQUE_PAYMENT, FEE
 }

@@ -9,15 +9,15 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class ChequeApplicationContext {
+public class ChequeRequestContext {
 
-    private final Map<String, ChequeApplication> applicationMap = new HashMap<>();
+    private final Map<String, ChequeRequest> applicationMap = new HashMap<>();
 
-    public ChequeApplicationContext(Set<ChequeApplication> chequeApplications) {
-        chequeApplications.forEach(type -> applicationMap.put(type.getType().name(), type));
+    public ChequeRequestContext(Set<ChequeRequest> chequeRequests) {
+        chequeRequests.forEach(type -> applicationMap.put(type.getType().name(), type));
     }
 
-    public ChequeApplication setContext(String applicationType) {
+    public ChequeRequest setContext(String applicationType) {
         return Optional.ofNullable(applicationMap.get(applicationType)).orElseThrow(() -> new IllegalOperationException("Unknown cheque application type"));
     }
 }
