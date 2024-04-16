@@ -1,8 +1,7 @@
 package com.dabel.repository;
 
-import com.dabel.model.Account;
 import com.dabel.model.Card;
-import com.dabel.model.Customer;
+import com.dabel.model.Trunk;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,7 +11,5 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     Optional<Card> findByCardNumber(String cardNumber);
 
-    List<Card> findAllByAccount(Account account);
-
-    List<Card> findAllByCustomer(Customer customer);
+    List<Card> findAllByTrunk(Trunk trunk);
 }

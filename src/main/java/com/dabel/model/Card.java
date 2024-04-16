@@ -18,12 +18,8 @@ public class Card {
     private Long cardId;
 
     @ManyToOne
-    @JoinColumn(name = "accountId")
-    private Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "customerId")
-    private Customer customer;
+    @JoinColumn(name = "trunkId")
+    private Trunk trunk;
 
     private String cardType;
     private String cardNumber;

@@ -15,9 +15,7 @@ public class CardDto extends BasicDto {
 
     private Long cardId;
 
-    private AccountDto account;
-
-    private CustomerDto customer;
+    private TrunkDto trunk;
 
     private String cardType;
 

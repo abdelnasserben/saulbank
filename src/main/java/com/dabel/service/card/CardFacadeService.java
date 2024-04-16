@@ -2,14 +2,15 @@ package com.dabel.service.card;
 
 import com.dabel.app.Helper;
 import com.dabel.constant.Status;
-import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
 import com.dabel.dto.CardRequestDto;
 import com.dabel.dto.CustomerDto;
+import com.dabel.dto.TrunkDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -35,11 +36,6 @@ public class CardFacadeService {
 
     public CardDto findCardByCardNumber(String cardNumber) {
         return cardService.findByCardNumber(cardNumber);
-    }
-
-    public List<CardDto> findAllCardsOfAnAccount(String accountNumber) {
-        AccountDto accountDto = accountService.findByNumber(accountNumber);
-        return cardService.findAllByAccount(accountDto);
     }
 
     public List<CardDto> findAllCards() {
@@ -98,11 +94,13 @@ public class CardFacadeService {
         return requestOperationService.getCardRequestService().findById(requestId);
     }
 
-    public List<CardDto> findAllByAccount(AccountDto accountDto) {
-        return cardService.findAllByAccount(accountDto);
-    }
 
     public List<CardDto> findAllByCustomer(CustomerDto customerDto) {
-        return cardService.findAllByCustomer(customerDto);
+        List<TrunkDto> trunks = accountService.findAllTrunks(customerDto);
+
+        return trunks.stream()
+                .map(cardService::findAllByTrunk)
+                .flatMap(Collection::stream)
+                .toList();
     }
 }

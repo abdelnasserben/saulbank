@@ -183,7 +183,7 @@
                                         <!--end::Label-->
 
                                         <!--end::Text-->
-                                        <div th:text="${card.account.accountNumber}" class="fw-bold fs-6 text-gray-800">
+                                        <div th:text="${card.trunk.account.accountNumber}" class="fw-bold fs-6 text-gray-800">
                                             0071001997
                                         </div>
                                         <!--end::Text-->
@@ -191,7 +191,7 @@
                                         <!--end::Description-->
                                         <div class="fw-semibold fs-7 text-gray-600">
                                             BUSINESS Account <br />
-                                            <span th:text="${card.account.accountName}">John
+                                            <span th:text="${card.trunk.account.accountName}">John
                                                 Doe</span>
                                         </div>
                                         <!--end::Description-->
@@ -265,9 +265,9 @@
 
                                 <div class="fw-bold text-gray-600 fs-7">
                                     <p class="mb-1">Number : <span
-                                            th:text="${card.account.accountNumber}">0071001997</span>
+                                            th:text="${card.trunk.account.accountNumber}">0071001997</span>
                                     </p>
-                                    <p class="mb-0">Name : <span th:text="${card.account.accountName}">John
+                                    <p class="mb-0">Name : <span th:text="${card.trunk.account.accountName}">John
                                             Doe</span></p>
                                 </div>
                             </div>

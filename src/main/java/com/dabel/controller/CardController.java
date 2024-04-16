@@ -82,6 +82,18 @@ public class CardController implements PageTitleConfig {
         return Web.View.CARD_REQUESTS;
     }
 
+    @GetMapping(value = Web.Endpoint.CARD_REQUESTS + "/{requestId}")
+    public String requestDetails(Model model, @PathVariable Long requestId, PostCardDto postCardDto) {
+
+        CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
+
+        configCardRequestAttributesPage(model, requestDto);
+        return Web.View.CARD_REQUEST_DETAILS;
+    }
+
+
+    /*** FOR CARD REQUEST ***/
+
     @PostMapping(value = Web.Endpoint.CARD_REQUESTS)
     public String sendRequest(Model model, @Valid PostCardRequestDto postCardRequestDto, BindingResult binding, RedirectAttributes redirect) {
 
@@ -107,15 +119,6 @@ public class CardController implements PageTitleConfig {
         return "redirect:" + Web.Endpoint.CARD_REQUESTS;
     }
 
-    @GetMapping(value = Web.Endpoint.CARD_REQUESTS + "/{requestId}")
-    public String requestDetails(Model model, @PathVariable Long requestId, PostCardDto postCardDto) {
-
-        CardRequestDto requestDto = cardFacadeService.findRequestById(requestId);
-
-        configCardRequestAttributesPage(model, requestDto);
-        return Web.View.CARD_REQUEST_DETAILS;
-    }
-
     @PostMapping(value = Web.Endpoint.CARD_REQUEST_APPROVE + "/{requestId}")
     public String approveRequest(Model model, @PathVariable Long requestId, @Valid PostCardDto postCardDto, BindingResult binding, RedirectAttributes redirect) {
 
@@ -131,10 +134,9 @@ public class CardController implements PageTitleConfig {
         //TODO: save card information and save it
         CardDto cardDto = CardDto.builder()
                 .cardType(postCardDto.getCardType())
+                .trunk(requestDto.getTrunk())
                 .cardName(postCardDto.getCardName())
                 .cardNumber(postCardDto.getCardNumber())
-                .account(requestDto.getTrunk().getAccount())
-                .customer(requestDto.getTrunk().getCustomer())
                 .expirationDate(CardExpirationDateUtils.getDate(Integer.parseInt(postCardDto.getExpiryYear()), Integer.parseInt(postCardDto.getExpiryMonth())))
                 .status(Status.PENDING.code())
                 .branch(requestDto.getBranch())

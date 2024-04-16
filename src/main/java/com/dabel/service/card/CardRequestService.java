@@ -20,18 +20,18 @@ CardRequestService {
     }
 
     public CardRequestDto save(CardRequestDto cardRequestDto) {
-        return CardMapper.toDTO(cardRequestRepository.save(CardMapper.toEntity(cardRequestDto)));
+        return CardMapper.toDto(cardRequestRepository.save(CardMapper.toEntity(cardRequestDto)));
     }
 
     public CardRequestDto findById(Long requestId) {
         CardRequest cardRequest = cardRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card request not found"));
-        return CardMapper.toDTO(cardRequest);
+        return CardMapper.toDto(cardRequest);
     }
 
     public List<CardRequestDto> findAll() {
         return cardRequestRepository.findAll().stream()
-                .map(CardMapper::toDTO)
+                .map(CardMapper::toDto)
                 .toList();
     }
 }

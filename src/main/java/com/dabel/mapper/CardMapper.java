@@ -14,7 +14,7 @@ public class CardMapper {
         return mapper.map(cardDto, Card.class);
     }
 
-    public static CardDto toDTO(Card card) {
+    public static CardDto toDto(Card card) {
         return mapper.map(card, CardDto.class);
     }
 
@@ -22,7 +22,7 @@ public class CardMapper {
         return mapper.map(cardRequestDto, CardRequest.class);
     }
 
-    public static CardRequestDto toDTO(CardRequest cardRequest) {
+    public static CardRequestDto toDto(CardRequest cardRequest) {
         return mapper.map(cardRequest, CardRequestDto.class);
     }
 }

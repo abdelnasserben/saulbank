@@ -14,5 +14,4 @@ public class ChequeRequestDto extends BasicDto {
     private Long requestId;
     private TrunkDto trunk;
     private String failureReason;
-    private String status;
 }
