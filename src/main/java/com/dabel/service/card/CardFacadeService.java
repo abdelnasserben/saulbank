@@ -34,10 +34,6 @@ public class CardFacadeService {
         return cardService.findById(cardId);
     }
 
-    public CardDto findCardByCardNumber(String cardNumber) {
-        return cardService.findByCardNumber(cardNumber);
-    }
-
     public List<CardDto> findAllCards() {
         return cardService.findAll();
     }

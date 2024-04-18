@@ -58,11 +58,12 @@ public class ExchangeController implements PageTitleConfig {
 
         if(binding.hasErrors()) {
             configPageTitle(model, Web.Menu.Exchange.INIT);
+            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
             return Web.View.EXCHANGE_INIT;
         }
 
         //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findById(1L);
+        BranchDto branchDto = branchFacadeService.findAll().get(0);
         exchangeDto.setBranch(branchDto);
 
         exchangeFacadeService.init(exchangeDto);

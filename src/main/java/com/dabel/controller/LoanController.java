@@ -73,7 +73,7 @@ public class LoanController implements PageTitleConfig {
         loanDto.setBorrower(customerDto);
 
         //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findById(1L);
+        BranchDto branchDto = branchFacadeService.findAll().get(0);
         loanDto.setBranch(branchDto);
 
         loanFacadeService.init(loanDto);

@@ -88,7 +88,7 @@ public class TransactionController implements PageTitleConfig {
         }
 
         //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findById(1L);
+        BranchDto branchDto = branchFacadeService.findAll().get(0);
         transactionDto.setBranch(branchDto);
         transactionDto.setSourceType(SourceType.ONLINE.name());
         transactionDto.setSourceValue(branchDto.getBranchName());

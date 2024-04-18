@@ -28,11 +28,6 @@ public class CardService {
                 .orElseThrow(() -> new ResourceNotFoundException("Card not found")));
     }
 
-    public CardDto findByCardNumber(String cardNumber) {
-        return CardMapper.toDto(cardRepository.findByCardNumber(cardNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Card not found")));
-    }
-
     public List<CardDto> findAll() {
         return cardRepository.findAll().stream()
                 .map(CardMapper::toDto)

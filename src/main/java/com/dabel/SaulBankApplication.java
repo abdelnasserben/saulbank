@@ -11,7 +11,5 @@ public class SaulBankApplication {
 	}
 
 }
-//transaction details, make image of cheque or card or anything by sourceType
-//customer details page: make transaction correct
 //transaction details, display initiator and receiver account
 //remove test to check all unnecessary methods on service classes

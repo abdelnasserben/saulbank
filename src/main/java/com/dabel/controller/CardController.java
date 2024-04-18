@@ -104,7 +104,7 @@ public class CardController implements PageTitleConfig {
         }
 
         //TODO: get branch, customer and his account
-        BranchDto branchDto = branchFacadeService.findById(1L);
+        BranchDto branchDto = branchFacadeService.findAll().get(0);
         CustomerDto customerDto = customerFacadeService.findByIdentity(postCardRequestDto.getCustomerIdentityNumber());
         TrunkDto trunkDto = accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, postCardRequestDto.getAccountNumber());
 

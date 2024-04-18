@@ -7,12 +7,13 @@ import java.util.List;
 
 public final class StatedObjectFormatter {
     public static <T extends StatedObject> T format(T t) {
-        t.setStatus(Status.nameOf(t.getStatus()));
+        if(t != null)
+            t.setStatus(Status.nameOf(t.getStatus()));
         return t;
     }
 
     public static <T extends StatedObject> List<T> format(List<T> list) {
-        return list.stream()
+        return list.isEmpty() ? list : list.stream()
                 .peek(t -> t.setStatus(Status.nameOf(t.getStatus())))
                 .toList();
     }

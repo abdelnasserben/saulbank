@@ -2,7 +2,10 @@ package com.dabel.service.account;
 
 import com.dabel.app.Helper;
 import com.dabel.constant.Status;
-import com.dabel.dto.*;
+import com.dabel.dto.AccountDto;
+import com.dabel.dto.CustomerDto;
+import com.dabel.dto.LedgerDto;
+import com.dabel.dto.TrunkDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,22 +39,6 @@ public class AccountFacadeService {
 
     public AccountDto findByNumber(String accountNumber) {
         return accountService.findByNumber(accountNumber);
-    }
-
-    public List<AccountDto> findAllVault(BranchDto branchDto) {
-        return accountService.findAllVault(branchDto);
-    }
-
-    public AccountDto findVault(BranchDto branchDto, String currency) {
-        return accountService.findVault(branchDto, currency);
-    }
-
-    public List<LedgerDto> findAllLedgers(BranchDto branchDto) {
-        return accountService.findAllLedgers(branchDto);
-    }
-
-    public LedgerDto findLedgerByBranchAndType(BranchDto branchDto, String ledgerType) {
-        return accountService.findLedgerByBranchAndType(branchDto, ledgerType);
     }
 
     public List<TrunkDto> findAllTrunks() {

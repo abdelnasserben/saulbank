@@ -77,9 +77,17 @@
 							<td th:text="${transaction.currency}">KMF</td>
 							<td th:text="${transaction.amount}">65000</td>
 							<td>
-								<img th:unless="${transaction.sourceType == 'ONLINE'}"
+								<img th:unless="${!#lists.contains({'VISA', 'MASTERCARD'}, transaction.sourceType)}"
 									th:src="${transaction.sourceType == 'VISA'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
 									class="w-35px me-3" alt="" />
+								<i th:unless="${transaction.sourceType != 'CHEQUE'}" class="ki-duotone ki-bill fs-1">
+									<span class="path1"></span>
+									<span class="path2"></span>
+									<span class="path3"></span>
+									<span class="path4"></span>
+									<span class="path5"></span>
+									<span class="path6"></span>
+								</i>
 								<span th:text="${transaction.sourceValue}">**** 3840</span>
 							</td>
 							<td><span th:text="${transaction.status}"

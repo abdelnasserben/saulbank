@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -71,7 +70,7 @@ public class CustomerController implements PageTitleConfig {
                                  @RequestParam AccountProfile accountProfile,
                                  @RequestParam MultipartFile avatar,
                                  @RequestParam MultipartFile signature,
-                                 BindingResult binding, RedirectAttributes redirect) throws IOException {
+                                 BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors()) {
             configPageTitle(model, Web.Menu.Customer.ADD);
@@ -80,7 +79,7 @@ public class CustomerController implements PageTitleConfig {
         }
 
         //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findById(1L);
+        BranchDto branchDto = branchFacadeService.findAll().get(0);
         customerDto.setBranch(branchDto);
 
         //TODO: save customer pictures
