@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
@@ -38,6 +37,22 @@ class ExchangeControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    private void initExchange() {
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("Moroni")
+                .build(), new double[3]);
+
+        exchangeFacadeService.init(ExchangeDto.builder()
+                .purchaseCurrency("EUR")
+                .purchaseAmount(500)
+                .saleCurrency("KMF")
+                .customerIdentityNumber("NBE546646")
+                .customerFullName("John Doe")
+                .branch(branchFacadeService.findAll().get(0))
+                .build());
+    }
+
     @BeforeEach
     void setup() {
         dbSetupForTests.truncate();
@@ -61,7 +76,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void shouldNotCreateAnInvalidBranch() throws Exception {
+    void shouldNotInitAnInvalidExchange() throws Exception {
 
         mockMvc.perform(post(Web.Endpoint.EXCHANGE_INIT))
                 .andExpect(model().attribute("errorMessage", "Invalid information !"));
@@ -69,7 +84,6 @@ class ExchangeControllerTest {
 
     @Test
     void shouldInitAValidExchange() throws Exception {
-
         //given
         branchFacadeService.create(BranchDto.builder()
                 .branchName("HQ")
@@ -83,8 +97,8 @@ class ExchangeControllerTest {
         params.add("customerIdentityNumber", "NBE546646");
         params.add("customerFullName", "John Doe");
 
+        //then
         mockMvc.perform(post(Web.Endpoint.EXCHANGE_INIT)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(params)
         ).andExpect(flash().attribute("successMessage", "Exchange successfully initiated"));
     }
@@ -98,74 +112,33 @@ class ExchangeControllerTest {
 
     @Test
     void shouldDisplayDetailsOfAnExistingExchange() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        exchangeFacadeService.init(ExchangeDto.builder()
-                .purchaseCurrency("EUR")
-                .purchaseAmount(500)
-                .saleCurrency("KMF")
-                .customerIdentityNumber("NBE546646")
-                .customerFullName("John Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build());
+        initExchange();
+        String url = Web.Endpoint.EXCHANGES + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
 
         //then
-        String url = Web.Endpoint.EXCHANGES + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
         mockMvc.perform(get(url))
                 .andExpect(model().attributeExists("exchange"));
     }
 
     @Test
     void shouldApproveExchange() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        exchangeFacadeService.init(ExchangeDto.builder()
-                .purchaseCurrency("EUR")
-                .purchaseAmount(500)
-                .saleCurrency("KMF")
-                .customerIdentityNumber("NBE546646")
-                .customerFullName("John Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build());
-
-        //then
+        initExchange();
         String url = Web.Endpoint.EXCHANGE_APPROVE + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
 
+        //then
         mockMvc.perform(post(url))
                 .andExpect(flash().attribute("successMessage", "Exchange successfully approved!"));
     }
 
     @Test
     void shouldNotRejectExchangeWithoutReason() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        exchangeFacadeService.init(ExchangeDto.builder()
-                .purchaseCurrency("EUR")
-                .purchaseAmount(500)
-                .saleCurrency("KMF")
-                .customerIdentityNumber("NBE546646")
-                .customerFullName("John Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build());
-
-        //then
+        initExchange();
         String url = Web.Endpoint.EXCHANGE_REJECT + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
 
+        //then
         mockMvc.perform(post(url)
                         .param("rejectReason", ""))
                 .andExpect(flash().attribute("errorMessage", "Reject reason is mandatory!"));
@@ -173,25 +146,11 @@ class ExchangeControllerTest {
 
     @Test
     void shouldRejectExchange() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        exchangeFacadeService.init(ExchangeDto.builder()
-                .purchaseCurrency("EUR")
-                .purchaseAmount(500)
-                .saleCurrency("KMF")
-                .customerIdentityNumber("NBE546646")
-                .customerFullName("John Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build());
-
-        //then
+        initExchange();
         String url = Web.Endpoint.EXCHANGE_REJECT + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
 
+        //then
         mockMvc.perform(post(url)
                         .param("rejectReason", "just a reason"))
                 .andExpect(flash().attribute("successMessage", "Exchange successfully rejected!"));

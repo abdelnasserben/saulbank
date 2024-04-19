@@ -20,6 +20,7 @@ public class CustomerDto extends BasicDto {
     @NotBlank
     private String lastName;
     private String gender;
+    @NotBlank
     private String identityNumber;
     private String identityType;
     private String identityIssue;

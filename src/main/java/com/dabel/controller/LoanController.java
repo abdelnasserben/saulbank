@@ -64,7 +64,7 @@ public class LoanController implements PageTitleConfig {
 
         if(binding.hasErrors() || customerIdentityNumber.isEmpty() || customerIdentityNumber.isBlank()) {
             configPageTitle(model, Web.Menu.Loan.INIT);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid Information");
+            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
             return Web.View.LOAN_INIT;
         }
 

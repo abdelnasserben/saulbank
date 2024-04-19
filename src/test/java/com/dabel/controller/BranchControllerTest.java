@@ -34,6 +34,14 @@ class BranchControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+
+    private void createBranch(double[] vaultsAsset) {
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("Moroni")
+                .build(), vaultsAsset);
+    }
+
     @BeforeEach
     void setup() {
         dbSetupForTests.truncate();
@@ -56,11 +64,12 @@ class BranchControllerTest {
     }
     @Test
     void shouldCreateValidBranch() throws Exception {
-
+        //given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("branchName", "HQ");
         params.add("branchAddress", "Moroni");
 
+        //then
         mockMvc.perform(post(Web.Endpoint.BRANCHES)
                  .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                  .params(params)
@@ -85,12 +94,8 @@ class BranchControllerTest {
 
     @Test
     void shouldListVaultsWithBranchCode() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
+        createBranch(new double[3]);
 
         //then
         mockMvc.perform(get(Web.Endpoint.BRANCH_ACCOUNTS)
@@ -102,15 +107,11 @@ class BranchControllerTest {
 
     @Test
     void shouldNotAdjustVaultWithNegativeAmount() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[]{100, 200, 300});
+        createBranch(new double[]{100, 200, 300});
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", "1");
+        params.add("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId()));
         params.add("currency", "KMF");
         params.add("amount", "-500");
         params.add("operationType", "credit");
@@ -124,19 +125,34 @@ class BranchControllerTest {
     }
 
     @Test
-    void shouldAdjustVaultWithPositiveAmount() throws Exception {
-
+    void shouldCreditVault() throws Exception {
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[]{100, 200, 300});
+        createBranch(new double[]{100, 200, 300});
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId()));
         params.add("currency", "KMF");
         params.add("amount", "500");
         params.add("operationType", "credit");
+
+        //then
+        mockMvc.perform(post(Web.Endpoint.BRANCH_ACCOUNTS)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(params)
+        ).andExpect(flash().attribute("successMessage", "Successful adjustment"));
+
+    }
+
+    @Test
+    void shouldDebitVault() throws Exception {
+        //given
+        createBranch(new double[]{100, 200, 300});
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId()));
+        params.add("currency", "KMF");
+        params.add("amount", "500");
+        params.add("operationType", "debit");
 
         //then
         mockMvc.perform(post(Web.Endpoint.BRANCH_ACCOUNTS)

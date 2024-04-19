@@ -41,6 +41,20 @@ class CustomerControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+
+    private void createCustomer() {
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("Moroni")
+                .build(), new double[3]);
+
+        customerFacadeService.create(CustomerDto.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .branch(branchFacadeService.findAll().get(0))
+                .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
+    }
+
     @BeforeEach
     void setup() {
         dbSetupForTests.truncate();
@@ -65,7 +79,6 @@ class CustomerControllerTest {
 
     @Test
     void shouldCreateValidCustomer() throws Exception {
-
         //given
         branchFacadeService.create(BranchDto.builder()
                 .branchName("HQ")
@@ -81,6 +94,7 @@ class CustomerControllerTest {
 
         byte[] multipartContent = "content of file".getBytes(StandardCharsets.UTF_8);
 
+        //then
         mockMvc.perform(multipart(Web.Endpoint.CUSTOMER_ADD)
                         .file(new MockMultipartFile("avatar", "avatar.txt", "text/plain", multipartContent))
                         .file(new MockMultipartFile("signature", "signature.txt", "text/plain", multipartContent))
@@ -97,43 +111,21 @@ class CustomerControllerTest {
 
     @Test
     void shouldDisplayDetailsOfExistingCustomer() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        customerFacadeService.create(CustomerDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-
+        createCustomer();
+        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
 
         //then
-        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
         mockMvc.perform(get(url))
                 .andExpect(model().attributeExists("customer"));
     }
 
     @Test
     void shouldUpdateCustomerInfo() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        customerFacadeService.create(CustomerDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-
-        //when
+        createCustomer();
         String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
+
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("firstName", "Sarah");
         params.add("lastName", "Hunt");
@@ -146,21 +138,11 @@ class CustomerControllerTest {
 
     @Test
     void shouldNotUpdateAnInvalidCustomer() throws Exception {
-
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("Moroni")
-                .build(), new double[3]);
-
-        customerFacadeService.create(CustomerDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .branch(branchFacadeService.findAll().get(0))
-                .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
+        createCustomer();
+        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
 
         //then
-        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
         mockMvc.perform(post(url))
                 .andExpect(flash().attribute("errorMessage", "Invalid information !"));
     }
