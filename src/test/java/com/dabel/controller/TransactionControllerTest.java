@@ -160,7 +160,7 @@ class TransactionControllerTest {
     }
 
     @Test
-    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNoExistingTransaction() throws Exception {
+    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNotExistingTransaction() throws Exception {
 
         mockMvc.perform(get(Web.Endpoint.TRANSACTIONS + "/1"))
                 .andExpect(view().name("redirect:/404"));

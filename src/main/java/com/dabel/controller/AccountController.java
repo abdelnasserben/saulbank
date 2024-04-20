@@ -78,7 +78,7 @@ public class AccountController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION)
-    public String trunkAffiliationsDetails(Model model, @RequestParam(name = "code", required = false) String code) {
+    public String displayTrunkAffiliationsDetails(Model model, @RequestParam(name = "code", required = false) String code) {
 
         if(code != null) {
             try {
@@ -100,16 +100,16 @@ public class AccountController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{accountNumber}")
-    public String addNewAffiliateOnTrunk(Model model, @PathVariable String accountNumber, @RequestParam(name="member", required = false) String customerIdentity) {
-
-        if(customerIdentity != null)
-            model.addAttribute("customer", customerFacadeService.findByIdentity(customerIdentity));
-        else model.addAttribute("customer",  new CustomerDto());
+    public String displayManageTrunkAffiliationPage(Model model, @PathVariable String accountNumber, @RequestParam(name="member", required = false) String customerIdentity) {
 
         TrunkDto trunkDto = Stream.of(accountFacadeService.findTrunkByNumber(accountNumber))
                 .peek(t -> StatedObjectFormatter.format(t.getAccount()))
                 .findFirst()
                 .get();
+
+        if(customerIdentity != null)
+            model.addAttribute("customer", customerFacadeService.findByIdentity(customerIdentity));
+        else model.addAttribute("customer",  new CustomerDto());
 
         model.addAttribute("trunk",  trunkDto);
         configPageTitle(model, Web.Menu.Account.AFFILIATION_ADD);
@@ -117,7 +117,7 @@ public class AccountController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{accountNumber}")
-    public String addNewAffiliateOnTrunk(Model model, @Valid CustomerDto customerDto, BindingResult binding,
+    public String addNewAffiliate(Model model, @Valid CustomerDto customerDto, BindingResult binding,
                                          @PathVariable String accountNumber,
                                          @RequestParam(name = "member") String customerIdentity,
                                          RedirectAttributes redirect) {
@@ -125,7 +125,7 @@ public class AccountController implements PageTitleConfig {
         CustomerDto nextAffiliate;
         if(customerIdentity.isEmpty()) {
             if(binding.hasErrors()) {
-                redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid Information");
+                redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid Information!");
                 return String.format("redirect:%s/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
             }
 
@@ -135,19 +135,19 @@ public class AccountController implements PageTitleConfig {
 
 
         accountFacadeService.addAffiliate(nextAffiliate, accountNumber);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful affiliation");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful affiliation!");
 
         return String.format("redirect:%s/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{trunkId}/" + "remove/" + "{customerIdentityNumber}")
-    public String manageTrunkAffiliation(@PathVariable Long trunkId, @PathVariable String customerIdentityNumber, RedirectAttributes redirect) {
+    public String removeAffiliate(@PathVariable Long trunkId, @PathVariable String customerIdentityNumber, RedirectAttributes redirect) {
 
         TrunkDto trunkDto = accountFacadeService.findTrunkById(trunkId);
         CustomerDto customerDto = customerFacadeService.findByIdentity(customerIdentityNumber);
 
         accountFacadeService.removeAffiliate(customerDto, trunkDto.getAccount().getAccountNumber());
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Affiliate removed successfully");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Affiliate removed successfully!");
 
         return String.format("redirect:%s?code=%s", Web.Endpoint.ACCOUNT_AFFILIATION, trunkDto.getAccount().getAccountNumber());
     }

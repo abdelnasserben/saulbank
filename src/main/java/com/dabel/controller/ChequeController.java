@@ -50,13 +50,6 @@ public class ChequeController implements PageTitleConfig {
         return Web.View.CHEQUE_DETAILS;
     }
 
-    @GetMapping(value = Web.Endpoint.CHEQUE_PAY)
-    public String initChequePayment(Model model, PostChequeDto postChequeDto) {
-        configPageTitle(model, Web.Menu.Cheque.PAY);
-
-        return Web.View.CHEQUE_PAY;
-    }
-
     @PostMapping(value = Web.Endpoint.CHEQUE_ACTIVATE + "/{chequeId}")
     public String activateCheque(@PathVariable Long chequeId, RedirectAttributes redirect) {
 
@@ -82,6 +75,14 @@ public class ChequeController implements PageTitleConfig {
 
     /*** FOR CHEQUES PAYMENTS ***/
 
+
+    @GetMapping(value = Web.Endpoint.CHEQUE_PAY)
+    public String initChequePayment(Model model, PostChequeDto postChequeDto) {
+        configPageTitle(model, Web.Menu.Cheque.PAY);
+
+        return Web.View.CHEQUE_PAY;
+    }
+
     @PostMapping(value = Web.Endpoint.CHEQUE_PAY)
     public String handleInitChequePayment(Model model, @Valid PostChequeDto postChequeDto, BindingResult binding, RedirectAttributes redirect) {
 
@@ -95,7 +96,7 @@ public class ChequeController implements PageTitleConfig {
         //TODO: save init cheque payment
         transactionFacadeService.init(chequeFacadeService.initPay(postChequeDto));
 
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque payment successfully initiated.");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Cheque payment successfully initiated!");
 
         return "redirect:" + Web.Endpoint.CHEQUE_PAY;
     }

@@ -104,7 +104,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNoExistingExchange() throws Exception {
+    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNotExistingExchange() throws Exception {
 
         mockMvc.perform(get(Web.Endpoint.EXCHANGES + "/1"))
                 .andExpect(view().name("redirect:/404"));

@@ -120,7 +120,7 @@ class LoanControllerTest {
     }
 
     @Test
-    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNoExistingLoan() throws Exception {
+    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNotExistingLoan() throws Exception {
 
         mockMvc.perform(get(Web.Endpoint.LOANS + "/1"))
                 .andExpect(view().name("redirect:/404"));

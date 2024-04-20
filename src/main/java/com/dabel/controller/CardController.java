@@ -74,6 +74,9 @@ public class CardController implements PageTitleConfig {
         return String.format("redirect:%s/%d", Web.Endpoint.CARDS, cardId);
     }
 
+
+    /*** FOR CARD REQUEST ***/
+
     @GetMapping(value = Web.Endpoint.CARD_REQUESTS)
     public String listingRequests(Model model, PostCardRequestDto postCardRequestDto) {
         configPageTitle(model, Web.Menu.Card.REQUESTS);
@@ -90,9 +93,6 @@ public class CardController implements PageTitleConfig {
         configCardRequestAttributesPage(model, requestDto);
         return Web.View.CARD_REQUEST_DETAILS;
     }
-
-
-    /*** FOR CARD REQUEST ***/
 
     @PostMapping(value = Web.Endpoint.CARD_REQUESTS)
     public String sendRequest(Model model, @Valid PostCardRequestDto postCardRequestDto, BindingResult binding, RedirectAttributes redirect) {
@@ -158,7 +158,7 @@ public class CardController implements PageTitleConfig {
     public String rejectRequest(@PathVariable Long requestId, @RequestParam String rejectReason, RedirectAttributes redirect) {
 
         if(rejectReason.isBlank())
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason reason is mandatory !");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory !");
         else {
             redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Card request successfully rejected!");
             cardFacadeService.rejectRequest(requestId, rejectReason);

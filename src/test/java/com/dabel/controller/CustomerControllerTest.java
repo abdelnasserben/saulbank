@@ -51,6 +51,7 @@ class CustomerControllerTest {
         customerFacadeService.create(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
+                .identityNumber("NBE465464")
                 .branch(branchFacadeService.findAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
@@ -88,6 +89,7 @@ class CustomerControllerTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("firstName", "John");
         params.add("lastName", "Doe");
+        params.add("identityNumber", "NBE465464");
         params.add("accountName", "John Doe");
         params.add("accountType", "SAVING");
         params.add("accountProfile", "PERSONAL");
@@ -103,7 +105,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNoExistingCustomer() throws Exception {
+    void shouldRedirectTo404PageWhenTryDisplayDetailsOfNotExistingCustomer() throws Exception {
 
         mockMvc.perform(get(Web.Endpoint.CUSTOMERS + "/1"))
                 .andExpect(view().name("redirect:/404"));
@@ -129,6 +131,7 @@ class CustomerControllerTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("firstName", "Sarah");
         params.add("lastName", "Hunt");
+        params.add("identityNumber", "NBE465464");
 
         //then
         mockMvc.perform(post(url)
