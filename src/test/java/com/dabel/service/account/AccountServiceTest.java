@@ -1,7 +1,6 @@
 package com.dabel.service.account;
 
 import com.dabel.DBSetupForTests;
-import com.dabel.constant.*;
 import com.dabel.dto.*;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.branch.BranchService;
@@ -30,114 +29,85 @@ class AccountServiceTest {
     @Autowired
     DBSetupForTests dbSetupForTests;
 
-    AccountDto accountDto;
-    BranchDto savedBranch;
 
-    @BeforeEach
-    void setUp() {
-        dbSetupForTests.truncate();
-        savedBranch = branchService.save(BranchDto.builder()
+    private AccountDto getAccountDto() {
+        BranchDto savedBranch = branchService.save(BranchDto.builder()
                 .branchName("HQ")
                 .branchAddress("London")
-                .status(Status.ACTIVE.code())
+                .status("1")
                 .build());
-        accountDto = AccountDto.builder()
+
+        return AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
-                .currency(Currency.KMF.name())
-                .accountType(AccountType.SAVING.name())
-                .accountProfile(AccountProfile.PERSONAL.name())
-                .status(Status.ACTIVE.code())
+                .currency("KMF")
+                .balance(0)
+                .accountType("SAVING")
+                .accountProfile("PERSONAL")
+                .status("1")
                 .branch(savedBranch)
                 .build();
     }
 
+    private AccountDto saveAccount() {
+        return accountService.save(getAccountDto());
+    }
+
+    private AccountDto saveVault() {
+        AccountDto accountDto = getAccountDto();
+        accountDto.setIsVault(1);
+        return accountService.save(accountDto);
+    }
+
+    private TrunkDto saveTrunk() {
+        AccountDto savedAccount = saveAccount();
+        CustomerDto savedCustomer = customerService.save(CustomerDto.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .identityNumber("NBE123456")
+                .status("1")
+                .branch(savedAccount.getBranch())
+                .build());
+        TrunkDto trunkDto = TrunkDto.builder()
+                .customer(savedCustomer)
+                .account(savedAccount)
+                .membership("OWNER")
+                .build();
+
+        return accountService.save(trunkDto);
+    }
+
+    @BeforeEach
+    void setUp() {
+        dbSetupForTests.truncate();
+    }
+
     @Test
-    void shouldSaveNewAccount() {
+    void shouldSaveAccount() {
         //given
         //when
-        AccountDto expected = accountService.save(accountDto);
+        AccountDto expected = accountService.save(getAccountDto());
 
         //then
         assertThat(expected.getAccountId()).isGreaterThan(0);
-        assertThat(expected.getCreatedAt()).isNotNull();
-        assertThat(expected.getAccountName()).isEqualTo("John Doe");
-        assertThat(expected.getBranch().getBranchName()).isEqualTo("HQ");
-    }
-
-    @Test
-    void shouldFindAccountByNumber() {
-        //given
-        accountService.save(accountDto);
-
-        //when
-        AccountDto expected = accountService.findByNumber("123456789");
-
-        //then
-        assertThat(expected.getAccountName()).isEqualTo("John Doe");
-    }
-
-    @Test
-    void shouldFindAllAccounts() {
-        //given
-        accountService.save(accountDto);
-
-        //when
-        List<AccountDto> expected = accountService.findAll();
-
-        //then
-        assertThat(expected.size()).isEqualTo(1);
-    }
-
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenTryFindNotExistsAccount() {
-        //given
-        //when
-        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findByNumber("0123456"));
-
-        //then
-        assertThat(expected.getMessage()).isEqualTo("Account not found");
-    }
-
-    @Test
-    void shouldFindVaultByBranchAndCurrency() {
-        //given
-        accountDto.setIsVault(1);
-        AccountDto savedAccount = accountService.save(accountDto);
-
-        //when
-        AccountDto expected = accountService.findVault(savedAccount.getBranch(), Currency.KMF.name());
-
-        //then
-        assertThat(expected.getAccountName()).isEqualTo("John Doe");
-    }
-
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenTryFindNotExistsVault() {
-        //given
-        AccountDto savedAccount = accountService.save(accountDto);
-
-        //when
-        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findVault(savedAccount.getBranch(), Currency.USD.name()));
-
-        //then
-        assertThat(expected.getMessage()).isEqualTo("Account not found");
+        assertThat(expected.getAccountNumber()).isEqualTo("123456789");
     }
 
     @Test
     void shouldSaveTrunk() {
         //given
+        AccountDto savedAccount = saveAccount();
         CustomerDto savedCustomer = customerService.save(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE123456")
-                .status(Status.ACTIVE.code())
-                .branch(accountDto.getBranch())
+                .status("1")
+                .branch(savedAccount.getBranch())
                 .build());
         TrunkDto trunkDto = TrunkDto.builder()
                 .customer(savedCustomer)
-                .account(accountDto)
-                .membership(AccountMembership.OWNER.name())
+                .account(savedAccount)
+                .membership("OWNER")
                 .build();
 
         //when
@@ -149,45 +119,13 @@ class AccountServiceTest {
     }
 
     @Test
-    void shouldFindTrunkByAccountNumber() {
+    void shouldSaveLedger() {
         //given
-        CustomerDto savedCustomer = customerService.save(CustomerDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .identityNumber("NBE123456")
-                .status(Status.ACTIVE.code())
-                .branch(accountDto.getBranch())
-                .build());
-        accountService.save(TrunkDto.builder()
-                .customer(savedCustomer)
-                .account(accountDto)
-                .membership(AccountMembership.OWNER.name())
-                .build());
-
-        //when
-        TrunkDto expected = accountService.findTrunkByNumber("123456789");
-
-        //then
-        assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
-    }
-
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenTryFindNotExistsTrunk() {
-        //given
-        //when
-        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findTrunkByNumber("0123456"));
-
-        //then
-        assertThat(expected.getMessage()).isEqualTo("Account not found");
-    }
-
-    @Test
-    void shouldSaveNewLedger() {
-        //given
+        AccountDto savedAccount = saveAccount();
         LedgerDto ledgerDto = LedgerDto.builder()
-                .branch(savedBranch)
-                .account(accountDto)
-                .ledgerType(LedgerType.WITHDRAW.name())
+                .branch(savedAccount.getBranch())
+                .account(savedAccount)
+                .ledgerType("WITHDRAW")
                 .build();
 
         //when
@@ -195,32 +133,269 @@ class AccountServiceTest {
 
         //then
         assertThat(expected.getLedgerId()).isGreaterThan(0);
-        assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
+        assertThat(expected.getAccount().getAccountNumber()).isEqualTo("123456789");
     }
 
     @Test
-    void shouldFindLedgerByAccountAndLedgerType() {
+    void shouldFindAllAccounts() {
         //given
-        accountService.save(LedgerDto.builder()
-                .branch(savedBranch)
-                .account(accountDto)
-                .ledgerType(LedgerType.WITHDRAW.name())
-                .build());
+        saveAccount();
 
         //when
-        LedgerDto expected = accountService.findLedgerByBranchAndType(savedBranch, LedgerType.WITHDRAW.name());
+        List<AccountDto> expected = accountService.findAll();
 
         //then
-        assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
+        assertThat(expected.size()).isEqualTo(1);
     }
 
     @Test
-    void shouldThrowResourceNotFoundExceptionWhenTryFindNotExistsLedger() {
+    void shouldFindAccountByHisNumber() {
+        //given
+        saveAccount();
+
+        //when
+        AccountDto expected = accountService.findByNumber("123456789");
+
+        //then
+        assertThat(expected.getAccountName()).isEqualTo("John Doe");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToFindAccountByNonExistentNumber() {
         //given
         //when
-        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findLedgerByBranchAndType(savedBranch, LedgerType.WITHDRAW.name()));
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findByNumber("0123456"));
 
         //then
         assertThat(expected.getMessage()).isEqualTo("Account not found");
+    }
+
+    @Test
+    void shouldFindAllBranchVaultsByBranch() {
+        //given
+        AccountDto savedVault = saveVault();
+
+        //when
+        List<AccountDto> expected = accountService.findAllVaults(savedVault.getBranch());
+
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getAccountNumber()).isEqualTo("123456789");
+    }
+
+    @Test
+    void shouldFindVaultByBranchAndCurrency() {
+        //given
+        AccountDto savedVault = saveVault();
+
+        //when
+        AccountDto expected = accountService.findVault(savedVault.getBranch(), "KMF");
+
+        //then
+        assertThat(expected.getAccountNumber()).isEqualTo("123456789");
+        assertThat(expected.getCurrency()).isEqualTo("KMF");
+        assertThat(expected.getBranch().getBranchName()).isEqualTo("HQ");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToFindNonExistentVault() {
+        //given
+        AccountDto savedAccount = saveAccount();
+        //when
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findVault(savedAccount.getBranch(), "USD"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Account not found");
+    }
+
+    @Test
+    void shouldFindAllBranchLedgersByBranch() {
+        //given
+        AccountDto savedAccount = saveAccount();
+        accountService.save(LedgerDto.builder()
+                .account(savedAccount)
+                .ledgerType("WITHDRAW")
+                .branch(savedAccount.getBranch())
+                .build());
+
+        //when
+        List<LedgerDto> expected = accountService.findAllLedgers(savedAccount.getBranch());
+
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getAccount().getAccountNumber()).isEqualTo("123456789");
+    }
+
+    @Test
+    void shouldFindLedgerByBranchAndType() {
+        //given
+        AccountDto savedAccount = saveAccount();
+        accountService.save(LedgerDto.builder()
+                .account(savedAccount)
+                .ledgerType("WITHDRAW")
+                .branch(savedAccount.getBranch())
+                .build());
+
+        //when
+        LedgerDto expected = accountService.findLedgerByBranchAndType(savedAccount.getBranch(), "WITHDRAW");
+
+        //then
+        assertThat(expected.getAccount().getAccountNumber()).isEqualTo("123456789");
+    }@Test
+    void shouldThrowExceptionWhenTryingToFindNonExistentLedger() {
+        //given
+        AccountDto savedAccount = saveAccount();
+        //when
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findLedgerByBranchAndType(savedAccount.getBranch(), "WITHDRAW"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Account not found");
+    }
+
+    @Test
+    void shouldFindAllTrunks() {
+        //given
+        saveTrunk();
+
+        //when
+        List<TrunkDto> expected = accountService.findAllTrunks();
+
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getAccount().getAccountNumber()).isEqualTo("123456789");
+    }
+
+    @Test
+    void shouldFindTrunksByCustomer() {
+        //given
+        CustomerDto savedCustomer = saveTrunk().getCustomer();
+
+        //when
+        List<TrunkDto> expected = accountService.findAllTrunks(savedCustomer);
+
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getAccount().getAccountName()).isEqualTo("John Doe");
+    }
+
+    @Test
+    void shouldFindTrunksByAccount() {
+        //given
+        AccountDto savedAccount = saveTrunk().getAccount();
+
+        //when
+        List<TrunkDto> expected = accountService.findAllTrunks(savedAccount);
+
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getAccount().getAccountName()).isEqualTo("John Doe");
+    }
+
+    @Test
+    void shouldFindTrunkByHisId() {
+        //given
+        TrunkDto savedTrunk = saveTrunk();
+
+        //when
+        TrunkDto expected = accountService.findTrunk(savedTrunk.getTrunkId());
+
+        //then
+        assertThat(expected.getAccount().getAccountNumber()).isEqualTo("123456789");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToFindTrunkByNonExistentId() {
+        //given
+        //when
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findTrunk(1L));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Account not found");
+    }
+
+    @Test
+    void shouldFindTrunkByHisNumber() {
+        //given
+        saveTrunk();
+
+        //when
+        TrunkDto expected = accountService.findTrunk("123456789");
+
+        //then
+        assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToFindTrunkByNonExistentNumber() {
+        //given
+        //when
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findTrunk("00000"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Account not found");
+    }
+
+    @Test
+    void shouldFindTrunkByCustomerAndAccountNumber() {
+        //given
+        CustomerDto savedCustomer = saveTrunk().getCustomer();
+
+        //when
+        TrunkDto expected = accountService.findTrunk(savedCustomer,"123456789");
+
+        //then
+        assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToFindTrunkByNonExistentCustomerAndAccountNumber() {
+        //given
+        //when
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> accountService.findTrunk(CustomerDto.builder().build(), "0000"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Account not found");
+    }
+
+    @Test
+    void shouldDeleteTrunk() {
+        //given
+        TrunkDto savedTrunk = saveTrunk();
+
+        //when
+        List<TrunkDto> expectedNotEmptyTrunksList = accountService.findAllTrunks();
+        accountService.deleteTrunk(savedTrunk);
+        List<TrunkDto> expectedEmptyTrunksList = accountService.findAllTrunks();
+
+        //then
+        assertThat(expectedNotEmptyTrunksList.size()).isEqualTo(1);
+        assertThat(expectedEmptyTrunksList.size()).isEqualTo(0);
+    }
+
+
+    @Test
+    void shouldDebitAccount() {
+        //given
+        AccountDto savedAccount = saveAccount();
+
+        //when
+        accountService.debit(savedAccount, 500);
+        AccountDto expected = accountService.findAll().get(0);
+
+        //then
+        assertThat(expected.getBalance()).isEqualTo(-500.0);
+    }
+
+    @Test
+    void shouldCreditAccount() {
+        //given
+        AccountDto savedAccount = saveAccount();
+
+        //when
+        accountService.credit(savedAccount, 500);
+        AccountDto expected = accountService.findAll().get(0);
+
+        //then
+        assertThat(expected.getBalance()).isEqualTo(500.0);
     }
 }

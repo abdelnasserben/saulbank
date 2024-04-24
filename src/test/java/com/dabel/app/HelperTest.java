@@ -1,6 +1,7 @@
 package com.dabel.app;
 
 import com.dabel.constant.AccountProfile;
+import com.dabel.constant.AccountType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CardDto;
@@ -55,6 +56,17 @@ class HelperTest {
                 .build();
 
         assertTrue(Helper.isActiveStatedObject(customerDto));
+    }
+
+    @Test
+    void isBusinessAccount() {
+        AccountDto accountDto = AccountDto.builder()
+                .accountName("John Doe")
+                .accountNumber("123456789")
+                .accountType(AccountType.BUSINESS.name())
+                .build();
+
+        assertTrue(Helper.isBusinessAccount(accountDto));
     }
 
     @Test

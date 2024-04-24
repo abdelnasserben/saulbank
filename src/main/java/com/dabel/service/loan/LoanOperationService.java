@@ -30,7 +30,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     public void init(LoanDto loanDto) {
 
         if(!Helper.isActiveStatedObject(loanDto.getBorrower()))
-            throw new IllegalOperationException("Customer must be active");
+            throw new IllegalOperationException("Borrower must be active");
 
         double loanAmount = Helper.calculateTotalAmountOfLoan(loanDto.getIssuedAmount(), loanDto.getInterestRate());
 

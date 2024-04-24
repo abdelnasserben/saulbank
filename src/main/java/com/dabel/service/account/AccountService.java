@@ -61,7 +61,7 @@ public class AccountService {
         return AccountMapper.toDto(account);
     }
 
-    public List<AccountDto> findAllVault(BranchDto branchDto) {
+    public List<AccountDto> findAllVaults(BranchDto branchDto) {
         return accountRepository.findAllByBranchAndIsVault(BranchMapper.toModel(branchDto), 1).stream()
                 .map(AccountMapper::toDto)
                 .toList();
@@ -90,17 +90,6 @@ public class AccountService {
                 .toList();
     }
 
-    public TrunkDto findTrunkByNumber(String accountNumber) {
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
-
-        Trunk trunk = trunkRepository.findAllByAccount(account).stream()
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Customer account not found"));
-
-        return TrunkMapper.toDto(trunk);
-    }
-
     public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
         return trunkRepository.findAllByCustomer(CustomerMapper.toModel(customerDto)).stream()
                 .map(TrunkMapper::toDto)
@@ -113,12 +102,23 @@ public class AccountService {
                 .toList();
     }
 
-    public TrunkDto findTrunkById(Long trunkId) {
+    public TrunkDto findTrunk(String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+        Trunk trunk = trunkRepository.findAllByAccount(account).stream()
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Customer account not found"));
+
+        return TrunkMapper.toDto(trunk);
+    }
+
+    public TrunkDto findTrunk(Long trunkId) {
         return TrunkMapper.toDto(trunkRepository.findById(trunkId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found")));
     }
 
-    public TrunkDto findTrunkByCustomerAndAccountNumber(CustomerDto customerDto, String accountNumber) {
+    public TrunkDto findTrunk(CustomerDto customerDto, String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
         return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account)

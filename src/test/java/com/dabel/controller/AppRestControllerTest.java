@@ -5,7 +5,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.ChequeDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.cheque.ChequeService;
+import com.dabel.service.cheque.ChequeFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class AppRestControllerTest {
     CustomerFacadeService customerFacadeService;
 
     @Autowired
-    ChequeService chequeService;
+    ChequeFacadeService chequeFacadeService;
 
     @Autowired
     MockMvc mockMvc;
@@ -99,7 +99,7 @@ class AppRestControllerTest {
     @Test
     void shouldGetChequeByHisNumber() throws Exception {
         //given
-        chequeService.save(ChequeDto.builder()
+        chequeFacadeService.saveCheque(ChequeDto.builder()
                 .chequeNumber("12345678")
                 .status("1")
                 .build());

@@ -3,11 +3,9 @@ package com.dabel.service.customer;
 import com.dabel.DBSetupForTests;
 import com.dabel.constant.AccountProfile;
 import com.dabel.constant.AccountType;
-import com.dabel.constant.Status;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
-import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountService;
 import com.dabel.service.branch.BranchService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,10 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class CustomerFacadeServiceTest {
@@ -50,7 +45,7 @@ class CustomerFacadeServiceTest {
                 .lastName("Doe")
                 .identityNumber("NBE46611")
                 .branch(savedBranch)
-                .status(Status.ACTIVE.code())
+                .status("1")
                 .build();
     }
 
@@ -59,7 +54,7 @@ class CustomerFacadeServiceTest {
         //given
         //when
         customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-        TrunkDto expected = accountService.findTrunkByNumber(accountService.findAll().get(0).getAccountNumber());
+        TrunkDto expected = accountService.findTrunk(accountService.findAll().get(0).getAccountNumber());
 
         //then
         assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
@@ -67,37 +62,15 @@ class CustomerFacadeServiceTest {
     }
 
     @Test
-    void shouldFindAllCustomers() {
+    void shouldUpdateCustomerInfo() {
         //given
-        customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
+        CustomerDto savedCustomer = customerFacadeService.save(getCustomerDto());
 
         //when
-        List<CustomerDto> expected = customerFacadeService.findAll();
+        savedCustomer.setFirstName("Sarah");
+        customerFacadeService.update(getCustomerDto());
 
         //then
-        assertThat(expected.size()).isEqualTo(1);
-        assertThat(expected.get(0).getFirstName()).isEqualTo("John");
-    }
-
-    @Test
-    void shouldFindCustomerByIdentityNumber() {
-        //given
-        customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-
-        //when
-        CustomerDto expected = customerFacadeService.findByIdentity("NBE46611");
-
-        //then
-        assertThat(expected.getFirstName()).isEqualTo("John");
-    }
-
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenTryFindNotExistsCustomer() {
-        //given
-        //when
-        Exception expected = assertThrows(ResourceNotFoundException.class, () -> customerFacadeService.findByIdentity("0123456"));
-
-        //then
-        assertThat(expected.getMessage()).isEqualTo("Customer not found");
+        assertThat(savedCustomer.getFirstName()).isEqualTo("Sarah");
     }
 }

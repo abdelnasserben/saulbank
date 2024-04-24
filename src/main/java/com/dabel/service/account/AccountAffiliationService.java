@@ -28,10 +28,10 @@ public class AccountAffiliationService {
         this.customerService = customerService;
     }
 
-    public void add(CustomerDto customerDto, String accountNumber) {
+    public void affiliate(CustomerDto customerDto, String accountNumber) {
 
         //TODO: get the account
-        AccountDto accountDto = accountService.findTrunkByNumber(accountNumber).getAccount();
+        AccountDto accountDto = accountService.findTrunk(accountNumber).getAccount();
 
         if(!Helper.isActiveStatedObject(accountDto))
             throw new IllegalOperationException("Account must be active");
@@ -45,7 +45,7 @@ public class AccountAffiliationService {
             //TODO: check if customer is already affiliated
             TrunkDto trunkDto = null;
             try {
-                trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
+                trunkDto = accountService.findTrunk(customerDto, accountNumber);
             }catch (ResourceNotFoundException ignored) {}
 
             if(trunkDto != null)
@@ -73,8 +73,8 @@ public class AccountAffiliationService {
 
     }
 
-    public void remove(CustomerDto customerDto, String accountNumber) {
-        TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
+    public void disaffiliate(CustomerDto customerDto, String accountNumber) {
+        TrunkDto trunkDto = accountService.findTrunk(customerDto, accountNumber);
         if(AppSpEL.removableMember(trunkDto))
             accountService.deleteTrunk(trunkDto);
 

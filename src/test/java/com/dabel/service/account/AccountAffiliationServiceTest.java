@@ -1,15 +1,13 @@
 package com.dabel.service.account;
 
 import com.dabel.DBSetupForTests;
-import com.dabel.constant.AccountProfile;
-import com.dabel.constant.AccountType;
-import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
+import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.branch.BranchService;
-import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.customer.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class AccountAffiliationServiceTest {
@@ -26,93 +25,180 @@ class AccountAffiliationServiceTest {
     AccountAffiliationService accountAffiliationService;
 
     @Autowired
-    CustomerFacadeService customerFacadeService;
+    BranchService branchService;
 
     @Autowired
     AccountService accountService;
 
     @Autowired
-    BranchService branchService;
+    CustomerService customerService;
 
     @Autowired
     DBSetupForTests dbSetupForTests;
 
-    BranchDto savedBranch;
+
+    private BranchDto savedBranch() {
+        return branchService.save(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("London")
+                .status("1")
+                .build());
+    }
+
+    private TrunkDto saveTrunk(String accountNumber, String accountStatus, String customerFirstName, String customerLastName, String customerIdentity, String customerStatus) {
+
+        BranchDto savedBranch = savedBranch();
+
+        AccountDto savedAccount = accountService.save(AccountDto.builder()
+                .accountNumber(accountNumber)
+                .accountName(String.format("%s %s", customerFirstName, customerLastName))
+                .currency("KMF")
+                .balance(0)
+                .accountType("SAVING")
+                .accountProfile("PERSONAL")
+                .status(accountStatus)
+                .branch(savedBranch)
+                .build());
+
+        CustomerDto savedCustomer = customerService.save(CustomerDto.builder()
+                .firstName(customerFirstName)
+                .lastName(customerLastName)
+                .identityNumber(customerIdentity)
+                .status(customerStatus)
+                .branch(savedBranch)
+                .build());
+
+        return accountService.save(TrunkDto.builder()
+                .customer(savedCustomer)
+                .account(savedAccount)
+                .membership("OWNER")
+                .build());
+    }
 
     @BeforeEach
     void setUp() {
         dbSetupForTests.truncate();
-        savedBranch = branchService.save(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .status(Status.ACTIVE.code())
-                .build());
     }
 
     @Test
-    void shouldAddNewCustomerAsJointedOnPersonalAccount() {
+    void shouldJoinNonExistentCustomerToAPersonalAccount() {
         //given
-        CustomerDto ownerCustomer = CustomerDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .identityNumber("US4546888")
-                .branch(savedBranch)
-                .build();
+        TrunkDto savedTrunk = saveTrunk("123456789", "1", "John", "Doe", "NBE123456", "1");
 
         CustomerDto newCustomer = CustomerDto.builder()
                 .firstName("Sarah")
                 .lastName("Hunt")
-                .identityNumber("NBE123456")
-                .branch(savedBranch)
+                .identityNumber("NBE001245")
+                .branch(savedTrunk.getAccount().getBranch())
                 .build();
-        customerFacadeService.create(ownerCustomer, "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-        String savedAccountNumber = accountService.findAll().get(0).getAccountNumber();
 
         //when
-        accountAffiliationService.add(newCustomer, savedAccountNumber);
-        CustomerDto savedCustomer = customerFacadeService.findByIdentity("NBE123456");
-        TrunkDto expected = accountService.findTrunkByCustomerAndAccountNumber(savedCustomer, savedAccountNumber);
+        accountAffiliationService.affiliate(newCustomer, "123456789");
+        CustomerDto savedNewCustomer = customerService.findByIdentity("NBE001245");
+        List<TrunkDto> expectedNewCustomerTrunks = accountService.findAllTrunks(savedNewCustomer);
 
         //then
-        assertThat(expected.getAccount().getAccountProfile()).isEqualTo("JOINT");
-        assertThat(expected.getMembership()).isEqualTo("JOINTED");
+        assertThat(expectedNewCustomerTrunks.size()).isEqualTo(1);
+        assertThat(expectedNewCustomerTrunks.get(0).getAccount().getAccountProfile()).isEqualTo("JOINT");
+        assertThat(expectedNewCustomerTrunks.get(0).getMembership()).isEqualTo("JOINTED");
     }
 
     @Test
-    void shouldAddExistsCustomerAsJointedOnPersonalAccount() {
+    void shouldJoinAnExistingCustomerToAPersonalAccount() {
         //given
-        CustomerDto customer1 = CustomerDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .identityNumber("US4546888")
-                .branch(savedBranch)
-                .build();
-
-        CustomerDto customer2 = CustomerDto.builder()
-                .firstName("Sarah")
-                .lastName("Hunt")
-                .identityNumber("NBE123456")
-                .branch(savedBranch)
-                .build();
-        customerFacadeService.create(customer1, "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-        customerFacadeService.create(customer2, "Sarah Hunt", AccountType.BUSINESS, AccountProfile.PERSONAL);
-
-        AccountDto savedAccount1 = accountService.findAll().get(0);
-        CustomerDto savedCustomer2 = customerFacadeService.findAll().get(1);
+        saveTrunk("123456789", "1", "John", "Doe", "NBE123456", "1");
+        TrunkDto sarahTrunk = saveTrunk("987654321", "1", "sarah", "Hunt", "NBE001245", "1");
 
         //when
-        accountAffiliationService.add(customer2, savedAccount1.getAccountNumber());
-        List<TrunkDto> expected = accountService.findAllTrunks(savedCustomer2);
+        accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "123456789");
+        List<TrunkDto> expectedSarahTrunks = accountService.findAllTrunks(sarahTrunk.getCustomer());
 
         //then
-        assertThat(expected.size()).isEqualTo(2);
-        assertThat(expected.get(0).getAccount().getAccountProfile()).isEqualTo("PERSONAL");
-        assertThat(expected.get(0).getMembership()).isEqualTo("OWNER");
-//        assertThat(expected.get(1).getAccount().getAccountProfile()).isEqualTo("JOINT");
-        assertThat(expected.get(0).getMembership()).isEqualTo("JOINTED");
+        assertThat(expectedSarahTrunks.size()).isEqualTo(2);
+        assertThat(expectedSarahTrunks.get(0).getAccount().getAccountProfile()).isEqualTo("PERSONAL");
+        assertThat(expectedSarahTrunks.get(0).getMembership()).isEqualTo("OWNER");
+        assertThat(expectedSarahTrunks.get(1).getAccount().getAccountProfile()).isEqualTo("JOINT");
+        assertThat(expectedSarahTrunks.get(1).getMembership()).isEqualTo("JOINTED");
     }
 
     @Test
-    void remove() {
+    void shouldThrowExceptionWhenAffiliatingACustomerToAnInactiveAccount() {
+        //given
+        saveTrunk("123456789", "0", "John", "Doe", "NBE123456", "1");
+
+        //when
+        Exception expected = assertThrows(IllegalOperationException.class, () -> accountAffiliationService.affiliate(CustomerDto.builder().build(), "123456789"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Account must be active");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAffiliatingAnInactiveCustomerToAnActiveAccount() {
+        //given
+        saveTrunk("123456789", "1", "John", "Doe", "NBE123456", "1");
+        TrunkDto sarahTrunk = saveTrunk("987654321", "1", "Sarah", "Hunt", "NBE001245", "0");
+
+        //when
+        Exception expected = assertThrows(IllegalOperationException.class, () -> accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "123456789"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Sarah is inactive");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAffiliatingACustomerWhoIsAlreadyAffiliatedToTheAccount() {
+        //given
+        TrunkDto sarahTrunk = saveTrunk("987654321", "1", "Sarah", "Hunt", "NBE001245", "1");
+
+        //when
+        Exception expected = assertThrows(IllegalOperationException.class, () -> accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "987654321"));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Sarah is already member");
+    }
+
+    @Test
+    void shouldDisaffiliateAnAffiliateFromAccount() {
+        //given
+        saveTrunk("123456789", "1", "John", "Doe", "NBE123456", "1");
+        TrunkDto sarahTrunk = saveTrunk("987654321", "1", "sarah", "Hunt", "NBE001245", "1");
+
+        accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "123456789");
+
+        //when
+        accountAffiliationService.disaffiliate(sarahTrunk.getCustomer(), "123456789");
+        List<TrunkDto> expectedSarahTrunksAfterDisaffiliating = accountService.findAllTrunks(sarahTrunk.getCustomer());
+
+        //then
+
+        assertThat(expectedSarahTrunksAfterDisaffiliating.size()).isEqualTo(1);
+        assertThat(expectedSarahTrunksAfterDisaffiliating.get(0).getAccount().getAccountProfile()).isEqualTo("PERSONAL");
+        assertThat(expectedSarahTrunksAfterDisaffiliating.get(0).getMembership()).isEqualTo("OWNER");
+    }
+
+    @Test
+    void shouldUpdateAccountProfileToPersonalWhenDisaffiliatingTheLastAffiliateFromAJointAccount() {
+        //given
+        TrunkDto johnTrunkBeforeAffiliating = saveTrunk("123456789", "1", "John", "Doe", "NBE123456", "1");
+        TrunkDto sarahTrunk = saveTrunk("987654321", "1", "sarah", "Hunt", "NBE001245", "1");
+
+        accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "123456789");
+        TrunkDto johnTrunkAfterAffiliating = accountService.findTrunk("123456789");
+
+        //when
+        accountAffiliationService.disaffiliate(sarahTrunk.getCustomer(), "123456789");
+        TrunkDto johnTrunkAfterDisaffiliating = accountService.findTrunk("123456789");
+
+        //then
+        assertThat(johnTrunkBeforeAffiliating.getAccount().getAccountProfile()).isEqualTo("PERSONAL");
+        assertThat(johnTrunkBeforeAffiliating.getMembership()).isEqualTo("OWNER");
+
+        assertThat(johnTrunkAfterAffiliating.getAccount().getAccountProfile()).isEqualTo("JOINT");
+        assertThat(johnTrunkAfterAffiliating.getMembership()).isEqualTo("OWNER");
+
+        assertThat(johnTrunkAfterDisaffiliating.getAccount().getAccountProfile()).isEqualTo("PERSONAL");
+        assertThat(johnTrunkAfterDisaffiliating.getMembership()).isEqualTo("OWNER");
+
     }
 }

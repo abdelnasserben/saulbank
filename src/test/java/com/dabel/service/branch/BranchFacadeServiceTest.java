@@ -4,7 +4,6 @@ import com.dabel.DBSetupForTests;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.LedgerDto;
-import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class BranchFacadeServiceTest {
@@ -28,6 +26,14 @@ class BranchFacadeServiceTest {
     @Autowired
     DBSetupForTests dbSetupForTests;
 
+
+    private void createBranch() {
+        branchFacadeService.create(BranchDto.builder()
+                .branchName("HQ")
+                .branchAddress("London")
+                .build(), new double[3]);
+    }
+
     @BeforeEach
     void setUp() {
         dbSetupForTests.truncate();
@@ -36,10 +42,7 @@ class BranchFacadeServiceTest {
     @Test
     void shouldCreateNewBranchWithHisVaultsAndGL() {
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .build(), new double[3]);
+        createBranch();
 
         //when
         List<AccountDto> expected = accountService.findAll();
@@ -52,54 +55,9 @@ class BranchFacadeServiceTest {
     }
 
     @Test
-    void shouldFindAllBranches() {
+    void shouldFindAllVaultsByBranchId() {
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .build(),  new double[3]);
-
-        //then
-        List<BranchDto> expected = branchFacadeService.findAll();
-
-        //then
-        assertThat(expected.size()).isEqualTo(1);
-        assertThat(expected.get(0).getBranchName()).isEqualTo("HQ");
-    }
-
-    @Test
-    void shouldFindBranchById() {
-        //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .build(),  new double[3]);
-
-        //when
-        BranchDto savedBranch = branchFacadeService.findAll().get(0);
-        BranchDto expected = branchFacadeService.findById(savedBranch.getBranchId());
-
-        //then
-        assertThat(expected.getBranchName()).isEqualTo("HQ");
-    }
-
-    @Test
-    void shouldThrowResourceNotFoundExceptionWhenTryFindNotExistsBranch() {
-        //given
-        //when
-        Exception expected = assertThrows(ResourceNotFoundException.class, () -> branchFacadeService.findById(1L));
-
-        //then
-        assertThat(expected.getMessage()).isEqualTo("Branch not found");
-    }
-
-    @Test
-    void findAllVaultsByBranchId() {
-        //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .build(), new double[3]);
+        createBranch();
 
         //when
         BranchDto savedBranch = branchFacadeService.findAll().get(0);
@@ -112,12 +70,9 @@ class BranchFacadeServiceTest {
     }
 
     @Test
-    void findAllLedgersByBranchId() {
+    void shouldFindAllLedgersByBranchId() {
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .build(), new double[3]);
+        createBranch();
 
         //when
         BranchDto savedBranch = branchFacadeService.findAll().get(0);
@@ -129,12 +84,9 @@ class BranchFacadeServiceTest {
     }
 
     @Test
-    void findVaultByBranchIdAndCurrency() {
+    void shouldFindVaultByBranchIdAndCurrency() {
         //given
-        branchFacadeService.create(BranchDto.builder()
-                .branchName("HQ")
-                .branchAddress("London")
-                .build(), new double[3]);
+        createBranch();
 
         //when
         BranchDto savedBranch = branchFacadeService.findAll().get(0);

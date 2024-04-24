@@ -1,15 +1,12 @@
 package com.dabel.service.cheque;
 
 import com.dabel.dto.ChequeDto;
-import com.dabel.dto.TrunkDto;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.ChequeMapper;
-import com.dabel.mapper.TrunkMapper;
 import com.dabel.repository.ChequeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ChequeService {
@@ -32,13 +29,6 @@ public class ChequeService {
     public ChequeDto findByChequeNumber(String chequeNumber) {
         return ChequeMapper.toDTO(chequeRepository.findByChequeNumber(chequeNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Cheque not found")));
-    }
-
-    public List<ChequeDto> findAllByTrunk(TrunkDto trunkDto) {
-
-        return chequeRepository.findAllByTrunk(TrunkMapper.toModel(trunkDto)).stream()
-                .map(ChequeMapper::toDTO)
-                .collect(Collectors.toList());
     }
 
     public List<ChequeDto> findAll() {

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusinessChequeRequest extends ChequeRequest {
 
-
     public BusinessChequeRequest(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
         super(chequeService, chequeRequestService, feeService);
     }

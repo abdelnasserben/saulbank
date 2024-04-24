@@ -8,7 +8,6 @@ import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.cheque.ChequeFacadeService;
-import com.dabel.service.cheque.ChequeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,6 @@ class ChequeControllerTest {
 
     @Autowired
     ChequeFacadeService chequeFacadeService;
-
-    @Autowired
-    ChequeService chequeService;
 
     @Autowired
     DBSetupForTests dbSetupForTests;
@@ -84,7 +80,7 @@ class ChequeControllerTest {
     private void saveCheque(String status) {
         saveChequeRequest();
 
-        chequeService.save(ChequeDto.builder()
+        chequeFacadeService.saveCheque(ChequeDto.builder()
                 .chequeNumber("12345678")
                 .serial(chequeFacadeService.findAllRequests().get(0))
                 .trunk(accountFacadeService.findAllTrunks().get(0))

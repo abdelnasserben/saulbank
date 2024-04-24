@@ -46,15 +46,15 @@ public class AccountFacadeService {
     }
 
     public TrunkDto findTrunkById(Long trunkId) {
-        return accountService.findTrunkById(trunkId);
+        return accountService.findTrunk(trunkId);
     }
 
     public TrunkDto findTrunkByNumber(String accountNumber) {
-        return accountService.findTrunkByNumber(accountNumber);
+        return accountService.findTrunk(accountNumber);
     }
 
     public TrunkDto findTrunkByCustomerAndAccountNumber(CustomerDto customerDto, String accountNumber) {
-        return accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
+        return accountService.findTrunk(customerDto, accountNumber);
     }
 
     public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
@@ -83,11 +83,11 @@ public class AccountFacadeService {
     }
 
     public void addAffiliate(CustomerDto customerDto, String accountNumber) {
-        accountAffiliationService.add(customerDto, accountNumber);
+        accountAffiliationService.affiliate(customerDto, accountNumber);
     }
 
     public void removeAffiliate(CustomerDto customerDto, String accountNumber) {
-        accountAffiliationService.remove(customerDto, accountNumber);
+        accountAffiliationService.disaffiliate(customerDto, accountNumber);
     }
 
     public void debit(AccountDto accountDto, double amount) {

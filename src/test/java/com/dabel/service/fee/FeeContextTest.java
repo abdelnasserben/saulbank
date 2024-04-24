@@ -16,7 +16,7 @@ class FeeContextTest {
     FeeContext feeContext;
 
     @Test
-    void shouldSetWithdrawFeetContext() {
+    void shouldSetWithdrawFeeContext() {
         Tax expected = feeContext.setContext("WITHDRAW");
         assertThat(expected.getLedgerType()).isEqualTo(LedgerType.WITHDRAW);
     }
@@ -28,7 +28,25 @@ class FeeContextTest {
     }
 
     @Test
-    void shouldThrowIllegalOperationExceptionWhenContextTypeDoesNotExists() {
+    void shouldSetLoanFeeContext() {
+        Tax expected = feeContext.setContext("LOAN");
+        assertThat(expected.getLedgerType()).isEqualTo(LedgerType.LOAN);
+    }
+
+    @Test
+    void shouldSetChequeRequestFeeContext() {
+        Tax expected = feeContext.setContext("CHEQUE_REQUEST");
+        assertThat(expected.getLedgerType()).isEqualTo(LedgerType.CHEQUE_REQUEST);
+    }
+
+    @Test
+    void shouldSetCardRequestFeeContext() {
+        Tax expected = feeContext.setContext("CARD_REQUEST");
+        assertThat(expected.getLedgerType()).isEqualTo(LedgerType.CARD_REQUEST);
+    }
+
+    @Test
+    void shouldThrowWhenTryingToSetANonExistentContextType() {
         Exception expected = assertThrows(IllegalOperationException.class, () -> feeContext.setContext("FAKE TYPE"));
         assertThat(expected.getMessage()).isEqualTo("Unknown fee type");
     }

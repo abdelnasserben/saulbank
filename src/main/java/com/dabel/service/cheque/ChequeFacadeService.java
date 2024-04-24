@@ -29,6 +29,10 @@ public class ChequeFacadeService {
         this.customerService = customerService;
     }
 
+    public ChequeDto saveCheque(ChequeDto chequeDto) {
+        return chequeService.save(chequeDto);
+    }
+
     public List<ChequeDto> findAllCheques() {
         return chequeService.findAll();
     }
@@ -53,7 +57,7 @@ public class ChequeFacadeService {
     public void sendRequest(PostChequeRequestDto postChequeRequestDto) {
 
         CustomerDto customerDto = customerService.findByIdentity(postChequeRequestDto.getCustomerIdentityNumber());
-        TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, postChequeRequestDto.getAccountNumber());
+        TrunkDto trunkDto = accountService.findTrunk(customerDto, postChequeRequestDto.getAccountNumber());
         ChequeRequestDto chequeRequestDto = ChequeRequestDto.builder()
                 .trunk(trunkDto)
                 .branch(trunkDto.getAccount().getBranch())

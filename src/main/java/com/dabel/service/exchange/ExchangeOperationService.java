@@ -8,21 +8,18 @@ import com.dabel.dto.ExchangeDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
-import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 @Service
-@Getter
 public class ExchangeOperationService implements EvaluableOperation<ExchangeDto> {
 
+    @Getter
     private final ExchangeService exchangeService;
-    private final FeeService feeService;
     private final AccountService accountService;
 
-    public ExchangeOperationService(ExchangeService exchangeService, FeeService feeService, AccountService accountService) {
+    public ExchangeOperationService(ExchangeService exchangeService, AccountService accountService) {
         this.exchangeService = exchangeService;
-        this.feeService = feeService;
         this.accountService = accountService;
     }
 

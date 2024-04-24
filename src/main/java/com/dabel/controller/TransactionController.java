@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 @Controller
 public class TransactionController implements PageTitleConfig {
 
@@ -120,7 +121,6 @@ public class TransactionController implements PageTitleConfig {
 
         return "redirect:" + Web.Endpoint.TRANSACTIONS + "/" + transactionId;
     }
-
 
     @Override
     public String[] getMenuAndSubMenu() {

@@ -177,6 +177,6 @@ class LoanFacadeServiceTest {
         Exception expected = assertThrows(IllegalOperationException.class, () -> loanFacadeService.init(loanDto));
 
         //then
-        assertThat(expected.getMessage()).isEqualTo("Customer must be active");
+        assertThat(expected.getMessage()).isEqualTo("Borrower must be active");
     }
 }

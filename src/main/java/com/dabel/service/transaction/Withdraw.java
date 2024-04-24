@@ -40,7 +40,7 @@ public class Withdraw extends Transaction {
 
         //TODO: check if initiator customer is affiliate on the account
         CustomerDto customerDto = customerService.findByIdentity(transactionDto.getCustomerIdentity());
-        accountService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
+        accountService.findTrunk(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
         //TODO: for withdraw, debit account is the initiator account of transaction so we interchange nothing, we set only the receiver
         AccountDto receiverAccount = this.accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());

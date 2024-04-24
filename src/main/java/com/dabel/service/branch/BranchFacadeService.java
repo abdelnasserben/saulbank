@@ -162,7 +162,7 @@ public class BranchFacadeService {
 
     public List<AccountDto> findAllVaultsByBranchId(Long branchId) {
         BranchDto branchDto = branchService.findById(branchId);
-        return accountService.findAllVault(branchDto);
+        return accountService.findAllVaults(branchDto);
     }
 
     public List<LedgerDto> findAllLedgersByBranchId(Long branchId) {

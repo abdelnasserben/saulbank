@@ -39,7 +39,7 @@ public class Transfer extends Transaction{
 
         //TODO: check if initiator customer is affiliate on the account
         CustomerDto customerDto = customerService.findByIdentity(transactionDto.getCustomerIdentity());
-        accountService.findTrunkByCustomerAndAccountNumber(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
+        accountService.findTrunk(customerDto, transactionDto.getInitiatorAccount().getAccountNumber());
 
         if(transactionDto.getInitiatorAccount().getAccountNumber().equals(transactionDto.getReceiverAccount().getAccountNumber()))
             throw new IllegalOperationException("Can't make self transfer");

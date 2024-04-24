@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SavingChequeRequest extends ChequeRequest {
 
-
     public SavingChequeRequest(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
         super(chequeService, chequeRequestService, feeService);
     }
@@ -60,11 +59,12 @@ public class SavingChequeRequest extends ChequeRequest {
         chequeRequestService.save(chequeRequestDto);
 
         //TODO: generate 25 cheques for this trunk
-        for (int i = 0; i < 25; i++) {
+        String chequeNumber = Helper.generateChequeNumber();
+        for (int i = 1; i <= 25; i++) {
             ChequeDto chequeDto = ChequeDto.builder()
                     .trunk(chequeRequestDto.getTrunk())
                     .serial(chequeRequestDto)
-                    .chequeNumber(Helper.generateChequeNumber())
+                    .chequeNumber(chequeNumber + i)
                     .status(Status.ACTIVE.code())
                     .branch(chequeRequestDto.getBranch())
                     .build();

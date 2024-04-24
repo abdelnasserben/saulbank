@@ -628,20 +628,20 @@
 							aria-labelledby="kt_customer_infos_documents_tab">
 							<!--begin::Avatar-->
 							<div class="row g-9 text-center align-items-end">
-								<div class="col-auto me-3">
-									<img alt="Logo" src="img/avatars/150-2.jpg" />
+								<div class="col-auto me-3 symbol symbol-100px symbol-lg-160px">
+									<img alt="Logo" th:src="@{${'/assets/avatars/' + customer.profilePicture}}" />
 									<!--begin::Hint-->
 									<div class="form-text">Identity picture</div>
 									<!--end::Hint-->
 								</div>
-								<div class="col-auto me-3">
-									<img alt="Logo" src="img/avatars/150-2.jpg" />
+								<div class="col-auto me-3 symbol symbol-100px symbol-lg-160px">
+									<img alt="Logo" th:src="@{${'/assets/signatures/' + customer.signaturePicture}}" />
 									<!--begin::Hint-->
 									<div class="form-text">Signature</div>
 									<!--end::Hint-->
 								</div>
-								<div class="col-auto me-3">
-									<img alt="Logo" src="img/svg/files/doc.svg" />
+								<div class="col-auto me-3 symbol symbol-100px symbol-lg-160px">
+									<img alt="Logo" th:src="@{/assets/svg/doc.svg}" />
 									<!--begin::Hint-->
 									<div class="form-text">Deal</div>
 									<!--end::Hint-->

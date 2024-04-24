@@ -34,7 +34,13 @@ class TransactionContextTest {
     }
 
     @Test
-    void shouldThrowIllegalOperationExceptionWhenContextTypeDoesNotExists() {
+    void shouldSetChequePaymentContext() {
+        Transaction expected = transactionContext.setContext("CHEQUE_PAYMENT");
+        assertThat(expected.getType()).isEqualTo(TransactionType.CHEQUE_PAYMENT);
+    }
+
+    @Test
+    void shouldThrowWhenTryingToSetANonExistentContextType() {
         Exception expected = assertThrows(IllegalOperationException.class, () -> transactionContext.setContext("FAKE TYPE"));
         assertThat(expected.getMessage()).isEqualTo("Unknown transaction type");
     }
