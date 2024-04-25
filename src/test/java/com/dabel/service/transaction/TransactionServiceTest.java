@@ -74,7 +74,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void shouldSaveNewTransaction() {
+    void shouldSaveTransaction() {
         //given
         //when
         TransactionDto expected = transactionService.save(getTransactionDto());

@@ -2,7 +2,7 @@ package com.dabel.service.card;
 
 import com.dabel.DBSetupForTests;
 import com.dabel.dto.*;
-import com.dabel.exception.IllegalOperationException;
+import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountService;
 import com.dabel.service.branch.BranchService;
 import com.dabel.service.customer.CustomerService;
@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class CardFacadeServiceTest {
+class CardServiceTest {
 
     @Autowired
-    CardFacadeService cardFacadeService;
+    CardService cardService;
 
     @Autowired
     BranchService branchService;
@@ -35,9 +35,13 @@ class CardFacadeServiceTest {
     @Autowired
     DBSetupForTests dbSetupForTests;
 
+    @BeforeEach
+    void setUp() {
+        dbSetupForTests.truncate();
+    }
 
 
-    private CardDto getSavedCard() {
+    private CardDto getCardDto() {
         BranchDto savedBranch = branchService.save(BranchDto.builder()
                 .branchName("HQ")
                 .branchAddress("London")
@@ -67,81 +71,66 @@ class CardFacadeServiceTest {
                 .membership("OWNER")
                 .build());
 
-        cardFacadeService.saveCard(CardDto.builder()
+        return CardDto.builder()
                 .cardName("John Doe")
                 .cardNumber("1450 1525 1542 1248")
                 .trunk(savedTrunk)
                 .expirationDate(LocalDate.of(24, 2, 26))
                 .cvc("123")
-                .status("0")
-                .build());
-        return cardFacadeService.findAllCards().get(0);
-    }
-
-    @BeforeEach
-    void setUp() {
-        dbSetupForTests.truncate();
+                .build();
     }
 
     @Test
-    void shouldActivateActiveCard() {
+    void shouldSaveCard() {
         //given
         //when
-        cardFacadeService.activateCard(getSavedCard().getCardId());
-        CardDto expected = cardFacadeService.findAllCards().get(0);
+        CardDto expected = cardService.save(getCardDto());
 
         //then
-        assertThat(expected.getStatus()).isEqualTo("1");
+        assertThat(expected.getCardId()).isGreaterThan(0);
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingActivateActiveCard() {
+    void shouldFindAllCards() {
         //given
-        CardDto savedCard = getSavedCard();
-        savedCard.setStatus("1");
-        cardFacadeService.saveCard(savedCard);
+        cardService.save(getCardDto());
 
         //when
-        Exception expected = assertThrows(IllegalOperationException.class, () -> cardFacadeService.activateCard(savedCard.getCardId()));
+        List<CardDto> expected = cardService.findAll();
 
         //then
-        assertThat(expected.getMessage()).isEqualTo("Card already active");
+        assertThat(expected.size()).isEqualTo(1);
     }
 
     @Test
-    void shouldDeactivateCard() {
+    void shouldFindCardById() {
         //given
-        CardDto savedCard = getSavedCard();
-        savedCard.setStatus("1");
-        cardFacadeService.saveCard(savedCard);
+        CardDto savedCard = cardService.save(getCardDto());
 
         //when
-        cardFacadeService.deactivateCard(savedCard.getCardId(), "Just a reason");
-        CardDto expected = cardFacadeService.findAllCards().get(0);
+        CardDto expected = cardService.findById(savedCard.getCardId());
 
         //then
-        assertThat(expected.getStatus()).isEqualTo("5"); //deactivated status = 5
-        assertThat(expected.getFailureReason()).isEqualTo("Just a reason");
+        assertThat(expected.getTrunk().getCustomer().getIdentityNumber()).isEqualTo("NBE451287");
     }
 
     @Test
-    void shouldThrowExceptionWhenTryingDeactivateInactiveCard() {
+    void shouldThrowExceptionWhenTryingToFindCardByNonExistentId() {
         //given
         //when
-        Exception expected = assertThrows(IllegalOperationException.class,
-                () -> cardFacadeService.deactivateCard(getSavedCard().getCardId(), "Just reason"));
+        Exception expected = assertThrows(ResourceNotFoundException.class, () -> cardService.findById(1L));
 
         //then
-        assertThat(expected.getMessage()).isEqualTo("Unable to deactivate an inactive card");
+        assertThat(expected.getMessage()).isEqualTo("Card not found");
     }
 
     @Test
-    void shouldGetCustomersCardList() {
+    void shouldFindTrunkCards() {
         //given
-        CardDto savedCard = getSavedCard();
+        CardDto savedCard = cardService.save(getCardDto());
 
         //when
-        List<CardDto> expected = cardFacadeService.findAllByCustomer(savedCard.getTrunk().getCustomer());
+        List<CardDto> expected = cardService.findAllByTrunk(savedCard.getTrunk());
 
         //then
         assertThat(expected.size()).isEqualTo(1);

@@ -157,16 +157,12 @@ class ChequeFacadeServiceTest {
         //given
         saveTrunk();
 
-        //TODO: save receiver account because a cheque payment requires one.
-        AccountDto receiverAccount = accountService.save(AccountDto.builder()
-                .accountName("Sarah Hunt")
-                .accountNumber("0987654321")
-                .currency("KMF")
-                .accountType("SAVING")
-                .accountProfile("PERSONAL")
-                .status("1")
-//                .branch(savedBranch)
+        //TODO: send request and get it
+        chequeFacadeService.sendRequest(PostChequeRequestDto.builder()
+                .accountNumber("123456789")
+                .customerIdentityNumber("NBE451287")
                 .build());
+        ChequeRequestDto savedRequest = chequeFacadeService.findAllRequests().get(0);
 
         //TODO: save ledger for cheque application fees
         accountService.save(LedgerDto.builder()
@@ -177,9 +173,55 @@ class ChequeFacadeServiceTest {
                         .accountType("BUSINESS")
                         .accountProfile("PERSONAL")
                         .currency("KMF")
-//                        .branch(requestDto.getBranch())
+                        .branch(savedRequest.getBranch())
                         .status("1")
                         .build())
                 .build());
+
+        //TODO: approve request application and get a cheque
+        chequeFacadeService.approveRequest(savedRequest.getRequestId());
+        ChequeDto savedCheque = chequeFacadeService.findAllCheques().get(0);
+
+        //TODO: save receiver account because a cheque payment requires one
+        accountService.save(AccountDto.builder()
+                .accountName("Sarah Hunt")
+                .accountNumber("0987654321")
+                .currency("KMF")
+                .accountType("SAVING")
+                .accountProfile("PERSONAL")
+                .status("1")
+                .branch(savedRequest.getBranch())
+                .build());
+
+        //when
+        TransactionDto expectedChequeOfInitiatingPayment = chequeFacadeService.initPay(PostChequeDto.builder()
+                .chequeNumber(savedCheque.getChequeNumber())
+                .beneficiaryAccountNumber("0987654321")
+                .amount(500)
+                .build());
+
+        //then
+        assertThat(expectedChequeOfInitiatingPayment.getSourceValue()).isEqualTo(savedCheque.getChequeNumber());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInitiatingPaymentOnAnInactiveCheque() {
+        //given
+        ChequeDto savedCheque = chequeFacadeService.saveCheque(ChequeDto.builder()
+                .chequeNumber("00012367")
+                .status("5") //deactivated status = 5
+                .build());
+
+        PostChequeDto postChequeDto = PostChequeDto.builder()
+                .chequeNumber(savedCheque.getChequeNumber())
+                .beneficiaryAccountNumber("0987654321")
+                .amount(500)
+                .build();
+
+        //when
+        Exception expected = assertThrows(IllegalOperationException.class, () -> chequeFacadeService.initPay(postChequeDto));
+
+        //then
+        assertThat(expected.getMessage()).isEqualTo("Cheque must be active");
     }
 }

@@ -11,6 +11,5 @@ public class SaulBankApplication {
 	}
 
 }
-//refactoring services test [test base service. For facade classes, only the methods that differ)]. loanFacade, exchangeFacade, transactionFacade not requires
-//implement cheque service tests
+
 //transaction details, display initiator and receiver account
