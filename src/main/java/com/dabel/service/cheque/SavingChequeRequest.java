@@ -64,7 +64,7 @@ public class SavingChequeRequest extends ChequeRequest {
             ChequeDto chequeDto = ChequeDto.builder()
                     .trunk(chequeRequestDto.getTrunk())
                     .serial(chequeRequestDto)
-                    .chequeNumber(chequeNumber + i)
+                    .chequeNumber(chequeNumber + (i <= 9 ? "0" + i : i))
                     .status(Status.ACTIVE.code())
                     .branch(chequeRequestDto.getBranch())
                     .build();

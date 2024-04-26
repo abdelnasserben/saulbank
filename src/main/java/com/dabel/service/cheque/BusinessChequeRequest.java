@@ -58,11 +58,12 @@ public class BusinessChequeRequest extends ChequeRequest {
 
         chequeRequestService.save(chequeRequestDto);
 
-        //TODO: generate 25 cheques for this trunk
-        for (int i = 0; i < 50; i++) {
+        //TODO: generate 50 cheques for this trunk
+        String chequeNumber = Helper.generateChequeNumber();
+        for (int i = 1; i <= 50; i++) {
             ChequeDto chequeDto = ChequeDto.builder()
                     .trunk(chequeRequestDto.getTrunk())
-                    .chequeNumber(Helper.generateChequeNumber())
+                    .chequeNumber(chequeNumber + (i <= 9 ? "0" + i : i))
                     .status(Status.ACTIVE.code())
                     .branch(chequeRequestDto.getBranch())
                     .build();

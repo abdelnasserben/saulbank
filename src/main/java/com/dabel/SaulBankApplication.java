@@ -11,5 +11,5 @@ public class SaulBankApplication {
 	}
 
 }
-
+//users roles [Cashier, Manager, Loaner, Receptionist, Admin, BO(back office)]
 //transaction details, display initiator and receiver account
