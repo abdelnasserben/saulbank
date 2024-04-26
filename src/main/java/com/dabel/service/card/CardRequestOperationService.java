@@ -12,6 +12,7 @@ import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.fee.FeeService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
     private final CardRequestService cardRequestService;
     private final FeeService feeService;
 
+    @Autowired
     public CardRequestOperationService(CardRequestService cardRequestService, FeeService feeService) {
         this.cardRequestService = cardRequestService;
         this.feeService = feeService;

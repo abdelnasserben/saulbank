@@ -1,6 +1,7 @@
 package com.dabel.service.exchange;
 
 import com.dabel.dto.ExchangeDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class ExchangeFacadeService {
 
     private final ExchangeOperationService exchangeOperationService;
 
+    @Autowired
     public ExchangeFacadeService(ExchangeOperationService exchangeOperationService) {
         this.exchangeOperationService = exchangeOperationService;
     }

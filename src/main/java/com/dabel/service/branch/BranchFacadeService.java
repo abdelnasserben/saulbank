@@ -6,6 +6,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.service.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class BranchFacadeService {
     private final BranchService branchService;
     private final AccountService accountService;
 
+    @Autowired
     public BranchFacadeService(BranchService branchService, AccountService accountService) {
         this.branchService = branchService;
         this.accountService = accountService;

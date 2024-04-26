@@ -5,6 +5,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.ChequeMapper;
 import com.dabel.model.ChequeRequest;
 import com.dabel.repository.ChequeRequestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ ChequeRequestService {
 
     private final ChequeRequestRepository chequeRequestRepository;
 
+    @Autowired
     public ChequeRequestService(ChequeRequestRepository chequeRequestRepository) {
         this.chequeRequestRepository = chequeRequestRepository;
     }

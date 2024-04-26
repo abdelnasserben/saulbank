@@ -10,6 +10,7 @@ import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
 import com.dabel.service.fee.FeeService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     private final AccountService accountService;
     private final FeeService feeService;
 
+    @Autowired
     public LoanOperationService(LoanService loanService, AccountService accountService, FeeService feeService) {
         this.loanService = loanService;
         this.accountService = accountService;

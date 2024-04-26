@@ -9,6 +9,7 @@ import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +19,7 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
     private final ExchangeService exchangeService;
     private final AccountService accountService;
 
+    @Autowired
     public ExchangeOperationService(ExchangeService exchangeService, AccountService accountService) {
         this.exchangeService = exchangeService;
         this.accountService = accountService;

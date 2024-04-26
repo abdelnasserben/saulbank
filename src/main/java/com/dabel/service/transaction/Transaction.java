@@ -5,12 +5,14 @@ import com.dabel.constant.TransactionType;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class Transaction implements EvaluableOperation<TransactionDto> {
 
     protected TransactionService transactionService;
     protected AccountService accountService;
 
+    @Autowired
     public Transaction(TransactionService transactionService, AccountService accountService) {
         this.transactionService = transactionService;
         this.accountService = accountService;

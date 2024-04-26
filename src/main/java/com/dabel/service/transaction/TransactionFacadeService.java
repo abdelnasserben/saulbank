@@ -2,6 +2,7 @@ package com.dabel.service.transaction;
 
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.TransactionDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class TransactionFacadeService {
     private final TransactionService transactionService;
     private final TransactionContext transactionContext;
 
+    @Autowired
     public TransactionFacadeService(TransactionService transactionService, TransactionContext transactionContext) {
         this.transactionService = transactionService;
         this.transactionContext = transactionContext;

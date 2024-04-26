@@ -5,6 +5,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.ExchangeMapper;
 import com.dabel.model.Exchange;
 import com.dabel.repository.ExchangeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class ExchangeService {
 
     private final ExchangeRepository exchangeRepository;
 
+    @Autowired
     public ExchangeService(ExchangeRepository exchangeRepository) {
         this.exchangeRepository = exchangeRepository;
     }

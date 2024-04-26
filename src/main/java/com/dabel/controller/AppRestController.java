@@ -10,6 +10,7 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.cheque.ChequeFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ public class AppRestController {
     private final CustomerFacadeService customerFacadeService;
     private final ChequeFacadeService chequeFacadeService;
 
+    @Autowired
     public AppRestController(AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService, ChequeFacadeService chequeFacadeService) {
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;

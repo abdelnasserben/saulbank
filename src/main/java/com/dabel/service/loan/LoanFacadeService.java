@@ -1,6 +1,7 @@
 package com.dabel.service.loan;
 
 import com.dabel.dto.LoanDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class LoanFacadeService {
 
     private final LoanOperationService loanOperationService;
 
+    @Autowired
     public LoanFacadeService(LoanOperationService loanOperationService) {
         this.loanOperationService = loanOperationService;
     }

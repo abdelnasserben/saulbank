@@ -6,6 +6,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.service.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class CustomerFacadeService {
     private final CustomerService customerService;
     private final AccountService accountService;
 
+    @Autowired
     public CustomerFacadeService(CustomerService customerService, AccountService accountService) {
         this.customerService = customerService;
         this.accountService = accountService;

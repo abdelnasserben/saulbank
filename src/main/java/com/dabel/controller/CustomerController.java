@@ -15,6 +15,7 @@ import com.dabel.service.storage.ProfileFileStorageService;
 import com.dabel.service.storage.SignatureFileStorageService;
 import com.dabel.service.transaction.TransactionFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class CustomerController implements PageTitleConfig {
     private final LoanFacadeService loanFacadeService;
     private final CardFacadeService cardFacadeService;
 
+    @Autowired
     public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService, LoanFacadeService loanFacadeService, CardFacadeService cardFacadeService) {
         this.customerFacadeService = customerFacadeService;
         this.branchFacadeService = branchFacadeService;

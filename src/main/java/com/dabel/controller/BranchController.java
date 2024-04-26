@@ -9,6 +9,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ public class BranchController implements PageTitleConfig {
     private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
 
+    @Autowired
     public BranchController(BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService) {
         this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;

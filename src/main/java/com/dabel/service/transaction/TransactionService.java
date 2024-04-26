@@ -7,6 +7,7 @@ import com.dabel.mapper.AccountMapper;
 import com.dabel.mapper.TransactionMapper;
 import com.dabel.model.Account;
 import com.dabel.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
 
+    @Autowired
     public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }

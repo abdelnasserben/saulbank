@@ -6,6 +6,7 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TrunkDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class AccountFacadeService {
     private final AccountService accountService;
     private final AccountAffiliationService accountAffiliationService;
 
+    @Autowired
     public AccountFacadeService(AccountAffiliationService accountAffiliationService) {
         this.accountAffiliationService = accountAffiliationService;
         this.accountService = this.accountAffiliationService.getAccountService();

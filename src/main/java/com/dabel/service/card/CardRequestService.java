@@ -5,6 +5,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.CardMapper;
 import com.dabel.model.CardRequest;
 import com.dabel.repository.CardRequestRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ CardRequestService {
 
     private final CardRequestRepository cardRequestRepository;
 
+    @Autowired
     public CardRequestService(CardRequestRepository cardRequestRepository) {
         this.cardRequestRepository = cardRequestRepository;
     }

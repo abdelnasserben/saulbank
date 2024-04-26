@@ -10,6 +10,7 @@ import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.loan.LoanFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ public class LoanController implements PageTitleConfig {
     private final BranchFacadeService branchFacadeService;
     private final CustomerFacadeService customerFacadeService;
 
+    @Autowired
     public LoanController(LoanFacadeService loanFacadeService, BranchFacadeService branchFacadeService, CustomerFacadeService customerFacadeService) {
         this.loanFacadeService = loanFacadeService;
         this.branchFacadeService = branchFacadeService;

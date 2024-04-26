@@ -8,6 +8,7 @@ import com.dabel.dto.ExchangeDto;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.exchange.ExchangeFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ public class ExchangeController implements PageTitleConfig {
     private final ExchangeFacadeService exchangeFacadeService;
     private final BranchFacadeService branchFacadeService;
 
+    @Autowired
     public ExchangeController(ExchangeFacadeService exchangeFacadeService, BranchFacadeService branchFacadeService) {
         this.exchangeFacadeService = exchangeFacadeService;
         this.branchFacadeService = branchFacadeService;

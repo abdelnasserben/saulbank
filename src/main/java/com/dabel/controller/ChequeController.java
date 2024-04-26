@@ -11,6 +11,7 @@ import com.dabel.dto.PostChequeRequestDto;
 import com.dabel.service.cheque.ChequeFacadeService;
 import com.dabel.service.transaction.TransactionFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ public class ChequeController implements PageTitleConfig {
     private final ChequeFacadeService chequeFacadeService;
     private final TransactionFacadeService transactionFacadeService;
 
+    @Autowired
     public ChequeController(ChequeFacadeService chequeFacadeService, TransactionFacadeService transactionFacadeService) {
         this.chequeFacadeService = chequeFacadeService;
         this.transactionFacadeService = transactionFacadeService;

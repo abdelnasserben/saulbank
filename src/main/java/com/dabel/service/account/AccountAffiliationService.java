@@ -12,6 +12,7 @@ import com.dabel.exception.IllegalOperationException;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.customer.CustomerService;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class AccountAffiliationService {
     private final AccountService accountService;
     private final CustomerService customerService;
 
+    @Autowired
     public AccountAffiliationService(AccountService accountService, CustomerService customerService) {
         this.accountService = accountService;
         this.customerService = customerService;

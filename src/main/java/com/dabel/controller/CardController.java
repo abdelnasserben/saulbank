@@ -11,6 +11,7 @@ import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ public class CardController implements PageTitleConfig {
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
 
+    @Autowired
     public CardController(CardFacadeService cardFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
         this.cardFacadeService = cardFacadeService;
         this.branchFacadeService = branchFacadeService;

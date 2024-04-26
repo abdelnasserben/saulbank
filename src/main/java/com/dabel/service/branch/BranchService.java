@@ -5,6 +5,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.BranchMapper;
 import com.dabel.model.Branch;
 import com.dabel.repository.BranchRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class BranchService {
 
     BranchRepository branchRepository;
 
+    @Autowired
     public BranchService(BranchRepository branchRepository) {
         this.branchRepository = branchRepository;
     }

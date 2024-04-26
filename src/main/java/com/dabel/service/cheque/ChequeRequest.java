@@ -5,6 +5,7 @@ import com.dabel.constant.Status;
 import com.dabel.dto.ChequeRequestDto;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.fee.FeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class ChequeRequest implements EvaluableOperation<ChequeRequestDto> {
 
@@ -12,6 +13,7 @@ public abstract class ChequeRequest implements EvaluableOperation<ChequeRequestD
     protected ChequeRequestService chequeRequestService;
     protected FeeService feeService;
 
+    @Autowired
     public ChequeRequest(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
         this.chequeService = chequeService;
         this.chequeRequestService = chequeRequestService;

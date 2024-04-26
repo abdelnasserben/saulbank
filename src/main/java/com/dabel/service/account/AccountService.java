@@ -10,6 +10,7 @@ import com.dabel.model.Trunk;
 import com.dabel.repository.AccountRepository;
 import com.dabel.repository.LedgerRepository;
 import com.dabel.repository.TrunkRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class AccountService {
     private final TrunkRepository trunkRepository;
     private final LedgerRepository ledgerRepository;
 
+    @Autowired
     public AccountService(AccountRepository accountRepository, TrunkRepository trunkRepository, LedgerRepository ledgerRepository) {
         this.accountRepository = accountRepository;
         this.trunkRepository = trunkRepository;

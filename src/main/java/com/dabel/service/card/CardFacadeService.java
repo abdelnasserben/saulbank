@@ -8,6 +8,7 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -20,6 +21,7 @@ public class CardFacadeService {
     private final CardRequestOperationService requestOperationService;
     private final AccountService accountService;
 
+    @Autowired
     public CardFacadeService(CardService cardService, CardRequestOperationService requestOperationService, AccountService accountService) {
         this.cardService = cardService;
         this.requestOperationService = requestOperationService;

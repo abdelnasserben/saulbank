@@ -7,12 +7,14 @@ import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.account.AccountService;
 import com.dabel.service.transaction.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class Tax {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
 
+    @Autowired
     public Tax(AccountService accountService, TransactionService transactionService) {
         this.accountService = accountService;
         this.transactionService = transactionService;

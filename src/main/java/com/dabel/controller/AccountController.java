@@ -10,6 +10,7 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,7 @@ public class AccountController implements PageTitleConfig {
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
 
+    @Autowired
     public AccountController(AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
