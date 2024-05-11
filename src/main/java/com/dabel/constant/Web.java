@@ -44,6 +44,9 @@ public final class Web {
         String CHEQUE_REQUEST_REJECT = CHEQUE_REQUESTS + "/reject";
         String CHEQUE_PAY = CHEQUES + "/pay";
 
+        String USERS = "/users";
+
+
         String PAGE_404 = "/404";
     }
 
@@ -84,6 +87,8 @@ public final class Web {
         String CHEQUES_REQUEST_DETAILS = "cheques-requests-details";
         String CHEQUE_PAY = "cheques-pay";
 
+        String USERS = "users";
+
         String PAGE_404 = "page404";
     }
 
@@ -101,6 +106,11 @@ public final class Web {
                 String SUB_MENU = "Branches";
                 String ROOT = "Branches List";
                 String ACCOUNTS = "Vaults/GL";
+            }
+
+            interface Users {
+                String SUB_MENU = "Users";
+                String ROOT = "All Users";
             }
         }
 

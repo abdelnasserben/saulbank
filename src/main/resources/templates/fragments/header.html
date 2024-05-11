@@ -210,7 +210,7 @@
 								<!--end::Menu item-->
 								<!--begin::Menu item-->
 								<div class="menu-item px-5">
-									<a href="../dist/authentication/layouts/corporate/sign-in.html"
+									<a th:href="@{/logout}"
 										class="menu-link px-5">Sign Out</a>
 								</div>
 								<!--end::Menu item-->
@@ -753,13 +753,13 @@
 									</div>
 									<!--end:Menu item-->
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentSubMenu == 'Users' ? 'show' : ''}">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Users Managment</span>
+											<span class="menu-title">Users</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<!--end:Menu link-->
@@ -768,10 +768,7 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="../dist/apps/projects/list.html">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
+												<a class="menu-link" th:classappend="${currentPage == 'All Users' ? 'active' : ''}" th:href="@{/users}">
 													<span class="menu-title">All Users</span>
 												</a>
 												<!--end:Menu link-->
@@ -780,10 +777,7 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="#" data-kt-page="pro">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
+												<a class="menu-link" th:classappend="${currentPage == 'Roles & Permissions' ? 'active' : ''}" th:href="@{/users}">
 													<span class="menu-title">Roles & Permissions</span>
 												</a>
 												<!--end:Menu link-->

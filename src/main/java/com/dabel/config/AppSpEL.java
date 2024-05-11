@@ -1,9 +1,11 @@
 package com.dabel.config;
 
+import com.dabel.app.Helper;
 import com.dabel.constant.*;
 import com.dabel.dto.TrunkDto;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,5 +43,9 @@ public final class AppSpEL {
         return trunkDto.getAccount().getAccountProfile().equals(AccountProfile.ASSOCIATIVE.name())
                 || trunkDto.getAccount().getAccountProfile().equals(AccountProfile.JOINT.name())
                 && !trunkDto.getMembership().equals(AccountMembership.OWNER.name());
+    }
+
+    public static String elapsedTime(LocalDateTime dateTime) {
+        return dateTime != null ? Helper.elapsedTime(dateTime) : "-----";
     }
 }

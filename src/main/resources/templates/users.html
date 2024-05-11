@@ -1,0 +1,187 @@
+<div th:replace="~{fragments/header}"></div>
+
+<!--begin::Content-->
+<div id="kt_app_content" class="app-content flex-column-fluid">
+	<!--begin::Content container-->
+	<div id="kt_app_content_container" class="app-container container-fluid">
+
+		<div th:replace="~{fragments/success-error-alert}"></div>
+
+		<!--begin::Card-->
+		<div class="card">
+			<!--begin::Card header-->
+			<div class="card-header border-0 pt-6">
+				<!--begin::Card title-->
+				<div class="card-title">
+					<!--begin::Search-->
+					<div class="d-flex align-items-center position-relative my-1">
+						<i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+							<span class="path1"></span>
+							<span class="path2"></span>
+						</i>
+						<input type="text" data-kt-datatable-table-filter="search"
+							class="form-control form-control-solid w-250px ps-12" placeholder="Search Branches" />
+					</div>
+					<!--end::Search-->
+				</div>
+				<!--begin::Card title-->
+				<!--begin::Card toolbar-->
+				<div class="card-toolbar">
+					<!--begin::Toolbar-->
+					<div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+						<!--begin::Add customer-->
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+							data-bs-target="#kt_modal_new_user">
+							<i class="ki-duotone ki-plus fs-2"></i>
+							Add User
+						</button>
+						<!--end::Add customer-->
+					</div>
+					<!--end::Toolbar-->
+				</div>
+				<!--end::Card toolbar-->
+			</div>
+			<!--end::Card header-->
+			<!--begin::Card body-->
+			<div class="card-body pt-0">
+				<!--begin::Table-->
+				<table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_datatable_table">
+					<thead>
+						<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+							<th class="min-w-50px">User ID</th>
+							<th class="min-w-70px">User</th>
+							<th class="min-w-90px">Role</th>
+							<th class="min-w-50px">Last Login</th>
+							<th class="min-w-50px">Status</th>
+							<th class="min-w-100px">Joined Date</th>
+						</tr>
+					</thead>
+					<tbody class="fw-semibold text-gray-600">
+						<tr th:each="user: ${users}">
+							<td th:text="${user.userId}">1202</td>
+							<td>
+								<a th:href="@{/users/{id}(id=${user.userId})}" th:text="${user.username}"
+									class="text-gray-800 text-hover-primary mb-1">sarah</a>
+							</td>
+							<td th:text="${#strings.substring(user.role, 5)}">ADMIN</td>
+							<td>
+								<div th:text="${@appSpEL.elapsedTime(user.loginAt)}" class="badge badge-light fw-bold">
+									Just now</div>
+							</td>
+							<td>
+								<span th:text="${user.status}"
+									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(user.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
+							</td>
+							<td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25 08:55</td>
+						</tr>
+					</tbody>
+				</table>
+				<!--end::Table-->
+			</div>
+			<!--end::Card body-->
+		</div>
+		<!--end::Card-->
+	</div>
+	<!--end::Content container-->
+</div>
+<!--end::Content-->
+
+<!--begin::Modals-->
+<div class="modal fade" id="kt_modal_new_user" tabindex="-1" aria-hidden="true">
+	<!--begin::Modal dialog-->
+	<div class="modal-dialog modal-dialog-centered mw-650px">
+		<!--begin::Modal content-->
+		<div class="modal-content">
+			<!--begin::Modal header-->
+			<div class="modal-header">
+				<!--begin::Modal title-->
+				<h2>New User</h2>
+				<!--end::Modal title-->
+
+				<!--begin::Close-->
+				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+					<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+					<span class="svg-icon svg-icon-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+							viewBox="0 0 24 24" fill="none">
+							<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+								transform="rotate(-45 6 17.3137)" fill="currentColor" />
+							<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+								fill="currentColor" />
+						</svg></span>
+					<!--end::Svg Icon-->
+				</div>
+				<!--end::Close-->
+			</div>
+			<!--end::Modal header-->
+
+			<!--begin::Modal body-->
+			<div class="modal-body scroll-y mx-5 my-7">
+				<!--begin::Form-->
+				<form class="form" th:action="@{/users}" method="post" th:object="${userDto}">
+
+					<div class="row">
+						<div class="col-md-8">
+							<!--begin::Input group-->
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Username</label>
+								<input type="text" th:field="*{username}" class="form-control mb-2"
+									th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
+									placeholder="username" />
+								<div class="invalid-feedback" th:errors="*{username}"></div>
+							</div>
+							<!--end::Input group-->
+						</div>
+						<!--begin::Input group-->
+						<div class="col-md-4">
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Role</label>
+								<select class="form-select mb-3" th:field="*{role}"
+									th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''"
+									data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+									<option value=""></option>
+									<option value="Cashier">Cashier</option>
+									<option value="Receptionist">Receptionist</option>
+									<option value="Loaner">Loaner</option>
+									<option value="BO">BO</option>
+									<option value="Manager">Manager</option>
+									<option value="Admin">Admin</option>
+								</select>
+								<div class="invalid-feedback" th:errors="*{role}">
+								</div>
+							</div>
+							<!--end::Input group-->
+						</div>
+					</div>
+					<div class="row">
+						<label class="required form-label">Branch</label>
+						<select class="form-select mb-3" name="branchCode" data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+							<option value=""></option>
+							<option th:each="branch: ${branches}" th:text="${branch.branchName}"
+								th:value="${branch.branchId}">HQ
+							</option>
+						</select>
+					</div>
+
+					<!--begin::Actions-->
+					<div class="text-center pt-15">
+						<button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
+							Discard
+						</button>
+
+						<button type="submit" class="btn btn-primary">
+							Submit
+						</button>
+					</div>
+					<!--end::Actions-->
+				</form>
+				<!--end::Form-->
+			</div>
+			<!--end::Modal body-->
+		</div>
+		<!--end::Modal content-->
+	</div>
+	<!--end::Modal dialog-->
+</div>
+<!--end::Modals-->
+
+<div th:replace="~{fragments/footer}"></div>

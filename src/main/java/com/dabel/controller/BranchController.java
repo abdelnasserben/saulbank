@@ -54,7 +54,7 @@ public class BranchController implements PageTitleConfig {
         branchFacadeService.create(branchDto, vaultsAssets);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "New branch added successfully !");
 
-        return "redirect:" + Web.View.BRANCHES;
+        return "redirect:" + Web.Endpoint.BRANCHES;
     }
 
     @GetMapping(value = Web.Endpoint.BRANCH_ACCOUNTS)
