@@ -21,8 +21,8 @@
                     </div>
 
                     <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                        <span th:text="${errorMessage}">Message d'erreur</span> <br>
-                        <span th:unless="${remainingAttempts == null}">3 tentatives restantes</span>
+                        <span th:text="${errorMessage}">Message d'erreur</span>. <br>
+                        <span th:unless="${remainingAttempts == null}" th:text="${remainingAttempts + ' remaining attempts'}">3 tentatives restantes</span>
                     </div>
 
                     <div class="fv-row mb-10">

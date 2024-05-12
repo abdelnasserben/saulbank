@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public final class AppSpEL {
@@ -46,6 +47,6 @@ public final class AppSpEL {
     }
 
     public static String elapsedTime(LocalDateTime dateTime) {
-        return dateTime != null ? Helper.elapsedTime(dateTime) : "-----";
+        return Optional.ofNullable(dateTime).map(Helper::elapsedTime).orElse("");
     }
 }

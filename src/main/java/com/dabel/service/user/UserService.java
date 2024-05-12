@@ -8,6 +8,8 @@ import com.dabel.model.Role;
 import com.dabel.model.User;
 import com.dabel.repository.RoleRepository;
 import com.dabel.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -64,17 +66,15 @@ public class UserService implements UserDetailsService {
 
         return UserMapper.toDto(user);
     }
-
-    private void setUserRole(User user) {
-        user.setRole(roleRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"))
-                .getName());
-    }
-
     public void incrementFailedLoginAttempts(String username) {
         User user = getUser(username);
         user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
         userRepository.save(user);
+    }
+
+    public UserDto getAuthenticated() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return this.findByUsername(auth.getName());
     }
 
     private User getUser(String username) {
@@ -82,7 +82,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
-    public void lockAccount(String username) {
-
+    private void setUserRole(User user) {
+        user.setRole(roleRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"))
+                .getName());
     }
+
 }
