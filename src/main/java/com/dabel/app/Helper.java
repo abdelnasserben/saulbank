@@ -5,6 +5,10 @@ import com.dabel.constant.AccountType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.StatedObject;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -12,7 +16,9 @@ import java.text.DecimalFormatSymbols;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 
 public final class Helper {
@@ -94,5 +100,10 @@ public final class Helper {
         } else {
             return dateTime.format(DateTimeFormatter.ofPattern("y-M-d HH:mm"));
         }
+    }
+
+    public static Authentication getAuthenticated() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .orElse(new AnonymousAuthenticationToken("key", "anonymousUser", List.of(new SimpleGrantedAuthority("ROLE_ANONYMOUS")))) ;
     }
 }

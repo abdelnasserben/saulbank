@@ -24,6 +24,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/assets/**", "/css/**", "/js/**").permitAll()
+//                        .requestMatchers(Web.Endpoint.CUSTOMER_ADD).hasRole(UserRole.RECEPTIONIST.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

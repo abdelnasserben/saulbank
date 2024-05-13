@@ -32,6 +32,8 @@ public class BusinessChequeRequest extends ChequeRequest {
         if(!Helper.isActiveStatedObject(accountDto) || !Helper.isActiveStatedObject(chequeRequestDto.getTrunk().getCustomer()))
             throw new IllegalOperationException("The account and its owner must be active for this operation");
 
+        chequeRequestDto.setInitiatedBy(currentUsername());
+
         if(accountDto.getBalance() < BankFees.Basic.BUSINESS_CHEQUE) {
             chequeRequestDto.setStatus(Status.FAILED.code());
             chequeRequestDto.setFailureReason("Account balance is insufficient for cheque request fees");
@@ -50,7 +52,7 @@ public class BusinessChequeRequest extends ChequeRequest {
             return;
 
         chequeRequestDto.setStatus(Status.APPROVED.code());
-        //we'll make update by info later...
+        chequeRequestDto.setUpdatedBy(currentUsername());
 
         //TODO: apply fees
         Fee fee = new Fee(chequeRequestDto.getBranch(), BankFees.Basic.BUSINESS_CHEQUE, "Cheque application request");

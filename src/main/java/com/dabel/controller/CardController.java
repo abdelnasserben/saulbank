@@ -1,6 +1,7 @@
 package com.dabel.controller;
 
 import com.dabel.app.CardExpirationDateUtils;
+import com.dabel.app.Helper;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Status;
@@ -144,6 +145,7 @@ public class CardController implements PageTitleConfig {
                 .branch(requestDto.getBranch())
                 .failureReason("New added")
                 .cvc(postCardDto.getCvc())
+                .initiatedBy(Helper.getAuthenticated().getName())
                 .build();
 
         cardFacadeService.saveCard(cardDto);

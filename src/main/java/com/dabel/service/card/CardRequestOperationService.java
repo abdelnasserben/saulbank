@@ -36,6 +36,8 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
         if(!Helper.isActiveStatedObject(accountDto) || Helper.isAssociativeAccount(accountDto) || !Helper.isActiveStatedObject(cardRequestDto.getTrunk().getCustomer()))
             throw new IllegalOperationException("The account is not eligible for this operation");
 
+        cardRequestDto.setInitiatedBy(Helper.getAuthenticated().getName());
+
         if(accountDto.getBalance() < BankFees.Basic.CARD_REQUEST) {
             cardRequestDto.setStatus(Status.FAILED.code());
             cardRequestDto.setFailureReason("Account balance is insufficient for card request fees");
@@ -53,7 +55,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
             return;
 
         cardRequestDto.setStatus(Status.APPROVED.code());
-        //we'll make update by info later...
+        cardRequestDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
         //TODO: apply fees
         Fee fee = new Fee(cardRequestDto.getBranch(), BankFees.Basic.CARD_REQUEST, "Card application request");
@@ -66,7 +68,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
     public void reject(CardRequestDto cardRequestDto, String remarks) {
         cardRequestDto.setStatus(Status.REJECTED.code());
         cardRequestDto.setFailureReason(remarks);
-        //we'll make update by info later...
+        cardRequestDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
         cardRequestService.save(cardRequestDto);
     }

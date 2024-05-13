@@ -46,6 +46,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
                 .balance(-loanAmount)
                 .status(Status.PENDING.code())
                 .branch(loanDto.getBranch())
+                .initiatedBy(Helper.getAuthenticated().getName())
                 .build());
 
         //TODO: update loan info before saving
@@ -53,6 +54,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
         loanDto.setTotalAmount(loanAmount);
         loanDto.setCurrency(Currency.KMF.name());
         loanDto.setStatus(Status.PENDING.code());
+        loanDto.setInitiatedBy(Helper.getAuthenticated().getName());
 
         loanService.save(loanDto);
     }
@@ -60,14 +62,16 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     @Override
     public void approve(LoanDto loanDto) {
 
+        String currentUsername = Helper.getAuthenticated().getName();
+
         loanDto.setStatus(Status.ACTIVE.code());
         loanDto.setFailureReason("Approved");
-        //we'll make updated by later...
+        loanDto.setUpdatedBy(currentUsername);
 
         //TODO: active loan account
         AccountDto loanAccount = loanDto.getAccount();
         loanAccount.setStatus(Status.ACTIVE.code());
-        //we'll make updated account info later...
+        loanAccount.setUpdatedBy(currentUsername);
         accountService.save(loanAccount);
 
         //TODO: apply withdraw fees
@@ -80,13 +84,15 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     @Override
     public void reject(LoanDto loanDto, String remarks) {
 
+        String currentUsername = Helper.getAuthenticated().getName();
+
         loanDto.setStatus(Status.REJECTED.code());
         loanDto.setFailureReason(remarks);
-        //we'll make updated by later...
+        loanDto.setUpdatedBy(currentUsername);
 
         AccountDto loanAccount = loanDto.getAccount();
         loanAccount.setStatus(Status.REJECTED.code());
-        //we'll make updated account info later...
+        loanAccount.setUpdatedBy(currentUsername);
         accountService.save(loanAccount);
 
         loanService.save(loanDto);

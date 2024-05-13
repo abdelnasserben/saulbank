@@ -194,22 +194,20 @@
                                     <div class="col-sm-6">
                                         <!--end::Label-->
                                         <div class="fw-semibold fs-7 text-gray-600 mb-1">Operated
-                                            By:</div>
+                                            At:</div>
                                         <!--end::Label-->
 
                                         <!--end::Text-->
-                                        <div class="fw-bold fs-6 text-gray-800">Hamida Toilib
-                                        </div>
-                                        <!--end::Text-->
+										<div th:text="${trunk.account.branch.branchName}" class="fw-bold fs-6 text-gray-800">
+											HQ</div>
+										<!--end::Text-->
 
-                                        <!--end::Description-->
-                                        <div class="fw-semibold fs-7 text-gray-600">
-                                            <span
-                                                th:text="${trunk.account.branch.branchName + ', ' + trunk.account.branch.branchAddress}">HQ
-                                                Moroni, Place de France</span><br />
-                                            Cashier
-                                        </div>
-                                        <!--end::Description-->
+										<!--end::Description-->
+										<div class="fw-semibold fs-7 text-gray-600">
+											<span th:text="${trunk.account.branch.branchAddress}">Moroni, Place de
+												France</span>
+										</div>
+										<!--end::Description-->
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -284,8 +282,8 @@
                                 <div class="fw-bold text-gray-800 fs-6 mb-1">Operators:</div>
 
                                 <div class="fw-bold text-gray-600 fs-7">
-                                    <p class="mb-1">Issued By : Sarah Hunt</p>
-                                    <p class="mb-0">Updated By : John Doe</p>
+                                    <p class="mb-1">Initiated By : <span th:text="${trunk.account.initiatedBy}">Sarah</span></p>
+									<p class="mb-0">Updated By : <span th:text="${trunk.account.updatedBy}">John</span></p>
                                 </div>
                             </div>
                             <!--end::Item-->

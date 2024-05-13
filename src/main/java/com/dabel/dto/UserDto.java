@@ -1,5 +1,6 @@
 package com.dabel.dto;
 
+import com.dabel.app.validation.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ public class UserDto  extends BasicDto {
     @NotBlank
     private String username;
     private String password;
-    @NotBlank
+    @UserRole
     private String role;
     private int failedLoginAttempts;
     private LocalDateTime loginAt;

@@ -32,8 +32,11 @@ public class CustomerFacadeService {
         if (customerDto.getCustomerId() != null)
             return;
 
+        String currentUsername = Helper.getAuthenticated().getName();
+
         //TODO: save customer
         customerDto.setStatus(Status.ACTIVE.code());
+        customerDto.setInitiatedBy(currentUsername);
         CustomerDto savedCustomer = customerService.save(customerDto);
 
         //TODO: define the membership and save trunk
@@ -48,6 +51,7 @@ public class CustomerFacadeService {
                         .currency(Currency.KMF.name())
                         .branch(savedCustomer.getBranch())
                         .status(Status.ACTIVE.code())
+                        .initiatedBy(currentUsername)
                         .build())
                 .membership(accountMembership)
                 .build());
@@ -67,6 +71,7 @@ public class CustomerFacadeService {
 
     public void update(CustomerDto customerDto) {
         customerDto.setStatus(Status.codeOf(customerDto.getStatus()));
+        customerDto.setUpdatedBy(Helper.getAuthenticated().getName());
         customerService.save(customerDto);
     }
 }

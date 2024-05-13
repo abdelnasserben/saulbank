@@ -20,11 +20,10 @@ public class User {
     private String username;
 
     private String password;
-
     private String status;
-
+    private String initiatedBy;
+    private String updatedBy;
     private int failedLoginAttempts;
-
     private LocalDateTime loginAt;
 
     @ManyToOne

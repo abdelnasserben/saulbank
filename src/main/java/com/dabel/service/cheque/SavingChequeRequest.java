@@ -32,6 +32,8 @@ public class SavingChequeRequest extends ChequeRequest {
         if(!Helper.isActiveStatedObject(accountDto) || !Helper.isActiveStatedObject(chequeRequestDto.getTrunk().getCustomer()))
             throw new IllegalOperationException("The account and its owner must be active for this operation");
 
+        chequeRequestDto.setInitiatedBy(currentUsername());
+
         if(accountDto.getBalance() < BankFees.Basic.SAVING_CHEQUE) {
             chequeRequestDto.setStatus(Status.FAILED.code());
             chequeRequestDto.setFailureReason("Account balance is insufficient for cheque request fees");
@@ -50,7 +52,7 @@ public class SavingChequeRequest extends ChequeRequest {
             return;
 
         chequeRequestDto.setStatus(Status.APPROVED.code());
-        //we'll make update by info later...
+        chequeRequestDto.setUpdatedBy(currentUsername());
 
         //TODO: apply fees
         Fee fee = new Fee(chequeRequestDto.getBranch(), BankFees.Basic.SAVING_CHEQUE, "Cheque application request");
@@ -67,6 +69,7 @@ public class SavingChequeRequest extends ChequeRequest {
                     .chequeNumber(chequeNumber + (i <= 9 ? "0" + i : i))
                     .status(Status.ACTIVE.code())
                     .branch(chequeRequestDto.getBranch())
+                    .initiatedBy(currentUsername())
                     .build();
 
             chequeService.save(chequeDto);

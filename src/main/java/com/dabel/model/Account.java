@@ -23,6 +23,8 @@ public class Account {
     private String currency;
     private String status;
     private int isVault;
+    private String initiatedBy;
+    private String updatedBy;
 
     @ManyToOne
     @JoinColumn(name = "branchId")

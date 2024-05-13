@@ -31,6 +31,7 @@ public class Deposit extends Transaction {
         transactionDto.setInitiatorAccount(initiatorAccount);
         transactionDto.setReceiverAccount(receiverAccount);
         transactionDto.setStatus(Status.PENDING.code());
+        transactionDto.setInitiatedBy(currentUsername());
         transactionService.save(transactionDto);
     }
 
@@ -49,7 +50,7 @@ public class Deposit extends Transaction {
         //TODO: update transactionDto info and save it
         transactionDto.setStatus(Status.APPROVED.code());
         transactionDto.setFailureReason("Approved");
-        //we'll set updatedBy later...
+        transactionDto.setUpdatedBy(currentUsername());
 
         transactionService.save(transactionDto);
     }

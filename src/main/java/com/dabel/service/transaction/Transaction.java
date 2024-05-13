@@ -1,11 +1,13 @@
 package com.dabel.service.transaction;
 
+import com.dabel.app.Helper;
 import com.dabel.constant.Status;
 import com.dabel.constant.TransactionType;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 
 public abstract class Transaction implements EvaluableOperation<TransactionDto> {
 
@@ -25,10 +27,13 @@ public abstract class Transaction implements EvaluableOperation<TransactionDto> 
 
         transactionDto.setStatus(Status.REJECTED.code());
         transactionDto.setFailureReason(remarks);
-        //we'll set updatedBy later...
+        transactionDto.setUpdatedBy(currentUsername());
 
         transactionService.save(transactionDto);
     }
 
     abstract TransactionType getType();
+    public String currentUsername() {
+        return Helper.getAuthenticated().getName();
+    }
 }

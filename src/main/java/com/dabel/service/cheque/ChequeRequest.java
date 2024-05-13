@@ -1,5 +1,6 @@
 package com.dabel.service.cheque;
 
+import com.dabel.app.Helper;
 import com.dabel.constant.AccountType;
 import com.dabel.constant.Status;
 import com.dabel.dto.ChequeRequestDto;
@@ -24,10 +25,14 @@ public abstract class ChequeRequest implements EvaluableOperation<ChequeRequestD
     public void reject(ChequeRequestDto chequeRequestDto, String remarks) {
         chequeRequestDto.setStatus(Status.REJECTED.code());
         chequeRequestDto.setFailureReason(remarks);
-        //we'll make update by info later...
+        chequeRequestDto.setUpdatedBy(currentUsername());
 
         chequeRequestService.save(chequeRequestDto);
     }
 
     abstract AccountType getType();
+
+    public String currentUsername() {
+        return Helper.getAuthenticated().getName();
+    }
 }

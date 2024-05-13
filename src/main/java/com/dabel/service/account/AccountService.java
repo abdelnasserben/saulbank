@@ -21,6 +21,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final TrunkRepository trunkRepository;
     private final LedgerRepository ledgerRepository;
+    private final String currentUsername = Helper.getAuthenticated().getName();
 
     @Autowired
     public AccountService(AccountRepository accountRepository, TrunkRepository trunkRepository, LedgerRepository ledgerRepository) {
@@ -133,11 +134,13 @@ public class AccountService {
 
     public void debit(AccountDto accountDto, double amount) {
         accountDto.setBalance(accountDto.getBalance() - Helper.formatAmount(amount));
+        accountDto.setUpdatedBy(currentUsername);
         accountRepository.save(AccountMapper.toModel(accountDto));
     }
 
     public void credit(AccountDto accountDto, double amount) {
         accountDto.setBalance(accountDto.getBalance() + Helper.formatAmount(amount));
+        accountDto.setUpdatedBy(currentUsername);
         accountRepository.save(AccountMapper.toModel(accountDto));
     }
 }

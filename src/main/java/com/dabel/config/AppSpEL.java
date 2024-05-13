@@ -27,6 +27,12 @@ public final class AppSpEL {
                 .toArray();
     }
 
+    public static Object[] userRoles() {
+        return Arrays.stream(UserRole.values())
+                .map(Enum::name)
+                .toArray();
+    }
+
     public static Object[] currencies() {
         return Arrays.stream(Currency.values())
                 .map(Enum::name)

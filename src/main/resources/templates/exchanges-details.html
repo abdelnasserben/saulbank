@@ -148,21 +148,18 @@
 									<!--end::Col-->
 									<div class="col-sm-6">
 										<!--end::Label-->
-										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issued
-											By:</div>
+										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issued At:</div>
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-bold fs-6 text-gray-800">Hamida Toilib
-										</div>
+										<div th:text="${exchange.branch.branchName}" class="fw-bold fs-6 text-gray-800">
+											HQ</div>
 										<!--end::Text-->
 
 										<!--end::Description-->
 										<div class="fw-semibold fs-7 text-gray-600">
-											<span
-												th:text="${exchange.branch.branchName + ', ' + exchange.branch.branchAddress}">HQ
-												Moroni, Place de France</span><br />
-											Cashier
+											<span th:text="${exchange.branch.branchAddress}">Moroni, Place de
+												France</span>
 										</div>
 										<!--end::Description-->
 									</div>
@@ -270,20 +267,18 @@
 								<div class="fw-bold text-gray-800 fs-6 mb-1">Operators:</div>
 
 								<div class="fw-bold text-gray-600 fs-7">
-									<p class="mb-1">Issued By : Sarah Hunt</p>
-									<p class="mb-0">Updated By : John Doe</p>
+									<p class="mb-1">Initiated By : <span th:text="${exchange.initiatedBy}">Sarah</span></p>
+									<p class="mb-0">Updated By : <span th:text="${exchange.updatedBy}">John</span></p>
 								</div>
 							</div>
 							<!--end::Item-->
 
 							<div th:unless="${exchange.status} != 'PENDING'">
-								<button type="button"
-									class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
+								<button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
 									data-bs-target="#reject_operation">
 									Reject
 								</button>
-								<button type="button"
-									data-bs-toggle="modal" data-bs-target="#approve_operation"
+								<button type="button" data-bs-toggle="modal" data-bs-target="#approve_operation"
 									class="btn btn-sm btn-primary">
 									Approve
 								</button>
@@ -306,12 +301,12 @@
 
 <!--begin::Modals-->
 <div
-    th:replace="~{fragments/confirmDialog(modalId='reject_operation', modalTitle='Reject Exchange', confirmReason=1, actionUrl=${'/exchanges/reject/' + exchange.exchangeId})}">
-    ...</div>
+	th:replace="~{fragments/confirmDialog(modalId='reject_operation', modalTitle='Reject Exchange', confirmReason=1, actionUrl=${'/exchanges/reject/' + exchange.exchangeId})}">
+	...</div>
 
 <div
-    th:replace="~{fragments/confirmDialog(modalId='approve_operation', modalTitle='Approve Exchange', actionUrl=${'/exchanges/approve/' + exchange.exchangeId})}">
-    ...</div>
+	th:replace="~{fragments/confirmDialog(modalId='approve_operation', modalTitle='Approve Exchange', actionUrl=${'/exchanges/approve/' + exchange.exchangeId})}">
+	...</div>
 <!--end::Modals-->
 
 <div th:replace="~{fragments/footer}"></div>

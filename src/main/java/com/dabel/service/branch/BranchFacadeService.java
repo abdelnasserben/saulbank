@@ -44,6 +44,9 @@ public class BranchFacadeService {
     }
 
     private void createGL(BranchDto savedBranch) {
+
+        String currentUsername = Helper.getAuthenticated().getName();
+
         AccountDto forWithdrawLedger = accountService.save(AccountDto.builder()
                 .accountName(String.format("GL Withdraw Fees Branch %d", savedBranch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
@@ -52,6 +55,7 @@ public class BranchFacadeService {
                 .currency(Currency.KMF.name())
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         AccountDto forTransferLedger = accountService.save(AccountDto.builder()
@@ -62,6 +66,7 @@ public class BranchFacadeService {
                 .currency(Currency.KMF.name())
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         AccountDto forLoanLedger = accountService.save(AccountDto.builder()
@@ -72,6 +77,7 @@ public class BranchFacadeService {
                 .currency(Currency.KMF.name())
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         AccountDto forCardApplicationLedger = accountService.save(AccountDto.builder()
@@ -82,6 +88,7 @@ public class BranchFacadeService {
                 .currency(Currency.KMF.name())
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         AccountDto forChequeApplicationLedger = accountService.save(AccountDto.builder()
@@ -92,6 +99,7 @@ public class BranchFacadeService {
                 .currency(Currency.KMF.name())
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         accountService.save(LedgerDto.builder()
@@ -122,6 +130,8 @@ public class BranchFacadeService {
 
     private void createVaults(BranchDto savedBranch, double[] vaultsAsset) {
 
+        String currentUsername = Helper.getAuthenticated().getName();
+
         //TODO: build and save vault kmf
         accountService.save(AccountDto.builder()
                 .accountName(String.format("Vault KMF %d", savedBranch.getBranchId()))
@@ -133,6 +143,7 @@ public class BranchFacadeService {
                 .isVault(1)
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         //TODO: build and save vault eur
@@ -146,6 +157,7 @@ public class BranchFacadeService {
                 .isVault(1)
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
 
         //TODO: build and save vault usd
@@ -159,6 +171,7 @@ public class BranchFacadeService {
                 .isVault(1)
                 .branch(savedBranch)
                 .status(savedBranch.getStatus())
+                .initiatedBy(currentUsername)
                 .build());
     }
 

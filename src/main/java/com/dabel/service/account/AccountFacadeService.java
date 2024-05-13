@@ -71,6 +71,7 @@ public class AccountFacadeService {
         AccountDto accountDto = findTrunkById(trunkId).getAccount();
         if(!Helper.isActiveStatedObject(accountDto)) {
             accountDto.setStatus(Status.ACTIVE.code());
+            accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
             accountService.save(accountDto);
         }
     }
@@ -81,6 +82,7 @@ public class AccountFacadeService {
             return;
 
         accountDto.setStatus(Status.DEACTIVATED.code());
+        accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
         accountService.save(accountDto);
     }
 

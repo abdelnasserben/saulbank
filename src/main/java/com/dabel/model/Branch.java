@@ -18,6 +18,8 @@ public class Branch {
     private String branchName;
     private String branchAddress;
     private String status;
+    private String initiatedBy;
+    private String updatedBy;
     @CurrentTimestamp(event = EventType.INSERT)
     private LocalDateTime createdAt;
     @CurrentTimestamp(event = EventType.UPDATE)

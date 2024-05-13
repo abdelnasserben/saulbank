@@ -49,7 +49,7 @@ public class CardFacadeService {
 
         card.setStatus(Status.ACTIVE.code());
         card.setFailureReason("Activated");
-        //we'll set update info later...
+        card.setUpdatedBy(Helper.getAuthenticated().getName());
 
         cardService.save(card);
     }
@@ -63,7 +63,7 @@ public class CardFacadeService {
 
         card.setStatus(Status.DEACTIVATED.code());
         card.setFailureReason(remarks);
-        //we'll set update info later...
+        card.setUpdatedBy(Helper.getAuthenticated().getName());
 
         cardService.save(card);
     }

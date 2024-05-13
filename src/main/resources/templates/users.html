@@ -139,12 +139,8 @@
 									th:classappend="${#fields.hasErrors('role')} ? 'is-invalid' : ''"
 									data-control="select2" data-hide-search="true" data-placeholder="Select an option">
 									<option value=""></option>
-									<option value="Cashier">Cashier</option>
-									<option value="Receptionist">Receptionist</option>
-									<option value="Loaner">Loaner</option>
-									<option value="BO">BO</option>
-									<option value="Manager">Manager</option>
-									<option value="Admin">Admin</option>
+									<option th:each="role: ${@appSpEL.userRoles}" th:text="${role}"
+										th:value="${role}">CASHIER</option>
 								</select>
 								<div class="invalid-feedback" th:errors="*{role}">
 								</div>
@@ -154,7 +150,8 @@
 					</div>
 					<div class="row">
 						<label class="required form-label">Branch</label>
-						<select class="form-select mb-3" name="branchCode" data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+						<select class="form-select mb-3" name="branchCode" data-control="select2"
+							data-hide-search="true" data-placeholder="Select an option">
 							<option value=""></option>
 							<option th:each="branch: ${branches}" th:text="${branch.branchName}"
 								th:value="${branch.branchId}">HQ

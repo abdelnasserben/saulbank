@@ -36,6 +36,8 @@ public class Customer {
     private String signaturePicture;
     private String identityPicture;
     private String status;
+    private String initiatedBy;
+    private String updatedBy;
 
     @ManyToOne
     @JoinColumn(name = "branchId")

@@ -56,6 +56,7 @@ public class AccountAffiliationService {
         } else {
             //TODO: save new customer
             customerDto.setStatus(Status.ACTIVE.code());
+            customerDto.setInitiatedBy(Helper.getAuthenticated().getName());
             customerDto = customerService.save(customerDto);
         }
 
@@ -70,6 +71,7 @@ public class AccountAffiliationService {
         //TODO: update account profile to JOINT if is PERSONAL
         if(Helper.isPersonalAccount(accountDto)) {
             accountDto.setAccountProfile(AccountProfile.JOINT.name());
+            accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
             accountService.save(accountDto);
         }
 
@@ -86,6 +88,7 @@ public class AccountAffiliationService {
             List<TrunkDto> trunks = accountService.findAllTrunks(accountDto);
             if(trunks.size() == 1) {
                 accountDto.setAccountProfile(AccountProfile.PERSONAL.name());
+                accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
                 accountService.save(accountDto);
             }
         }

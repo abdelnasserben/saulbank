@@ -29,6 +29,8 @@ public class Cheque {
     private String failureReason;
 
     private String status;
+    private String initiatedBy;
+    private String updatedBy;
 
     @ManyToOne
     @JoinColumn(name = "branchId")

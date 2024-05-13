@@ -1,6 +1,7 @@
 package com.dabel.service.exchange;
 
 import com.dabel.app.CurrencyExchanger;
+import com.dabel.app.Helper;
 import com.dabel.constant.Currency;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
@@ -40,6 +41,7 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
         double saleAmount = CurrencyExchanger.exchange(purchaseCurrency, saleCurrency, exchangeDto.getPurchaseAmount());
         exchangeDto.setSaleAmount(saleAmount);
         exchangeDto.setStatus(Status.PENDING.code());
+        exchangeDto.setInitiatedBy(Helper.getAuthenticated().getName());
         exchangeService.save(exchangeDto);
     }
 
@@ -72,7 +74,8 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
         accountService.credit(purchaseAccount, exchangeDto.getPurchaseAmount());
 
         exchangeDto.setStatus(Status.APPROVED.code());
-//        we'll make updated by later
+        exchangeDto.setFailureReason("Approved");
+        exchangeDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
         exchangeService.save(exchangeDto);
     }
@@ -81,7 +84,7 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
     public void reject(ExchangeDto exchangeDto, String remarks) {
         exchangeDto.setStatus(Status.REJECTED.code());
         exchangeDto.setFailureReason(remarks);
-//        we'll make updated by later
+        exchangeDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
         exchangeService.save(exchangeDto);
     }

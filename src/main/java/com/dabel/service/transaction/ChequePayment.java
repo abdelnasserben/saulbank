@@ -15,7 +15,7 @@ import com.dabel.service.customer.CustomerService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChequePayment extends Transaction{
+public class ChequePayment extends Transaction {
 
     private final ChequeService chequeService;
     private final CustomerService customerService;
@@ -42,6 +42,7 @@ public class ChequePayment extends Transaction{
         if(transactionDto.getInitiatorAccount().getAccountNumber().equals(transactionDto.getReceiverAccount().getAccountNumber()))
             throw new IllegalOperationException("Can't make self transfer");
 
+        transactionDto.setInitiatedBy(currentUsername());
 
         if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount()) {
 
@@ -71,7 +72,7 @@ public class ChequePayment extends Transaction{
         //TODO: update transaction info and save it
         transactionDto.setStatus(Status.APPROVED.code());
         transactionDto.setFailureReason("Approved");
-        //we'll set updatedBy later...
+        transactionDto.setUpdatedBy(currentUsername());
 
         transactionService.save(transactionDto);
 

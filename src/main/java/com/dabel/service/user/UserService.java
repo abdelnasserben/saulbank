@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public UserDto getAuthenticated() {
+    public UserDto getAuthenticate() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return this.findByUsername(auth.getName());
     }

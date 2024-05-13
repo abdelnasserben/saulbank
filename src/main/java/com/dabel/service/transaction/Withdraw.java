@@ -45,8 +45,9 @@ public class Withdraw extends Transaction {
         //TODO: for withdraw, debit account is the initiator account of transaction so we interchange nothing, we set only the receiver
         AccountDto receiverAccount = this.accountService.findVault(transactionDto.getBranch(), transactionDto.getCurrency());
 
-        //TODO: set receiver account of transaction
+        //TODO: set receiver account of transaction and initiator
         transactionDto.setReceiverAccount(receiverAccount);
+        transactionDto.setInitiatedBy(currentUsername());
 
         if(transactionDto.getInitiatorAccount().getBalance() < transactionDto.getAmount() + BankFees.Basic.WITHDRAW) {
 
@@ -78,7 +79,7 @@ public class Withdraw extends Transaction {
         //TODO: update transaction info and save it
         transactionDto.setStatus(Status.APPROVED.code());
         transactionDto.setFailureReason("Approved");
-        //we'll set updatedBy later...
+        transactionDto.setUpdatedBy(currentUsername());
 
         transactionService.save(transactionDto);
     }

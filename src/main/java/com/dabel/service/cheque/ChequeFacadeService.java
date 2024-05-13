@@ -84,7 +84,7 @@ public class ChequeFacadeService {
 
         chequeDto.setStatus(Status.ACTIVE.code());
         chequeDto.setFailureReason("Activation");
-        //we'll set update info later...
+        chequeDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
         chequeService.save(chequeDto);
     }
@@ -98,7 +98,7 @@ public class ChequeFacadeService {
 
         chequeDto.setStatus(Status.DEACTIVATED.code());
         chequeDto.setFailureReason(remarks);
-        //we'll set update info later...
+        chequeDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
         chequeService.save(chequeDto);
     }
@@ -128,6 +128,7 @@ public class ChequeFacadeService {
                 .sourceType(SourceType.CHEQUE.name())
                 .sourceValue(chequeDto.getChequeNumber())
                 .branch(chequeDto.getBranch())
+                .initiatedBy(Helper.getAuthenticated().getName())
                 .build();
     }
 }

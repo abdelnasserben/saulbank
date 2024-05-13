@@ -178,20 +178,18 @@
 									<div class="col-sm-6">
 										<!--end::Label-->
 										<div class="fw-semibold fs-7 text-gray-600 mb-1">Issued
-											By:</div>
+											At:</div>
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-bold fs-6 text-gray-800">Hamida Toilib
-										</div>
+										<div th:text="${requestDto.branch.branchName}" class="fw-bold fs-6 text-gray-800">
+											HQ</div>
 										<!--end::Text-->
 
 										<!--end::Description-->
 										<div class="fw-semibold fs-7 text-gray-600">
-											<span
-												th:text="${requestDto.branch.branchName + ', ' + requestDto.branch.branchAddress}">HQ
-												Moroni, Place de France</span><br />
-											Cashier
+											<span th:text="${requestDto.branch.branchAddress}">Moroni, Place de
+												France</span>
 										</div>
 										<!--end::Description-->
 									</div>
@@ -256,8 +254,8 @@
 								<div class="fw-bold text-gray-800 fs-6 mb-1">Operators:</div>
 
 								<div class="fw-bold text-gray-600 fs-7">
-									<p class="mb-1">Issued By : Sarah Hunt</p>
-									<p class="mb-0">Updated By : John Doe</p>
+									<p class="mb-1">Initiated By : <span th:text="${requestDto.initiatedBy}">Sarah</span></p>
+									<p class="mb-0">Updated By : <span th:text="${requestDto.updatedBy}">John</span></p>
 								</div>
 							</div>
 							<!--end::Item-->
