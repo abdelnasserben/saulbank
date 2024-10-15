@@ -9,6 +9,7 @@ import com.dabel.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 @Service
@@ -70,8 +71,47 @@ public class CustomerFacadeService {
     }
 
     public void update(CustomerDto customerDto) {
-        customerDto.setStatus(Status.codeOf(customerDto.getStatus()));
-        customerDto.setUpdatedBy(Helper.getAuthenticated().getName());
-        customerService.save(customerDto);
+
+        CustomerDto existingCustomer = findById(customerDto.getCustomerId());
+
+        for(Field field: CustomerDto.class.getDeclaredFields()) {
+            field.setAccessible(true); //allow access private field
+
+            try {
+                Object newValue = field.get(customerDto);
+                Object existingValue = field.get(existingCustomer);
+
+                // Check if the new value is not null, not empty and different of the old value
+                if (newValue != null && !newValue.toString().isEmpty() && !newValue.equals(existingValue)) {
+                    field.set(existingCustomer, newValue);
+                }
+
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        existingCustomer.setStatus(Status.codeOf(customerDto.getStatus()));
+        existingCustomer.setUpdatedBy(Helper.getAuthenticated().getName());
+        customerService.save(existingCustomer);
+    }
+
+    public double getCompletionRate(CustomerDto customerDto) {
+        int totalFields = 0;
+        int filledFields = 0;
+
+        for (Field field : CustomerDto.class.getDeclaredFields()) {
+            field.setAccessible(true);
+            totalFields++;
+
+            try {
+                Object value = field.get(customerDto);
+                if (value != null && !value.toString().isEmpty())
+                    filledFields++;
+
+            } catch (IllegalAccessException ignored) {}
+        }
+
+        return (double) filledFields / totalFields * 100;
     }
 }

@@ -145,7 +145,7 @@ public class CustomerController implements PageTitleConfig {
         model.addAttribute("cards", StatedObjectFormatter.format(customerCards));
         model.addAttribute("notifyNoActiveCreditCards", notifyNoActiveCreditCards);
         model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
-//        model.addAttribute("payments", StatedObjectFormatter.format(lastTenCustomerPayments));
+        model.addAttribute("completionRate", customerFacadeService.getCompletionRate(customerDto));
         model.addAttribute("exchanges", StatedObjectFormatter.format(lastTenCustomerExchanges));
         model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
         model.addAttribute("totalLoan", totalLoan);

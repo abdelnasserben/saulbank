@@ -55,4 +55,8 @@ public final class AppSpEL {
     public static String elapsedTime(LocalDateTime dateTime) {
         return Optional.ofNullable(dateTime).map(Helper::elapsedTime).orElse("");
     }
+
+    public String currentUsername() {
+        return Helper.getAuthenticated().getName();
+    }
 }

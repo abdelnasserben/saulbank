@@ -49,7 +49,7 @@ public final class CustomExceptionHandler {
 
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public String dataIntegrityViolationHandler(HttpServletRequest request, Exception ex, RedirectAttributes redirect) {
-        return redirection(redirect, request.getRequestURI(), ex.getMessage().split("(for key)")[0].trim() + "]");
+        return redirection(redirect, request.getRequestURI(), "data integrity violation");
     }
 
     private String redirection(RedirectAttributes redirect, String url, String message) {
