@@ -3,12 +3,11 @@ package com.dabel.controller;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
-import com.dabel.dto.BranchDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.LoanDto;
-import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.loan.LoanFacadeService;
+import com.dabel.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,14 +23,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class LoanController implements PageTitleConfig {
 
     private final LoanFacadeService loanFacadeService;
-    private final BranchFacadeService branchFacadeService;
     private final CustomerFacadeService customerFacadeService;
+    private final UserService userService;
 
     @Autowired
-    public LoanController(LoanFacadeService loanFacadeService, BranchFacadeService branchFacadeService, CustomerFacadeService customerFacadeService) {
+    public LoanController(LoanFacadeService loanFacadeService, CustomerFacadeService customerFacadeService, UserService userService) {
         this.loanFacadeService = loanFacadeService;
-        this.branchFacadeService = branchFacadeService;
         this.customerFacadeService = customerFacadeService;
+        this.userService = userService;
     }
 
     @GetMapping(value = Web.Endpoint.LOANS)
@@ -74,9 +73,7 @@ public class LoanController implements PageTitleConfig {
         CustomerDto customerDto = customerFacadeService.findByIdentity(customerIdentityNumber);
         loanDto.setBorrower(customerDto);
 
-        //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findAll().get(0);
-        loanDto.setBranch(branchDto);
+        loanDto.setBranch(userService.getAuthenticated().getBranch());
 
         loanFacadeService.init(loanDto);
 

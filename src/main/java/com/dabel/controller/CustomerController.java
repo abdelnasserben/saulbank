@@ -6,7 +6,6 @@ import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.*;
 import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.exchange.ExchangeFacadeService;
@@ -14,6 +13,7 @@ import com.dabel.service.loan.LoanFacadeService;
 import com.dabel.service.storage.ProfileFileStorageService;
 import com.dabel.service.storage.SignatureFileStorageService;
 import com.dabel.service.transaction.TransactionFacadeService;
+import com.dabel.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,22 +33,22 @@ import java.util.List;
 public class CustomerController implements PageTitleConfig {
 
     private final CustomerFacadeService customerFacadeService;
-    private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
     private final TransactionFacadeService transactionFacadeService;
     private final ExchangeFacadeService exchangeFacadeService;
     private final LoanFacadeService loanFacadeService;
     private final CardFacadeService cardFacadeService;
+    private final UserService userService;
 
     @Autowired
-    public CustomerController(CustomerFacadeService customerFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService, LoanFacadeService loanFacadeService, CardFacadeService cardFacadeService) {
+    public CustomerController(CustomerFacadeService customerFacadeService, AccountFacadeService accountFacadeService, TransactionFacadeService transactionFacadeService, ExchangeFacadeService exchangeFacadeService, LoanFacadeService loanFacadeService, CardFacadeService cardFacadeService, UserService userService) {
         this.customerFacadeService = customerFacadeService;
-        this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
         this.transactionFacadeService = transactionFacadeService;
         this.exchangeFacadeService = exchangeFacadeService;
         this.loanFacadeService = loanFacadeService;
         this.cardFacadeService = cardFacadeService;
+        this.userService = userService;
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMERS)
@@ -80,9 +80,7 @@ public class CustomerController implements PageTitleConfig {
             return "customers-add";
         }
 
-        //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findAll().get(0);
-        customerDto.setBranch(branchDto);
+        customerDto.setBranch(userService.getAuthenticated().getBranch());
 
         //TODO: save customer pictures
         String savedAvatarName = new ProfileFileStorageService().store(avatar, customerDto.getIdentityNumber());

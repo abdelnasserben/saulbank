@@ -7,7 +7,6 @@ import com.dabel.dto.TransactionDto;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 
 public abstract class Transaction implements EvaluableOperation<TransactionDto> {
 

@@ -3,10 +3,9 @@ package com.dabel.controller;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
-import com.dabel.dto.BranchDto;
 import com.dabel.dto.ExchangeDto;
-import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.exchange.ExchangeFacadeService;
+import com.dabel.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +21,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ExchangeController implements PageTitleConfig {
 
     private final ExchangeFacadeService exchangeFacadeService;
-    private final BranchFacadeService branchFacadeService;
+    private final UserService userService;
 
     @Autowired
-    public ExchangeController(ExchangeFacadeService exchangeFacadeService, BranchFacadeService branchFacadeService) {
+    public ExchangeController(ExchangeFacadeService exchangeFacadeService, UserService userService) {
         this.exchangeFacadeService = exchangeFacadeService;
-        this.branchFacadeService = branchFacadeService;
+        this.userService = userService;
     }
 
     @GetMapping(value = Web.Endpoint.EXCHANGES)
@@ -64,9 +63,7 @@ public class ExchangeController implements PageTitleConfig {
             return Web.View.EXCHANGE_INIT;
         }
 
-        //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findAll().get(0);
-        exchangeDto.setBranch(branchDto);
+        exchangeDto.setBranch(userService.getAuthenticated().getBranch());
 
         exchangeFacadeService.init(exchangeDto);
 

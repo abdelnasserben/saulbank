@@ -530,10 +530,19 @@ public class DataLoader {
 
         public void load() {
             try {
-                for (int i = 1; i <= CUSTOMERS_IDENTITY_NUMBERS.length; i++) {
-                    String oldImageName = DEFAULT_PATH + i + ".jpg";
-                    String newImageName = DESTINATION_PATH + CUSTOMERS_IDENTITY_NUMBERS[i - 1] + ".jpg";
-                    copyImage(oldImageName, newImageName);
+
+                // Check if destination folder is empty before copy
+                Path destinationDir = Paths.get(DESTINATION_PATH);
+                long fileCount = Files.list(destinationDir).count();
+
+                //in avatars folder we've a picture of logged user by default,
+                //so we test if destination folder have one or less file before copy
+                if(fileCount <= 1) {
+                    for (int i = 1; i <= CUSTOMERS_IDENTITY_NUMBERS.length; i++) {
+                        String oldImageName = DEFAULT_PATH + i + ".jpg";
+                        String newImageName = DESTINATION_PATH + CUSTOMERS_IDENTITY_NUMBERS[i - 1] + ".jpg";
+                        copyImage(oldImageName, newImageName);
+                    }
                 }
             } catch (IOException e) {
                 System.err.println(e.getMessage());

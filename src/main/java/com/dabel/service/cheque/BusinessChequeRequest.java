@@ -41,6 +41,7 @@ public class BusinessChequeRequest extends ChequeRequest {
             throw new BalanceInsufficientException("Account balance is insufficient for application fees");
         }
 
+        chequeRequestDto.setInitiatedBy(currentUsername());
         chequeRequestDto.setStatus(Status.PENDING.code());
         chequeRequestService.save(chequeRequestDto);
     }
@@ -65,9 +66,11 @@ public class BusinessChequeRequest extends ChequeRequest {
         for (int i = 1; i <= 50; i++) {
             ChequeDto chequeDto = ChequeDto.builder()
                     .trunk(chequeRequestDto.getTrunk())
+                    .serial(chequeRequestDto)
                     .chequeNumber(chequeNumber + (i <= 9 ? "0" + i : i))
                     .status(Status.ACTIVE.code())
                     .branch(chequeRequestDto.getBranch())
+                    .initiatedBy(currentUsername())
                     .build();
 
             chequeService.save(chequeDto);

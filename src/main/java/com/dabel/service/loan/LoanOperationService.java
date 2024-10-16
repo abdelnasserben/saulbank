@@ -1,14 +1,15 @@
 package com.dabel.service.loan;
 
-import com.dabel.app.Fee;
 import com.dabel.app.Helper;
-import com.dabel.constant.*;
+import com.dabel.constant.AccountProfile;
+import com.dabel.constant.AccountType;
+import com.dabel.constant.Currency;
+import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.LoanDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
-import com.dabel.service.fee.FeeService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,11 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
     @Getter
     private final LoanService loanService;
     private final AccountService accountService;
-    private final FeeService feeService;
 
     @Autowired
-    public LoanOperationService(LoanService loanService, AccountService accountService, FeeService feeService) {
+    public LoanOperationService(LoanService loanService, AccountService accountService) {
         this.loanService = loanService;
         this.accountService = accountService;
-        this.feeService = feeService;
     }
 
     @Override
@@ -35,6 +34,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
             throw new IllegalOperationException("Borrower must be active");
 
         double loanAmount = Helper.calculateTotalAmountOfLoan(loanDto.getIssuedAmount(), loanDto.getInterestRate());
+        double totalAmount = loanAmount + loanDto.getApplicationFees();
 
         //TODO: create account of loan
         AccountDto savedAccount = accountService.save(AccountDto.builder()
@@ -43,7 +43,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
                 .accountType(AccountType.LOAN.name())
                 .accountProfile(AccountProfile.PERSONAL.name())
                 .currency(Currency.KMF.name())
-                .balance(-loanAmount)
+                .balance(totalAmount)
                 .status(Status.PENDING.code())
                 .branch(loanDto.getBranch())
                 .initiatedBy(Helper.getAuthenticated().getName())
@@ -51,7 +51,7 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
 
         //TODO: update loan info before saving
         loanDto.setAccount(savedAccount);
-        loanDto.setTotalAmount(loanAmount);
+        loanDto.setTotalAmount(totalAmount);
         loanDto.setCurrency(Currency.KMF.name());
         loanDto.setStatus(Status.PENDING.code());
         loanDto.setInitiatedBy(Helper.getAuthenticated().getName());
@@ -73,10 +73,6 @@ public class LoanOperationService implements EvaluableOperation<LoanDto> {
         loanAccount.setStatus(Status.ACTIVE.code());
         loanAccount.setUpdatedBy(currentUsername);
         accountService.save(loanAccount);
-
-        //TODO: apply withdraw fees
-        Fee fee = new Fee(loanDto.getBranch(), loanDto.getApplicationFees(), "Loan");
-        feeService.apply(loanDto.getAccount(), LedgerType.LOAN, fee);
 
         loanService.save(loanDto);
     }

@@ -9,8 +9,8 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.TransactionDto;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.transaction.TransactionFacadeService;
+import com.dabel.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,14 +27,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class TransactionController implements PageTitleConfig {
 
     private final TransactionFacadeService transactionFacadeService;
-    private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
+    private final UserService userService;
 
     @Autowired
-    public TransactionController(TransactionFacadeService transactionFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService) {
+    public TransactionController(TransactionFacadeService transactionFacadeService, AccountFacadeService accountFacadeService, UserService userService) {
         this.transactionFacadeService = transactionFacadeService;
-        this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
+        this.userService = userService;
     }
 
     @GetMapping(value = Web.Endpoint.TRANSACTIONS)
@@ -91,7 +91,7 @@ public class TransactionController implements PageTitleConfig {
         }
 
         //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = branchFacadeService.findAll().get(0);
+        BranchDto branchDto = userService.getAuthenticated().getBranch();
         transactionDto.setBranch(branchDto);
         transactionDto.setSourceType(SourceType.ONLINE.name());
         transactionDto.setSourceValue(branchDto.getBranchName());

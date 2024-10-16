@@ -56,6 +56,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
 
         cardRequestDto.setStatus(Status.APPROVED.code());
         cardRequestDto.setUpdatedBy(Helper.getAuthenticated().getName());
+        cardRequestDto.setFailureReason("Approved");
 
         //TODO: apply fees
         Fee fee = new Fee(cardRequestDto.getBranch(), BankFees.Basic.CARD_REQUEST, "Card application request");

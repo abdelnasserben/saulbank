@@ -8306,9 +8306,6 @@ if (transactionType) {
         if (selectedValue == "TRANSFER") $('#receiverAccountSection').removeClass('d-none');
         else $('#receiverAccountSection').addClass('d-none');
 
-        if (selectedValue != "DEPOSIT") $('#transactionCustomerSignatureSection').removeClass('d-none')
-        else $('#transactionCustomerSignatureSection').addClass('d-none')
-
     });
 
     //for ajax requests
@@ -8318,7 +8315,7 @@ if (transactionType) {
     ajaxCustomerInfo('#transactionCustomerIdentity', '#transactionCustomerFullName', '#transactionInputSignature');
 }
 
-//Account Affiliation Managment Page:
+//Account Affiliation Management Page:
 let inputAccountNumber = $("#accountAffiliationInputAccountNumber")
 if (inputAccountNumber) {
     $(inputAccountNumber).change(function () {

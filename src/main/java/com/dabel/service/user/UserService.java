@@ -1,5 +1,6 @@
 package com.dabel.service.user;
 
+import com.dabel.app.Helper;
 import com.dabel.constant.Status;
 import com.dabel.dto.UserDto;
 import com.dabel.exception.ResourceNotFoundException;
@@ -44,9 +45,10 @@ public class UserService implements UserDetailsService {
 
     public void create(UserDto userDto) {
 
-        //TODO: encode password
+        //TODO: encode password, set user creator and user status
         userDto.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("123")); //by default, we make password to 123, user can change it later
         userDto.setStatus(Status.ACTIVE.code()); //by default user is active
+        userDto.setInitiatedBy(Helper.getAuthenticated().getName());
         User savedUser = userRepository.save(UserMapper.toModel(userDto));
 
         //TODO: save user roles
@@ -72,7 +74,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public UserDto getAuthenticate() {
+    public UserDto getAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return this.findByUsername(auth.getName());
     }

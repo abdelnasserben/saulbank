@@ -32,7 +32,8 @@ public final class CustomExceptionHandler {
                 Web.Endpoint.LOANS,
                 Web.Endpoint.CHEQUES,
                 Web.Endpoint.CHEQUE_REQUESTS,
-                Web.Endpoint.ACCOUNTS
+                Web.Endpoint.ACCOUNTS,
+                Web.Endpoint.ACCOUNT_AFFILIATION
         );
 
         String suspectedUrl = request.getRequestURI().substring(0, request.getRequestURI().lastIndexOf("/"));

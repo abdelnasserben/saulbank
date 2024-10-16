@@ -8,9 +8,9 @@ import com.dabel.constant.Status;
 import com.dabel.constant.Web;
 import com.dabel.dto.*;
 import com.dabel.service.account.AccountFacadeService;
-import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.card.CardFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
+import com.dabel.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,16 +26,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CardController implements PageTitleConfig {
 
     private final CardFacadeService cardFacadeService;
-    private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
+    private final UserService userService;
 
     @Autowired
-    public CardController(CardFacadeService cardFacadeService, BranchFacadeService branchFacadeService, AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService) {
+    public CardController(CardFacadeService cardFacadeService, AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService, UserService userService) {
         this.cardFacadeService = cardFacadeService;
-        this.branchFacadeService = branchFacadeService;
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
+        this.userService = userService;
     }
 
     @GetMapping(value = Web.Endpoint.CARDS)
@@ -107,14 +107,13 @@ public class CardController implements PageTitleConfig {
         }
 
         //TODO: get branch, customer and his account
-        BranchDto branchDto = branchFacadeService.findAll().get(0);
         CustomerDto customerDto = customerFacadeService.findByIdentity(postCardRequestDto.getCustomerIdentityNumber());
         TrunkDto trunkDto = accountFacadeService.findTrunkByCustomerAndAccountNumber(customerDto, postCardRequestDto.getAccountNumber());
 
         CardRequestDto requestDto = CardRequestDto.builder()
                 .cardType(postCardRequestDto.getCardType())
                 .trunk(trunkDto)
-                .branch(branchDto)
+                .branch(userService.getAuthenticated().getBranch())
                 .build();
         cardFacadeService.sendRequest(requestDto);
         redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Card request successfully sent !");

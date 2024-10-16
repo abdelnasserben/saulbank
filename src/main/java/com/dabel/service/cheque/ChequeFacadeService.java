@@ -8,6 +8,7 @@ import com.dabel.dto.*;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
 import com.dabel.service.customer.CustomerService;
+import com.dabel.service.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,13 +21,15 @@ public class ChequeFacadeService {
     private final ChequeRequestContext chequeRequestContext;
     private final AccountService accountService;
     private final CustomerService customerService;
+    private final UserService userService;
 
-    public ChequeFacadeService(ChequeService chequeService, ChequeRequestService chequeRequestService, ChequeRequestContext chequeRequestContext, AccountService accountService, CustomerService customerService) {
+    public ChequeFacadeService(ChequeService chequeService, ChequeRequestService chequeRequestService, ChequeRequestContext chequeRequestContext, AccountService accountService, CustomerService customerService, UserService userService) {
         this.chequeService = chequeService;
         this.chequeRequestService = chequeRequestService;
         this.chequeRequestContext = chequeRequestContext;
         this.accountService = accountService;
         this.customerService = customerService;
+        this.userService = userService;
     }
 
     public ChequeDto saveCheque(ChequeDto chequeDto) {
@@ -60,7 +63,7 @@ public class ChequeFacadeService {
         TrunkDto trunkDto = accountService.findTrunk(customerDto, postChequeRequestDto.getAccountNumber());
         ChequeRequestDto chequeRequestDto = ChequeRequestDto.builder()
                 .trunk(trunkDto)
-                .branch(trunkDto.getAccount().getBranch())
+                .branch(userService.getAuthenticated().getBranch())
                 .build();
         chequeRequestContext.setContext(trunkDto.getAccount().getAccountType()).init(chequeRequestDto);
     }
@@ -127,7 +130,7 @@ public class ChequeFacadeService {
                 .reason(postChequeDto.getReason())
                 .sourceType(SourceType.CHEQUE.name())
                 .sourceValue(chequeDto.getChequeNumber())
-                .branch(chequeDto.getBranch())
+                .branch(userService.getAuthenticated().getBranch())
                 .initiatedBy(Helper.getAuthenticated().getName())
                 .build();
     }

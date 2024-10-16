@@ -41,6 +41,7 @@ public class SavingChequeRequest extends ChequeRequest {
             throw new BalanceInsufficientException("Account balance is insufficient for application fees");
         }
 
+        chequeRequestDto.setInitiatedBy(currentUsername());
         chequeRequestDto.setStatus(Status.PENDING.code());
         chequeRequestService.save(chequeRequestDto);
     }
