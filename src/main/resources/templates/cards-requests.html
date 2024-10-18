@@ -125,20 +125,10 @@
 			<!--begin::Modal body-->
 			<div class="modal-body scroll-y mx-5 my-7">
 				<!--begin::Form-->
-				<form class="form" th:action="@{/cards/requests}" method="post" th:object="${postCardRequestDto}">
+				<form class="form" th:action="@{/cards/requests}" id="cardRequestForm" method="post"
+					th:object="${postCardRequestDto}">
 
 					<div class="row">
-						<div class="col-md-6">
-							<!--begin::Input group-->
-							<div class="mb-4 fv-row">
-								<label class="required form-label">Account Number</label>
-								<input type="text" th:field="*{accountNumber}" class="form-control mb-2"
-									th:classappend="${#fields.hasErrors('accountNumber')} ? 'is-invalid' : ''"
-									placeholder="Account Number" />
-								<div class="invalid-feedback" th:errors="*{accountNumber}"></div>
-							</div>
-							<!--end::Input group-->
-						</div>
 						<div class="col-md-6">
 							<!--begin::Input group-->
 							<div class="mb-4 fv-row">
@@ -147,6 +137,18 @@
 									th:classappend="${#fields.hasErrors('customerIdentityNumber')} ? 'is-invalid' : ''"
 									placeholder="Customer Identity" />
 								<div class="invalid-feedback" th:errors="*{customerIdentityNumber}"></div>
+							</div>
+							<!--end::Input group-->
+						</div>
+						<div class="col-md-6">
+							<!--begin::Input group-->
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Account Number</label>
+								<select th:field="*{accountNumber}" class="form-select mb-3" data-control="select2"
+									data-hide-search="true" data-placeholder="Select an option">
+									<option value=""></option>
+								</select>
+								<div class="invalid-feedback" th:errors="*{accountNumber}"></div>
 							</div>
 							<!--end::Input group-->
 						</div>

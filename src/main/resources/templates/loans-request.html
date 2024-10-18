@@ -8,7 +8,7 @@
 		<div th:replace="~{fragments/success-error-alert}"></div>
 
 
-		<form class="form" th:action="@{/loans/init}" method="post" th:object="${loanDto}">
+		<form class="form" th:action="@{/loans/request}" method="post" th:object="${loanRequestDto}">
 
 			<div class="row mb-6">
 				<div class="col-md-1">
@@ -23,16 +23,25 @@
 					<div class="invalid-feedback" th:errors="*{loanType}"></div>
 				</div>
 				<div class="col-md-10">
-					<div class="row">
+					<div class="row mb-4">
 						<div class="col-md-5">
 							<label class="required form-label">Customer Identity</label>
 							<input type="text" name="customerIdentityNumber" class="form-control mb-2"
-								placeholder="Customer Identity Number" id="loanCustomerIdentityNumber"/>
+								placeholder="Customer Identity Number" id="loanCustomerIdentityNumber" />
 						</div>
 						<div class="col-md-5">
 							<label class="form-label">Customer Name</label>
-							<input type="text" name="customerFullName" class="form-control mb-2"
-								placeholder="Full name" id="loanCustomerFullName" disabled />
+							<input type="text" name="customerFullName" class="form-control mb-2" placeholder="Full name"
+								id="loanCustomerFullName" disabled />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-5">
+							<label class="required form-label">Beneficiary Account</label>
+							<select name="beneficiaryAccount" id="loanAssociatedAccount" class="form-select mb-3"
+								data-control="select2" data-hide-search="true" data-placeholder="Select an option">
+								<option value=""></option>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -47,10 +56,11 @@
 					<div class="row">
 						<div class="col-md-5">
 							<label class="required form-label">Amount</label>
-							<input type="number" th:field="*{issuedAmount}" class="form-control mb-2" step=".01"
+							<input type="number" th:field="*{requestedAmount}" class="form-control mb-2" step=".01"
 								placeholder="0.00"
-								th:classappend="${#fields.hasErrors('issuedAmount')} ? 'is-invalid' : ''" id="loanIsuedAmount" />
-							<div class="invalid-feedback" th:errors="*{issuedAmount}"></div>
+								th:classappend="${#fields.hasErrors('requestedAmount')} ? 'is-invalid' : ''"
+								id="requestedAmount" />
+							<div class="invalid-feedback" th:errors="*{requestedAmount}"></div>
 						</div>
 						<div class="col-md-5">
 							<label class="required form-label">Duration (months)</label>
@@ -68,8 +78,8 @@
 					<div class="fv-row">
 						<label class="required form-label">Interest (%)</label>
 						<input type="number" th:field="*{interestRate}" class="form-control mb-2" step=".01"
-							placeholder="0.00"
-							th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid' : ''" id="loanInterestRate" />
+							placeholder="0.00" th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid' : ''"
+							id="loanInterestRate" />
 						<div class="invalid-feedback" th:errors="*{interestRate}"></div>
 					</div>
 					<!--end::Input group-->
@@ -83,7 +93,8 @@
 				</div>
 				<div class="col-md-2">
 					<label class="form-label">Total Due</label>
-					<input type="number" name="" class="form-control mb-2" placeholder="0.0" id="loanTotalDue" disabled />
+					<input type="number" name="" class="form-control mb-2" placeholder="0.0" id="loanTotalDue"
+						disabled />
 				</div>
 			</div>
 			<div class="col-md-5 mb-6">

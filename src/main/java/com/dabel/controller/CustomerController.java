@@ -123,7 +123,7 @@ public class CustomerController implements PageTitleConfig {
 
         double totalLoan = customerLoans.stream()
                 .filter(l -> l.getStatus().equals(Status.ACTIVE.code()))
-                .mapToDouble(LoanDto::getTotalAmount)
+                .mapToDouble(l -> l.getAccount().getBalance())
                 .sum();
 
         List<CardDto> customerCards = customerAccounts.stream()
@@ -139,14 +139,14 @@ public class CustomerController implements PageTitleConfig {
         configPageTitle(model, "Customer Details");
         model.addAttribute("customer", StatedObjectFormatter.format(customerDto));
         model.addAttribute("trunks", customerAccounts);
-        model.addAttribute("totalBalance", totalBalance);
+        model.addAttribute("totalBalance", Helper.formatCurrency(totalBalance));
         model.addAttribute("cards", StatedObjectFormatter.format(customerCards));
         model.addAttribute("notifyNoActiveCreditCards", notifyNoActiveCreditCards);
         model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
         model.addAttribute("completionRate", customerFacadeService.getCompletionRate(customerDto));
         model.addAttribute("exchanges", StatedObjectFormatter.format(lastTenCustomerExchanges));
         model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
-        model.addAttribute("totalLoan", totalLoan);
+        model.addAttribute("totalLoan", Helper.formatCurrency(totalLoan));
 
         return Web.View.CUSTOMER_DETAILS;
     }

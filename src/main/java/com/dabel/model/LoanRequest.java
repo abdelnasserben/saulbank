@@ -9,34 +9,29 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "loans")
-public class Loan {
+@Table(name = "loan_requests")
+public class LoanRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long loanId;
+    private Long requestId;
     private String loanType;
-
-    @ManyToOne
-    @JoinColumn(name = "accountId")
-    private Account account;
 
     @ManyToOne
     @JoinColumn(name = "borrowerId")
     private Customer borrower;
 
     @ManyToOne
-    @JoinColumn(name = "associatedAccountId")
+    @JoinColumn(name = "accountId")
     private Account associatedAccount;
 
     private String currency;
-    private double issuedAmount;
+    private double requestedAmount;
     private double interestRate;
     private int duration;
     private double applicationFees;
-    private double totalAmount;
-    private String reason;
     private String failureReason;
+    private String reason;
     private String status;
     private String initiatedBy;
     private String updatedBy;

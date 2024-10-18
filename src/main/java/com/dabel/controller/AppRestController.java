@@ -36,6 +36,16 @@ public class AppRestController {
         return ResponseEntity.ok(customerFacadeService.findByIdentity(identityNumber));
     }
 
+    @GetMapping("/rest/customer/accounts/" + "{identityNumber}")
+    public ResponseEntity<Object[]> getCustomerAccounts(@PathVariable String identityNumber) {
+
+        CustomerDto customerDto = customerFacadeService.findByIdentity(identityNumber);
+        return ResponseEntity.ok(accountFacadeService.findAllTrunks(customerDto)
+                .stream()
+                .map(trunkDto -> trunkDto.getAccount().getAccountNumber())
+                .toArray());
+    }
+
     @GetMapping("/rest/account/" + "{accountNumber}")
     public ResponseEntity<AccountDto> getAccountInformation(@PathVariable String accountNumber) {
 

@@ -8239,19 +8239,35 @@ function ajaxCustomerInfo(inputIdentityNumber, inputFullName, inputSignature) {
     });
 }
 
-function ajaxAccountInfo(inputNumber, inputName, inputBalance) {
-    $(inputNumber).change(function () {
+function ajaxCustomerAccountsInfo(inputIdentityNumber, selectInputForAccounts) {
+    var selectInput = $(selectInputForAccounts);
+
+    $(inputIdentityNumber).change(function () {
         $.ajax({
-            url: "http://localhost:8080/rest/account/" + $(this).val()
+            url: "http://localhost:8080/rest/customer/accounts/" + $(this).val()
         })
-            .done(function (data) {
-                $(inputName).val(data.accountName);
-                $(inputBalance).val(parseFloat(data.balance));
-            })
-            .fail(function () {
-                $(inputName).val("");
-                $(inputBalance).val("0.0");
-            });
+        .done(function (data) {
+            selectInput.append(data.map(option =>
+                $('<option>', { value: option, text: option })
+            ));
+        })
+        .fail(() => selectInput.empty());
+    });
+}
+
+function ajaxAccountInfo(inputNumber, inputName, inputBalance) {
+    $(inputNumber).change(() => {
+        $.ajax({
+            url: "http://localhost:8080/rest/account/" + $(inputNumber).val()
+        })
+        .done(data => {
+            $(inputName).val(data.accountName);
+            $(inputBalance).val(parseFloat(data.balance) || "0.0");
+        })
+        .fail(() => {
+            $(inputName).val("");
+            $(inputBalance).val("0.0");
+        });
     });
 }
 
@@ -8338,8 +8354,9 @@ if (exchangeCurrency) {
 let loanType = $("select[name = 'loanType']");
 if (loanType) {
     ajaxCustomerInfo('#loanCustomerIdentityNumber', '#loanCustomerFullName');
+    ajaxCustomerAccountsInfo('#loanCustomerIdentityNumber', '#loanAssociatedAccount')
 
-    let issuedAmount = $('#loanIsuedAmount');
+    let issuedAmount = $('#requestedAmount');
     let interestRate = $('#loanInterestRate');
     let totalDue = $('#loanTotalDue');
 
@@ -8367,6 +8384,13 @@ if (memberIdentityNumber) {
         }
 
     });
+}
+
+//For Card And Cheque Request:
+let cardRequestForm = $('#cardRequestForm');
+let chequeRequestForm = $('#chequeRequestForm');
+if (cardRequestForm || chequeRequestForm) {
+    ajaxCustomerAccountsInfo('#customerIdentityNumber', '#accountNumber')
 }
 
 //Cheque Payment Page:

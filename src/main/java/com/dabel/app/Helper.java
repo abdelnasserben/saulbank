@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -61,6 +62,13 @@ public final class Helper {
         DecimalFormat decimalFormat = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
         decimalFormat.setRoundingMode(RoundingMode.FLOOR);
         return Double.parseDouble(decimalFormat.format(amount));
+    }
+
+    public static String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getInstance(Locale.FRANCE);
+        formatter.setMinimumFractionDigits(2);
+        formatter.setMaximumFractionDigits(2);
+        return formatter.format(amount);
     }
 
     public static String generateAccountNumber() {

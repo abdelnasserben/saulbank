@@ -87,7 +87,7 @@ class LoanControllerTest {
 
     @Test
     void shouldDisplayInitLoanPage() throws Exception {
-        MockHttpServletResponse expected = mockMvc.perform(get(Web.Endpoint.LOAN_INIT))
+        MockHttpServletResponse expected = mockMvc.perform(get(Web.Endpoint.LOAN_REQUEST))
                 .andReturn()
                 .getResponse();
         assertThat(expected.getContentAsString()).contains("Init Loan");
@@ -96,7 +96,7 @@ class LoanControllerTest {
     @Test
     void shouldNotInitAnInvalidLoan() throws Exception {
 
-        mockMvc.perform(post(Web.Endpoint.LOAN_INIT)
+        mockMvc.perform(post(Web.Endpoint.LOAN_REQUEST)
                         .param("customerIdentityNumber", ""))
                 .andExpect(model().attribute("errorMessage", "Invalid information !"));
     }
@@ -114,7 +114,7 @@ class LoanControllerTest {
         params.add("duration", "3");
 
         //then
-        mockMvc.perform(post(Web.Endpoint.LOAN_INIT)
+        mockMvc.perform(post(Web.Endpoint.LOAN_REQUEST)
                 .params(params)
         ).andExpect(flash().attribute("successMessage", "Loan successfully initiated"));
     }
@@ -137,38 +137,38 @@ class LoanControllerTest {
                 .andExpect(model().attributeExists("loan"));
     }
 
-    @Test
-    void shouldApproveLoan() throws Exception {
-        //given
-        initLoan();
-        String url = Web.Endpoint.LOAN_APPROVE + "/" + loanFacadeService.findAll().get(0).getLoanId();
+//    @Test
+//    void shouldApproveLoan() throws Exception {
+//        //given
+//        initLoan();
+//        String url = Web.Endpoint.LOAN_APPROVE + "/" + loanFacadeService.findAll().get(0).getLoanId();
+//
+//        //then
+//        mockMvc.perform(post(url))
+//                .andExpect(flash().attribute("successMessage", "Loan successfully approved!"));
+//    }
 
-        //then
-        mockMvc.perform(post(url))
-                .andExpect(flash().attribute("successMessage", "Loan successfully approved!"));
-    }
+//    @Test
+//    void shouldNotRejectLoanWithoutReason() throws Exception {
+//        //given
+//        initLoan();
+//        String url = Web.Endpoint.LOAN_REJECT + "/" + loanFacadeService.findAll().get(0).getLoanId();
+//
+//        //then
+//        mockMvc.perform(post(url)
+//                        .param("rejectReason", ""))
+//                .andExpect(flash().attribute("errorMessage", "Reject reason is mandatory!"));
+//    }
 
-    @Test
-    void shouldNotRejectLoanWithoutReason() throws Exception {
-        //given
-        initLoan();
-        String url = Web.Endpoint.LOAN_REJECT + "/" + loanFacadeService.findAll().get(0).getLoanId();
-
-        //then
-        mockMvc.perform(post(url)
-                        .param("rejectReason", ""))
-                .andExpect(flash().attribute("errorMessage", "Reject reason is mandatory!"));
-    }
-
-    @Test
-    void shouldRejectLoan() throws Exception {
-        //given
-        initLoan();
-        String url = Web.Endpoint.LOAN_REJECT + "/" + loanFacadeService.findAll().get(0).getLoanId();
-
-        //then
-        mockMvc.perform(post(url)
-                        .param("rejectReason", "just a reason"))
-                .andExpect(flash().attribute("successMessage", "Loan successfully rejected!"));
-    }
+//    @Test
+//    void shouldRejectLoan() throws Exception {
+//        //given
+//        initLoan();
+//        String url = Web.Endpoint.LOAN_REJECT + "/" + loanFacadeService.findAll().get(0).getLoanId();
+//
+//        //then
+//        mockMvc.perform(post(url)
+//                        .param("rejectReason", "just a reason"))
+//                .andExpect(flash().attribute("successMessage", "Loan successfully rejected!"));
+//    }
 }

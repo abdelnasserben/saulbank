@@ -559,11 +559,23 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/loans/init}" th:classappend="${currentPage == 'Init Loan' ? 'active' : ''}">
+										<a class="menu-link" th:href="@{/loans/requests}" th:classappend="${currentPage == 'Loan Requests' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Init Loan</span>
+											<span class="menu-title">Loan Requests</span>
+										</a>
+										<!--end:Menu link-->
+									</div>
+									<!--end:Menu item-->
+									<!--begin:Menu item-->
+									<div class="menu-item">
+										<!--begin:Menu link-->
+										<a class="menu-link" th:href="@{/loans/request}" th:classappend="${currentPage == 'Request Loan' ? 'active' : ''}">
+											<span class="menu-bullet">
+												<span class="bullet bullet-dot"></span>
+											</span>
+											<span class="menu-title">Request Loan</span>
 										</a>
 										<!--end:Menu link-->
 									</div>

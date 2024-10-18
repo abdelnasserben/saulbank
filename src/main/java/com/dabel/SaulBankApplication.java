@@ -11,5 +11,6 @@ public class SaulBankApplication {
 	}
 
 }
-//users roles [Cashier, Manager, Loaner, Receptionist, Admin, BO(back office)]
-//transaction details, display initiator and receiver account
+//loan operation service for fees [loan must join by the beneficiary account]
+//manage user [add fields email, firstName and lastName, details, update password, etc...]
+//role management [only user role can make some operations]

@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
         User user = getUser(username);
 
         //TODO: set user role
-        this.setUserRole(user);
+        setUserRole(user);
         return new CustomUserDetails(user);
     }
 
@@ -76,7 +76,7 @@ public class UserService implements UserDetailsService {
 
     public UserDto getAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return this.findByUsername(auth.getName());
+        return findByUsername(auth.getName());
     }
 
     private User getUser(String username) {
@@ -84,10 +84,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
-    private void setUserRole(User user) {
-        user.setRole(roleRepository.findByUser(user)
+    private String getUserRole(User user) {
+        return roleRepository.findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"))
-                .getName());
+                .getName();
+    }
+
+    private void setUserRole(User user) {
+        user.setRole(getUserRole(user));
     }
 
 }

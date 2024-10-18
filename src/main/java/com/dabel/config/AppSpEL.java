@@ -18,6 +18,9 @@ public final class AppSpEL {
         if(status.equals(Status.PENDING.name()))
             return "warning";
 
+        if(status.equals(Status.COMPLETED.name()))
+            return "info";
+
         return List.of(Status.ACTIVE.name(), Status.APPROVED.name()).contains(status) ? "success" : "danger";
     }
 

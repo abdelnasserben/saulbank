@@ -20,9 +20,11 @@ public final class Web {
         String EXCHANGE_REJECT = EXCHANGES + "/reject";
 
         String LOANS = "/loans";
-        String LOAN_INIT = LOANS + "/init";
-        String LOAN_APPROVE = LOANS + "/approve";
-        String LOAN_REJECT = LOANS + "/reject";
+        String LOANS_PAY = LOANS + "/pay";
+        String LOAN_REQUEST = LOANS + "/request";
+        String LOAN_REQUESTS = LOANS + "/requests";
+        String LOAN_REQUESTS_APPROVE = LOAN_REQUESTS + "/approve";
+        String LOAN_REQUESTS_REJECT = LOAN_REQUESTS + "/reject";
 
         String CARDS = "/cards";
         String CARD_ACTIVATE = CARDS + "/activate";
@@ -68,8 +70,10 @@ public final class Web {
         String EXCHANGE_DETAILS = "exchanges-details";
 
         String LOANS = "loans";
-        String LOAN_INIT = "loans-init";
+        String LOAN_REQUEST = "loans-request";
         String LOAN_DETAILS = "loans-details";
+        String LOAN_REQUESTS = "loans-requests";
+        String LOAN_REQUEST_DETAILS = "loans-requests-details";
 
         String CARDS = "cards";
         String CARD_DETAILS = "cards-details";
@@ -140,7 +144,8 @@ public final class Web {
         interface Loan {
             String MENU = "Loans";
             String ROOT = "All Loans";
-            String INIT = "Init Loan";
+            String REQUEST = "Request Loan";
+            String REQUESTS = "Loan Requests";
         }
 
         interface Card {

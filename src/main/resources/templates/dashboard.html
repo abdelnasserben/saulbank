@@ -5,6 +5,10 @@
 	<!--begin::Content container-->
 	<div id="kt_app_content_container" class="app-container container-fluid">
 		Something here...
+		<div sec:authorize="hasRole('ROLE_ADMIN')">
+			<p>Vous êtes un administrateur.</p>
+		</div>
+
 	</div>
 	<!--end::Content container-->
 </div>

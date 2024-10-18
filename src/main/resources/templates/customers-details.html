@@ -1155,7 +1155,7 @@
 										<th class="min-w-70px">Loan ID</th>
 										<th class="min-w-70px">Loan Type</th>
 										<th class="min-w-100px">Account Number</th>
-										<th class="min-w-100px">Issued Amount</th>
+										<th class="min-w-100px">Due Amount</th>
 										<th class="min-w-100px">Remaining Amount</th>
 										<th class="min-w-70px">Status</th>
 										<th class="min-w-100px">Date Effective</th>
@@ -1174,8 +1174,8 @@
 												class="text-gray-800 text-hover-primary mb-1">Gold</a>
 										</td>
 										<td th:text="${loan.account.accountNumber}">0071001997</td>
-										<td th:text="${loan.issuedAmount + ' KMF'}">500 0000 KMF</td>
 										<td th:text="${loan.totalAmount + ' KMF'}">500 0000 KMF</td>
+										<td th:text="${loan.account.balance + ' KMF'}">500 0000 KMF</td>
 										<td class="pe-0">
 											<div th:text="${loan.status}"
 												th:class="${'badge badge-light-' + @appSpEL.statusColor(loan.status)}">
