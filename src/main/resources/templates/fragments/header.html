@@ -402,11 +402,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'All Transactions' ? 'active' : ''}">
+										<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'Transactions List' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">All Transactions</span>
+											<span class="menu-title">Transactions List</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -427,11 +427,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/transactions}" th:classappend="${currentPage == 'Invoices' ? 'active' : ''}">
+										<a class="menu-link" th:href="@{/cheques/pay}" th:classappend="${currentPage == 'Invoices' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Invoices</span>
+											<span class="menu-title">Pay A Cheque</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -659,11 +659,11 @@
 									<!--begin:Menu item-->
 									<div class="menu-item">
 										<!--begin:Menu link-->
-										<a class="menu-link" th:href="@{/accounts}" th:classappend="${currentPage == 'All Accounts' ? 'active' : ''}">
+										<a class="menu-link" th:href="@{/accounts}" th:classappend="${currentPage == 'Accounts List' ? 'active' : ''}">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">All Accounts</span>
+											<span class="menu-title">Accounts List</span>
 										</a>
 										<!--end:Menu link-->
 									</div>
@@ -701,13 +701,13 @@
 								<!--begin:Menu sub-->
 								<div class="menu-sub menu-sub-accordion">
 									<!--begin:Menu item-->
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentSubMenu == 'Branches' ? 'show' : ''}">
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" th:classappend="${currentSubMenu == '360 View' ? 'show' : ''}">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
-											<span class="menu-title">Branches</span>
+											<span class="menu-title">360 View</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<!--end:Menu link-->
@@ -716,11 +716,11 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" th:classappend="${currentPage == 'Branches List' ? 'active' : ''}" th:href="@{/branches}">
+												<a class="menu-link" th:classappend="${currentPage == 'Branches' ? 'active' : ''}" th:href="@{/view360/branches}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Branches List</span>
+													<span class="menu-title">Branches</span>
 												</a>
 												<!--end:Menu link-->
 											</div>
@@ -728,7 +728,7 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" th:classappend="${currentPage == 'Vaults/GL' ? 'active' : ''}" th:href="@{/branches/accounts}">
+												<a class="menu-link" th:classappend="${currentPage == 'Vaults/GL' ? 'active' : ''}" th:href="@{/view360/branches/accounts}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -740,11 +740,11 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="../dist/apps/projects/list.html">
+												<a class="menu-link" th:classappend="${currentPage == 'All Accounts' ? 'active' : ''}" th:href="@{/view360/accounts}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">All Transactions</span>
+													<span class="menu-title">All Accounts</span>
 												</a>
 												<!--end:Menu link-->
 											</div>
@@ -752,11 +752,11 @@
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="#" data-kt-page="pro">
+												<a class="menu-link" th:classappend="${currentPage == 'All Transactions' ? 'active' : ''}" th:href="@{/view360/transactions}">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Deposit/Withdraw</span>
+													<span class="menu-title">All Transactions</span>
 												</a>
 												<!--end:Menu link-->
 											</div>

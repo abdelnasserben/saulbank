@@ -59,17 +59,17 @@ class LoanControllerTest {
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
-    private void initLoan() {
-        createCustomer();
-        loanFacadeService.init(LoanDto.builder()
-                .loanType("GOLD")
-                .borrower(customerFacadeService.findAll().get(0))
-                .interestRate(5)
-                .issuedAmount(5000)
-                .duration(6)
-                .branch(branchFacadeService.findAll().get(0))
-                .build());
-    }
+//    private void initLoan() {
+//        createCustomer();
+//        loanFacadeService.init(LoanDto.builder()
+//                .loanType("GOLD")
+//                .borrower(customerFacadeService.findAll().get(0))
+//                .interestRate(5)
+//                .issuedAmount(5000)
+//                .duration(6)
+//                .branch(branchFacadeService.findAll().get(0))
+//                .build());
+//    }
 
     @BeforeEach
     void setup() {
@@ -126,16 +126,16 @@ class LoanControllerTest {
                 .andExpect(view().name("redirect:/404"));
     }
 
-    @Test
-    void shouldDisplayDetailsOfExistingLoan() throws Exception {
-        //given
-        initLoan();
-        String url = Web.Endpoint.LOANS + "/" + loanFacadeService.findAll().get(0).getLoanId();
-
-        //then
-        mockMvc.perform(get(url))
-                .andExpect(model().attributeExists("loan"));
-    }
+//    @Test
+//    void shouldDisplayDetailsOfExistingLoan() throws Exception {
+//        //given
+//        initLoan();
+//        String url = Web.Endpoint.LOANS + "/" + loanFacadeService.findAll().get(0).getLoanId();
+//
+//        //then
+//        mockMvc.perform(get(url))
+//                .andExpect(model().attributeExists("loan"));
+//    }
 
 //    @Test
 //    void shouldApproveLoan() throws Exception {

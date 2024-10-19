@@ -63,7 +63,7 @@
 						<tr th:each="branch: ${branches}">
 							<td th:text="${branch.branchId}">1202</td>
 							<td>
-								<a th:href="@{/branchs/{id}(id=${branch.branchId})}" th:text="${branch.branchName}" class="text-gray-800 text-hover-primary mb-1">HQ Moroni</a>
+								<a th:href="@{/view360/branches/accounts(code=${branch.branchId})}" th:text="${branch.branchName}" class="text-gray-800 text-hover-primary mb-1">HQ Moroni</a>
 							</td>
 							<td th:text="${branch.branchAddress}">Moroni, Place de la France</td>
 							<td><span th:text="${branch.status}" th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(branch.status) + ' fw-bold px-4 py-3'}">ACTIVE</span></td>
@@ -112,7 +112,7 @@
 			<!--begin::Modal body-->
 			<div class="modal-body scroll-y mx-5 my-7">
 				<!--begin::Form-->
-				<form class="form" th:action="@{/branches}" method="post" th:object="${branchDto}">
+				<form class="form" th:action="@{/view360/branches}" method="post" th:object="${branchDto}">
 
 					<div class="row">
 						<div class="col-md-4">

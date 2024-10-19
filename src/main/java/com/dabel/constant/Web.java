@@ -3,8 +3,12 @@ package com.dabel.constant;
 public final class Web {
 
     public interface Endpoint {
-        String BRANCHES = "/branches";
-        String BRANCH_ACCOUNTS = BRANCHES + "/accounts";
+
+        String VIEW360 = "/view360";
+        String VIEW360_BRANCHES = VIEW360 + "/branches";
+        String VIEW360_VAULT_GL = VIEW360_BRANCHES + "/accounts";
+        String VIEW360_ACCOUNTS = VIEW360 + "/accounts";
+        String VIEW360_TRANSACTIONS = VIEW360 + "/transactions";
 
         String CUSTOMERS = "/customers";
         String CUSTOMER_ADD = CUSTOMERS + "/add";
@@ -20,7 +24,6 @@ public final class Web {
         String EXCHANGE_REJECT = EXCHANGES + "/reject";
 
         String LOANS = "/loans";
-        String LOANS_PAY = LOANS + "/pay";
         String LOAN_REQUEST = LOANS + "/request";
         String LOAN_REQUESTS = LOANS + "/requests";
         String LOAN_REQUESTS_APPROVE = LOAN_REQUESTS + "/approve";
@@ -91,6 +94,8 @@ public final class Web {
         String CHEQUES_REQUEST_DETAILS = "cheques-requests-details";
         String CHEQUE_PAY = "cheques-pay";
 
+        String VIEW360_ACCOUNTS = "view360-accounts";
+
         String USERS = "users";
 
         String PAGE_404 = "page404";
@@ -106,10 +111,12 @@ public final class Web {
         interface Bank {
             String MENU = "Bank";
 
-            interface Branches {
-                String SUB_MENU = "Branches";
-                String ROOT = "Branches List";
-                String ACCOUNTS = "Vaults/GL";
+            interface View360 {
+                String SUB_MENU = "360 View";
+                String BRANCHES = "Branches";
+                String VAULT_GL = "Vaults/GL";
+                String TRANSACTIONS = "All Transactions";
+                String ACCOUNTS = "All Accounts";
             }
 
             interface Users {
@@ -131,7 +138,7 @@ public final class Web {
         
         interface Transaction {
             String MENU = "Transactions";
-            String ROOT = "All Transactions";
+            String ROOT = "Transactions List";
             String INIT = "Init Transaction";
         }
 
@@ -156,7 +163,7 @@ public final class Web {
 
         interface Account {
             String MENU = "Accounts";
-            String ROOT = "All Accounts";
+            String ROOT = "Accounts List";
             String AFFILIATION = "Manage Affiliation";
             String AFFILIATION_ADD = "Add Affiliate";
         }

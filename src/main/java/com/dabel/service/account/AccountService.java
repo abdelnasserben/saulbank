@@ -1,7 +1,6 @@
 package com.dabel.service.account;
 
 import com.dabel.app.Helper;
-import com.dabel.app.JpaHelper;
 import com.dabel.dto.*;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.*;
@@ -14,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 @Service
 public class AccountService {
@@ -88,7 +90,7 @@ public class AccountService {
 
     public List<TrunkDto> findAllTrunks() {
         return trunkRepository.findAll().stream()
-                .filter(JpaHelper.distinctByKey(Trunk::getAccount))
+                .filter(distinctByAccount())
                 .map(TrunkMapper::toDto)
                 .toList();
     }
@@ -143,4 +145,10 @@ public class AccountService {
         accountDto.setUpdatedBy(currentUsername);
         accountRepository.save(AccountMapper.toModel(accountDto));
     }
+
+    private Predicate<Trunk> distinctByAccount() {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return trunk -> seen.add(trunk.getAccount());
+    }
+
 }

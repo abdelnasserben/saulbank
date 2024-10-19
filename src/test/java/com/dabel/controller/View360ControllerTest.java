@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class BranchControllerTest {
+class View360ControllerTest {
 
     @Autowired
     BranchFacadeService branchFacadeService;
@@ -50,7 +50,7 @@ class BranchControllerTest {
     @Test
     void shouldListBranches() throws Exception {
 
-        MockHttpServletResponse expected = mockMvc.perform(get(Web.Endpoint.BRANCHES))
+        MockHttpServletResponse expected = mockMvc.perform(get(Web.Endpoint.VIEW360_BRANCHES))
                 .andReturn()
                 .getResponse();
         assertThat(expected.getContentAsString()).contains("Search Branches");
@@ -59,7 +59,7 @@ class BranchControllerTest {
     @Test
     void shouldNotCreateAnInvalidBranch() throws Exception {
 
-        mockMvc.perform(post(Web.Endpoint.BRANCHES))
+        mockMvc.perform(post(Web.Endpoint.VIEW360_BRANCHES))
                 .andExpect(model().attribute("errorMessage", "Invalid information !"));
     }
     @Test
@@ -70,7 +70,7 @@ class BranchControllerTest {
         params.add("branchAddress", "Moroni");
 
         //then
-        mockMvc.perform(post(Web.Endpoint.BRANCHES)
+        mockMvc.perform(post(Web.Endpoint.VIEW360_BRANCHES)
                  .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                  .params(params)
                 ).andExpect(flash().attribute("successMessage", "New branch added successfully !"));
@@ -80,14 +80,14 @@ class BranchControllerTest {
     @Test
     void shouldListVaultsWithoutBranchCode() throws Exception {
 
-        mockMvc.perform(get(Web.Endpoint.BRANCH_ACCOUNTS))
+        mockMvc.perform(get(Web.Endpoint.VIEW360_VAULT_GL))
                 .andExpect(model().attributeDoesNotExist("branch"));
     }
 
     @Test
     void shouldIndicateBranchNotFoundWhenTryListVaultsWIthIncorrectCode() throws Exception {
 
-        mockMvc.perform(get(Web.Endpoint.BRANCH_ACCOUNTS)
+        mockMvc.perform(get(Web.Endpoint.VIEW360_VAULT_GL)
                         .param("code", "12"))
                 .andExpect(model().attribute("errorMessage", "Branch not found"));
     }
@@ -98,7 +98,7 @@ class BranchControllerTest {
         createBranch(new double[3]);
 
         //then
-        mockMvc.perform(get(Web.Endpoint.BRANCH_ACCOUNTS)
+        mockMvc.perform(get(Web.Endpoint.VIEW360_VAULT_GL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId())))
                 .andExpect(model().attributeExists("vaults"))
@@ -117,7 +117,7 @@ class BranchControllerTest {
         params.add("operationType", "credit");
 
         //then
-        mockMvc.perform(post(Web.Endpoint.BRANCH_ACCOUNTS)
+        mockMvc.perform(post(Web.Endpoint.VIEW360_VAULT_GL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(params)
         ).andExpect(flash().attribute("errorMessage", "Amount must be positive !"));
@@ -136,7 +136,7 @@ class BranchControllerTest {
         params.add("operationType", "credit");
 
         //then
-        mockMvc.perform(post(Web.Endpoint.BRANCH_ACCOUNTS)
+        mockMvc.perform(post(Web.Endpoint.VIEW360_VAULT_GL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(params)
         ).andExpect(flash().attribute("successMessage", "Successful adjustment"));
@@ -155,7 +155,7 @@ class BranchControllerTest {
         params.add("operationType", "debit");
 
         //then
-        mockMvc.perform(post(Web.Endpoint.BRANCH_ACCOUNTS)
+        mockMvc.perform(post(Web.Endpoint.VIEW360_VAULT_GL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(params)
         ).andExpect(flash().attribute("successMessage", "Successful adjustment"));

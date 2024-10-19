@@ -198,16 +198,17 @@
                                         <!--end::Label-->
 
                                         <!--end::Text-->
-										<div th:text="${trunk.account.branch.branchName}" class="fw-bold fs-6 text-gray-800">
-											HQ</div>
-										<!--end::Text-->
+                                        <div th:text="${trunk.account.branch.branchName}"
+                                            class="fw-bold fs-6 text-gray-800">
+                                            HQ</div>
+                                        <!--end::Text-->
 
-										<!--end::Description-->
-										<div class="fw-semibold fs-7 text-gray-600">
-											<span th:text="${trunk.account.branch.branchAddress}">Moroni, Place de
-												France</span>
-										</div>
-										<!--end::Description-->
+                                        <!--end::Description-->
+                                        <div class="fw-semibold fs-7 text-gray-600">
+                                            <span th:text="${trunk.account.branch.branchAddress}">Moroni, Place de
+                                                France</span>
+                                        </div>
+                                        <!--end::Description-->
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -282,17 +283,26 @@
                                 <div class="fw-bold text-gray-800 fs-6 mb-1">Operators:</div>
 
                                 <div class="fw-bold text-gray-600 fs-7">
-                                    <p class="mb-1">Initiated By : <span th:text="${trunk.account.initiatedBy}">Sarah</span></p>
-									<p class="mb-0">Updated By : <span th:text="${trunk.account.updatedBy}">John</span></p>
+                                    <p class="mb-1">Initiated By : <span
+                                            th:text="${trunk.account.initiatedBy}">Sarah</span></p>
+                                    <p class="mb-0">Updated By : <span th:text="${trunk.account.updatedBy}">John</span>
+                                    </p>
                                 </div>
                             </div>
                             <!--end::Item-->
 
-                            <button th:unless="${trunk.account.status} != 'ACTIVE'" type="button"
-                                class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
-                                data-bs-target="#deactivate_account">
-                                Deactivate
-                            </button>
+                            <div th:unless="${trunk.account.status} != 'ACTIVE'">
+                                <button type="button"
+                                    class="btn btn-sm btn-danger me-2" data-bs-toggle="modal"
+                                    data-bs-target="#deactivate_account">
+                                    Deactivate
+                                </button>
+                                <a type="button"
+                                    th:href="@{/accounts/affiliation(code=${trunk.account.accountNumber})}"
+                                    class="btn btn-sm btn-primary">
+                                    Manage Affiliation
+                                </a>
+                            </div>
                             <button th:unless="${trunk.account.status} == 'ACTIVE'" type="button" data-bs-toggle="modal"
                                 data-bs-target="#activate_account" class="btn btn-sm btn-primary">
                                 Activate

@@ -39,7 +39,6 @@ public class AccountController implements PageTitleConfig {
     public String listingTrunks(Model model) {
 
         List<TrunkDto> customerAccounts = accountFacadeService.findAllTrunks().stream()
-                .distinct()
                 .peek(trunkDto -> StatedObjectFormatter.format(trunkDto.getAccount()))
                 .toList();
 

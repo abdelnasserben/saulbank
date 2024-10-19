@@ -8372,19 +8372,29 @@ if (loanType) {
     });
 }
 
-//Account Add Affiliate Page:
+// Account Add Affiliate Page:
 let memberIdentityNumber = $('#accountAffiliateMemberCustomerIdentity');
 if (memberIdentityNumber) {
+
     $(memberIdentityNumber).change(function () {
-        var identityNumber = $(this).val().trim().replace('/[^\w\s]/');
 
-        if (identityNumber != "") {
-            var pageURL = $(location).attr("href");
-            location.replace(pageURL + '?member=' + identityNumber);
+        // Clean the identity number by removing unwanted characters
+        var identityNumber = $(this).val().trim().replace(/[^\w\s]/g, '');
+
+        if (identityNumber !== "") {
+
+            // Get the current page URL and parse it
+            var pageURL = new URL(window.location.href);
+
+            // Add or update the 'member' parameter in the URL with the new identity number
+            pageURL.searchParams.set('member', identityNumber);
+
+            // Redirect the page to the new URL with the updated member parameter
+            window.location.replace(pageURL.toString());
         }
-
     });
 }
+
 
 //For Card And Cheque Request:
 let cardRequestForm = $('#cardRequestForm');

@@ -34,6 +34,7 @@ public abstract class Tax {
                         .sourceValue("System")
                         .reason(String.format("System charge @ %s fee.", fee.description()))
                         .status(Status.APPROVED.code())
+                        .branch(ledgerDto.getBranch())
                         .build());
 
         accountService.debit(accountDto, fee.value());
