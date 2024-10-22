@@ -8,7 +8,7 @@ public class AccountMapper {
 
     private static final ModelMapper mapper = new ModelMapper();
 
-    public static Account toModel(AccountDto accountDto) {
+    public static Account toEntity(AccountDto accountDto) {
         return mapper.map(accountDto, Account.class);
     }
 

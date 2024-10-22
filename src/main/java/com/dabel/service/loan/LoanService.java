@@ -42,7 +42,7 @@ public class LoanService {
 
     public List<LoanDto> findAllByCustomerIdentity(String customerIdentityNumber) {
         CustomerDto customerDto = customerService.findByIdentity(customerIdentityNumber);
-        return loanRepository.findAllByBorrower(CustomerMapper.toModel(customerDto)).stream()
+        return loanRepository.findAllByBorrower(CustomerMapper.toEntity(customerDto)).stream()
                 .map(LoanMapper::toDTO)
                 .collect(Collectors.toList());
     }

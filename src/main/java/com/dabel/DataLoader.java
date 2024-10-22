@@ -59,13 +59,17 @@ public class DataLoader {
 
             //TODO: create users
             UserDto user1 = UserDto.builder()
-                    .username("john")
+                    .firstName("John")
+                    .lastName("Doe")
+                    .username("johndoe@saulbank.com")
                     .role("ADMIN")
                     .branch(savedBranch1)
                     .build();
 
             UserDto user2 = UserDto.builder()
-                    .username("sarah")
+                    .firstName("Sarah")
+                    .lastName("Hunt")
+                    .username("sarah.hunt@saulbank.com")
                     .role("CASHIER")
                     .branch(savedBranch2)
                     .build();

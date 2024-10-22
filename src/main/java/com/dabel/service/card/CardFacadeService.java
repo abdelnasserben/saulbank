@@ -61,7 +61,7 @@ public class CardFacadeService {
         if(!Helper.isActiveStatedObject(card))
             throw new IllegalOperationException("Unable to deactivate an inactive card");
 
-        card.setStatus(Status.DEACTIVATED.code());
+        card.setStatus(Status.INACTIVE.code());
         card.setFailureReason(remarks);
         card.setUpdatedBy(Helper.getAuthenticated().getName());
 

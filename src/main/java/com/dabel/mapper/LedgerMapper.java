@@ -8,7 +8,7 @@ public class LedgerMapper {
 
     private static final ModelMapper mapper = new ModelMapper();
 
-    public static Ledger toModel(LedgerDto ledgerDto) {
+    public static Ledger toEntity(LedgerDto ledgerDto) {
         return mapper.map(ledgerDto, Ledger.class);
     }
 

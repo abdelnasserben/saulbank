@@ -23,7 +23,7 @@ public class TransactionService {
     }
 
     public TransactionDto save(TransactionDto transactionDto) {
-        return TransactionMapper.toDto(transactionRepository.save(TransactionMapper.toModel(transactionDto)));
+        return TransactionMapper.toDto(transactionRepository.save(TransactionMapper.toEntity(transactionDto)));
     }
 
     public List<TransactionDto> findAll() {
@@ -39,7 +39,7 @@ public class TransactionService {
     }
 
     public List<TransactionDto> findAllByAccount(AccountDto accountDto) {
-        Account account = AccountMapper.toModel(accountDto);
+        Account account = AccountMapper.toEntity(accountDto);
         return transactionRepository.findAllByInitiatorAccountOrReceiverAccount(account, account).stream()
                 .map(TransactionMapper::toDto)
                 .toList();

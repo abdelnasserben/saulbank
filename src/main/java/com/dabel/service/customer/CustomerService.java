@@ -20,7 +20,7 @@ public class CustomerService {
     }
 
     public CustomerDto save(CustomerDto customerDTO) {
-        return CustomerMapper.toDto(customerRepository.save(CustomerMapper.toModel(customerDTO)));
+        return CustomerMapper.toDto(customerRepository.save(CustomerMapper.toEntity(customerDTO)));
     }
 
     public List<CustomerDto> findAll() {

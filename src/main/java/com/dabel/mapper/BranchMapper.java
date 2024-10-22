@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 public class BranchMapper {
     private static final ModelMapper mapper = new ModelMapper();
 
-    public static Branch toModel(BranchDto branchDto) {
+    public static Branch toEntity(BranchDto branchDto) {
         return mapper.map(branchDto, Branch.class);
     }
 

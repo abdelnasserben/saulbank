@@ -1,5 +1,6 @@
 package com.dabel.controller;
 
+import com.dabel.constant.Web;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,7 @@ public class LoginController {
 
         if (error != null) {
             String message = getSecurityLastExceptionMessage(request);
-            model.addAttribute("errorMessage", message);
+            model.addAttribute(Web.MessageTag.ERROR, message);
 
             int failedAttempts = MAX_LOGIN_ATTEMPTS - remainingLoginAttempts;
 

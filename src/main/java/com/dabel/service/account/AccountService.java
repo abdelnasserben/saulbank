@@ -34,23 +34,23 @@ public class AccountService {
 
     public AccountDto save(AccountDto accountDTO) {
 
-        Account account = accountRepository.save(AccountMapper.toModel(accountDTO));
+        Account account = accountRepository.save(AccountMapper.toEntity(accountDTO));
         return AccountMapper.toDto(account);
     }
 
     public TrunkDto save(TrunkDto trunkDto) {
 
-        Account savedAccount = accountRepository.save(AccountMapper.toModel(trunkDto.getAccount()));
+        Account savedAccount = accountRepository.save(AccountMapper.toEntity(trunkDto.getAccount()));
         trunkDto.setAccount(AccountMapper.toDto(savedAccount));
-        return TrunkMapper.toDto(trunkRepository.save(TrunkMapper.toModel(trunkDto)));
+        return TrunkMapper.toDto(trunkRepository.save(TrunkMapper.toEntity(trunkDto)));
     }
 
     public LedgerDto save(LedgerDto ledgerDto) {
 
-        Account savedAccount = accountRepository.save(AccountMapper.toModel(ledgerDto.getAccount()));
+        Account savedAccount = accountRepository.save(AccountMapper.toEntity(ledgerDto.getAccount()));
         ledgerDto.setAccount(AccountMapper.toDto(savedAccount));
         ledgerDto.setBranch(ledgerDto.getAccount().getBranch());
-        return LedgerMapper.toDto(ledgerRepository.save(LedgerMapper.toModel(ledgerDto)));
+        return LedgerMapper.toDto(ledgerRepository.save(LedgerMapper.toEntity(ledgerDto)));
     }
 
     public List<AccountDto> findAll() {
@@ -67,24 +67,24 @@ public class AccountService {
     }
 
     public List<AccountDto> findAllVaults(BranchDto branchDto) {
-        return accountRepository.findAllByBranchAndIsVault(BranchMapper.toModel(branchDto), 1).stream()
+        return accountRepository.findAllByBranchAndIsVault(BranchMapper.toEntity(branchDto), 1).stream()
                 .map(AccountMapper::toDto)
                 .toList();
     }
 
     public AccountDto findVault(BranchDto branchDto, String currency) {
-        return AccountMapper.toDto(accountRepository.findByBranchAndCurrencyAndIsVault(BranchMapper.toModel(branchDto), currency, 1)
+        return AccountMapper.toDto(accountRepository.findByBranchAndCurrencyAndIsVault(BranchMapper.toEntity(branchDto), currency, 1)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found")));
     }
 
     public List<LedgerDto> findAllLedgers(BranchDto branchDto) {
-        return ledgerRepository.findAllByBranch(BranchMapper.toModel(branchDto)).stream()
+        return ledgerRepository.findAllByBranch(BranchMapper.toEntity(branchDto)).stream()
                 .map(LedgerMapper::toDto)
                 .toList();
     }
 
     public LedgerDto findLedgerByBranchAndType(BranchDto branchDto, String ledgerType) {
-        return LedgerMapper.toDto(ledgerRepository.findByBranchAndLedgerType(BranchMapper.toModel(branchDto), ledgerType)
+        return LedgerMapper.toDto(ledgerRepository.findByBranchAndLedgerType(BranchMapper.toEntity(branchDto), ledgerType)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found")));
     }
 
@@ -96,13 +96,13 @@ public class AccountService {
     }
 
     public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
-        return trunkRepository.findAllByCustomer(CustomerMapper.toModel(customerDto)).stream()
+        return trunkRepository.findAllByCustomer(CustomerMapper.toEntity(customerDto)).stream()
                 .map(TrunkMapper::toDto)
                 .toList();
     }
 
     public List<TrunkDto> findAllTrunks(AccountDto accountDto) {
-        return trunkRepository.findAllByAccount(AccountMapper.toModel(accountDto)).stream()
+        return trunkRepository.findAllByAccount(AccountMapper.toEntity(accountDto)).stream()
                 .map(TrunkMapper::toDto)
                 .toList();
     }
@@ -126,24 +126,24 @@ public class AccountService {
     public TrunkDto findTrunk(CustomerDto customerDto, String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
-        return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toModel(customerDto), account)
+        return TrunkMapper.toDto(trunkRepository.findByCustomerAndAccount(CustomerMapper.toEntity(customerDto), account)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found")));
     }
 
     public void deleteTrunk(TrunkDto trunkDto) {
-        trunkRepository.delete(TrunkMapper.toModel(trunkDto));
+        trunkRepository.delete(TrunkMapper.toEntity(trunkDto));
     }
 
     public void debit(AccountDto accountDto, double amount) {
         accountDto.setBalance(accountDto.getBalance() - Helper.formatAmount(amount));
         accountDto.setUpdatedBy(currentUsername);
-        accountRepository.save(AccountMapper.toModel(accountDto));
+        accountRepository.save(AccountMapper.toEntity(accountDto));
     }
 
     public void credit(AccountDto accountDto, double amount) {
         accountDto.setBalance(accountDto.getBalance() + Helper.formatAmount(amount));
         accountDto.setUpdatedBy(currentUsername);
-        accountRepository.save(AccountMapper.toModel(accountDto));
+        accountRepository.save(AccountMapper.toEntity(accountDto));
     }
 
     private Predicate<Trunk> distinctByAccount() {

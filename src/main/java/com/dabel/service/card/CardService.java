@@ -37,7 +37,7 @@ public class CardService {
     }
 
     public List<CardDto> findAllByTrunk(TrunkDto trunkDto) {
-        return cardRepository.findAllByTrunk(TrunkMapper.toModel(trunkDto)).stream()
+        return cardRepository.findAllByTrunk(TrunkMapper.toEntity(trunkDto)).stream()
                 .map(CardMapper::toDto)
                 .toList();
     }

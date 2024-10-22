@@ -3,6 +3,7 @@ package com.dabel.config;
 import com.dabel.app.Helper;
 import com.dabel.constant.*;
 import com.dabel.dto.TrunkDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,21 @@ public final class AppSpEL {
         if(status.equals(Status.COMPLETED.name()))
             return "info";
 
-        return List.of(Status.ACTIVE.name(), Status.APPROVED.name()).contains(status) ? "success" : "danger";
+        return List.of(Status.ACTIVE.name(), Status.APPROVED.name(), Status.SUCCESS.name()).contains(status) ? "success" : "danger";
+    }
+
+    public static String httpStatusColor(String status) {
+
+        if(status.equals(String.valueOf(HttpStatus.OK)))
+            return "success";
+
+        if(status.equals(String.valueOf(HttpStatus.BAD_REQUEST)))
+            return "warning";
+
+        if(status.equals(String.valueOf(HttpStatus.FORBIDDEN)))
+            return "danger";
+
+        return "info";
     }
 
     public static Object[] countries() {
@@ -30,10 +45,8 @@ public final class AppSpEL {
                 .toArray();
     }
 
-    public static Object[] userRoles() {
-        return Arrays.stream(UserRole.values())
-                .map(Enum::name)
-                .toArray();
+    public static UserRole[] userRoles() {
+        return UserRole.values();
     }
 
     public static Object[] currencies() {
@@ -57,9 +70,5 @@ public final class AppSpEL {
 
     public static String elapsedTime(LocalDateTime dateTime) {
         return Optional.ofNullable(dateTime).map(Helper::elapsedTime).orElse("");
-    }
-
-    public String currentUsername() {
-        return Helper.getAuthenticated().getName();
     }
 }

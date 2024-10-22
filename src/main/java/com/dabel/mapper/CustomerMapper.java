@@ -8,7 +8,7 @@ public class CustomerMapper {
 
     private static final ModelMapper mapper = new ModelMapper();
 
-    public static Customer toModel(CustomerDto customerDto) {
+    public static Customer toEntity(CustomerDto customerDto) {
         return mapper.map(customerDto, Customer.class);
     }
 

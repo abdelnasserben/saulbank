@@ -81,7 +81,7 @@ public class AccountFacadeService {
         if(!Helper.isActiveStatedObject(accountDto))
             return;
 
-        accountDto.setStatus(Status.DEACTIVATED.code());
+        accountDto.setStatus(Status.INACTIVE.code());
         accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
         accountService.save(accountDto);
     }

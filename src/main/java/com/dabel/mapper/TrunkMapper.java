@@ -8,7 +8,7 @@ public class TrunkMapper {
 
     private static final ModelMapper mapper = new ModelMapper();
 
-    public static Trunk toModel(TrunkDto trunkDto) {
+    public static Trunk toEntity(TrunkDto trunkDto) {
         return mapper.map(trunkDto, Trunk.class);
     }
 

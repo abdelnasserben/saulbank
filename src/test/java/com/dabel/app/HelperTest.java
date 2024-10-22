@@ -41,7 +41,7 @@ class HelperTest {
         CustomerDto customerDto = CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
-                .status(Status.DEACTIVATED.code())
+                .status(Status.INACTIVE.code())
                 .build();
 
         assertFalse(Helper.isActiveStatedObject(customerDto));

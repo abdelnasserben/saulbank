@@ -8,7 +8,7 @@ public class TransactionMapper {
 
     private static final ModelMapper mapper = new ModelMapper();
 
-    public static Transaction toModel(TransactionDto transactionDto) {
+    public static Transaction toEntity(TransactionDto transactionDto) {
         return mapper.map(transactionDto, Transaction.class);
     }
 

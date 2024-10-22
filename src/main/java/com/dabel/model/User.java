@@ -6,6 +6,7 @@ import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.generator.EventType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,12 +20,17 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    private String firstName;
+    private String lastName;
     private String password;
     private String status;
     private String initiatedBy;
     private String updatedBy;
     private int failedLoginAttempts;
     private LocalDateTime loginAt;
+
+    @Transient
+    private List<LoginLog> loginLogs;
 
     @ManyToOne
     @JoinColumn(name = "branchId")

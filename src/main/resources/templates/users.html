@@ -60,10 +60,10 @@
 						<tr th:each="user: ${users}">
 							<td th:text="${user.userId}">1202</td>
 							<td>
-								<a th:href="@{/users/{id}(id=${user.userId})}" th:text="${user.username}"
+								<a th:href="@{/users/{id}(id=${user.username})}" th:text="${user.username}"
 									class="text-gray-800 text-hover-primary mb-1">sarah</a>
 							</td>
-							<td th:text="${#strings.substring(user.role, 5)}">ADMIN</td>
+							<td th:text="${user.role}">ADMIN</td>
 							<td>
 								<div th:text="${@appSpEL.elapsedTime(user.loginAt)}" class="badge badge-light fw-bold">
 									Just now</div>
@@ -120,10 +120,35 @@
 				<form class="form" th:action="@{/users}" method="post" th:object="${userDto}">
 
 					<div class="row">
-						<div class="col-md-8">
+						<div class="col-md-6">
 							<!--begin::Input group-->
 							<div class="mb-4 fv-row">
-								<label class="required form-label">Username</label>
+								<label class="required form-label">Firstname</label>
+								<input type="text" th:field="*{firstName}" class="form-control mb-2"
+									th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
+									placeholder="username" />
+								<div class="invalid-feedback" th:errors="*{firstName}"></div>
+							</div>
+							<!--end::Input group-->
+						</div>
+						<!--begin::Input group-->
+						<div class="col-md-6">
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Lastname</label>
+								<input type="text" th:field="*{lastName}" class="form-control mb-2"
+									th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
+									placeholder="username" />
+								<div class="invalid-feedback" th:errors="*{lastName}"></div>
+							</div>
+							<!--end::Input group-->
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<!--begin::Input group-->
+							<div class="mb-4 fv-row">
+								<label class="required form-label">Email address</label>
 								<input type="text" th:field="*{username}" class="form-control mb-2"
 									th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
 									placeholder="username" />
@@ -132,7 +157,7 @@
 							<!--end::Input group-->
 						</div>
 						<!--begin::Input group-->
-						<div class="col-md-4">
+						<div class="col-md-6">
 							<div class="mb-4 fv-row">
 								<label class="required form-label">Role</label>
 								<select class="form-select mb-3" th:field="*{role}"

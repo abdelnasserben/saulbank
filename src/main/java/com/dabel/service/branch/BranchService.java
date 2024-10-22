@@ -22,7 +22,7 @@ public class BranchService {
     }
 
     public BranchDto save(BranchDto branchDTO) {
-        Branch branch = branchRepository.save(BranchMapper.toModel(branchDTO));
+        Branch branch = branchRepository.save(BranchMapper.toEntity(branchDTO));
         return BranchMapper.toDto(branch);
     }
 

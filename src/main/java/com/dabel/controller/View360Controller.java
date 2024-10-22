@@ -5,7 +5,6 @@ import com.dabel.app.web.PageTitleConfig;
 import com.dabel.constant.Web;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
-import com.dabel.dto.TrunkDto;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.branch.BranchFacadeService;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 public class View360Controller implements PageTitleConfig {

@@ -50,6 +50,8 @@ public final class Web {
         String CHEQUE_PAY = CHEQUES + "/pay";
 
         String USERS = "/users";
+        String USERS_UPDATE_NAME = USERS + "/update-username";
+        String USERS_UPDATE_INFO = USERS + "/update-info";
 
 
         String PAGE_404 = "/404";
@@ -97,6 +99,7 @@ public final class Web {
         String VIEW360_ACCOUNTS = "view360-accounts";
 
         String USERS = "users";
+        String USERS_DETAILS = "users-details";
 
         String PAGE_404 = "page404";
     }

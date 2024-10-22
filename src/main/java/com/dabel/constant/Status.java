@@ -3,13 +3,14 @@ package com.dabel.constant;
 public enum Status {
     PENDING(0),
     ACTIVE(1),
-    FAILED(2),
-    APPROVED(3),
-    REJECTED(4),
-    DEACTIVATED(5),
-    USED(6),
-    COMPLETED(7),
-    CLOSED(8);
+    INACTIVE(2),
+    FAILED(3),
+    APPROVED(4),
+    REJECTED(5),
+    COMPLETED(6),
+    USED(7),
+    CLOSED(8),
+    SUCCESS(9);
 
     private final int code;
     Status(int code) {

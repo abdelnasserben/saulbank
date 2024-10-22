@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @SuperBuilder
@@ -18,9 +19,14 @@ public class UserDto  extends BasicDto {
     private Long userId;
     @NotBlank
     private String username;
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String lastName;
     private String password;
     @UserRole
     private String role;
     private int failedLoginAttempts;
     private LocalDateTime loginAt;
+    private List<LoginLogDto> loginLogs;
 }

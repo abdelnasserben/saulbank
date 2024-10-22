@@ -2,13 +2,21 @@ package com.dabel.service.user;
 
 import com.dabel.app.Helper;
 import com.dabel.constant.Status;
+import com.dabel.dto.LoginLogDto;
 import com.dabel.dto.UserDto;
+import com.dabel.dto.UserLogDto;
 import com.dabel.exception.ResourceNotFoundException;
+import com.dabel.mapper.LoginLogMapper;
+import com.dabel.mapper.UserLogMapper;
 import com.dabel.mapper.UserMapper;
 import com.dabel.model.Role;
 import com.dabel.model.User;
+import com.dabel.model.UserLog;
+import com.dabel.repository.LoginLogRepository;
 import com.dabel.repository.RoleRepository;
+import com.dabel.repository.UserLogRepository;
 import com.dabel.repository.UserRepository;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,23 +32,26 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final LoginLogRepository loginLogRepository;
+    private final UserLogRepository userLogRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, LoginLogRepository loginLogRepository, UserLogRepository userLogRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.loginLogRepository = loginLogRepository;
+        this.userLogRepository = userLogRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = getUser(username);
-
-        //TODO: set user role
         setUserRole(user);
+
         return new CustomUserDetails(user);
     }
 
     public UserDto save(UserDto userDto) {
-        return UserMapper.toDto(userRepository.save(UserMapper.toModel(userDto)));
+        return UserMapper.toDto(userRepository.save(UserMapper.toEntity(userDto)));
     }
 
     public void create(UserDto userDto) {
@@ -49,10 +60,10 @@ public class UserService implements UserDetailsService {
         userDto.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("123")); //by default, we make password to 123, user can change it later
         userDto.setStatus(Status.ACTIVE.code()); //by default user is active
         userDto.setInitiatedBy(Helper.getAuthenticated().getName());
-        User savedUser = userRepository.save(UserMapper.toModel(userDto));
+        User savedUser = userRepository.save(UserMapper.toEntity(userDto));
 
         //TODO: save user roles
-        roleRepository.save(new Role(savedUser, String.format("ROLE_%s", userDto.getRole()).toUpperCase()));
+        roleRepository.save(new Role(savedUser, userDto.getRole().toUpperCase()));
     }
 
     public List<UserDto> findAll() {
@@ -76,7 +87,50 @@ public class UserService implements UserDetailsService {
 
     public UserDto getAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken)
+            return UserDto.builder()
+                    .firstName("Unknown firstname")
+                    .lastName("Unknown lastName")
+                    .username("anonymous")
+                    .role("ROLE_ANONYMOUS")
+                    .status(Status.INACTIVE.code())
+                    .build();
+
         return findByUsername(auth.getName());
+    }
+
+    public List<LoginLogDto> getLoginLogs(UserDto userDto) {
+        User user = UserMapper.toEntity(userDto);
+
+        return loginLogRepository.findAllByUser(user).stream()
+                .map(LoginLogMapper::toDTO)
+                .toList();
+    }
+
+    public void saveLoginLog(LoginLogDto loginLogDto) {
+        LoginLogMapper.toDTO(loginLogRepository.save(LoginLogMapper.toEntity(loginLogDto)));
+    }
+
+    public void saveLog(String httpMethod, String httpStatus, String url) {
+
+        User user = userRepository.findByUsername(Helper.getAuthenticated().getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        UserLog userLog = new UserLog();
+        userLog.setUser(user);
+        userLog.setHttpMethod(httpMethod);
+        userLog.setHttpStatus(httpStatus);
+        userLog.setUrl(url);
+
+        userLogRepository.save(userLog);
+    }
+
+    public List<UserLogDto> getLogs(UserDto userDto) {
+        User user = UserMapper.toEntity(userDto);
+
+        return userLogRepository.findAllByUser(user).stream()
+                .map(UserLogMapper::toDTO)
+                .toList();
     }
 
     private User getUser(String username) {
@@ -84,14 +138,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
-    private String getUserRole(User user) {
-        return roleRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"))
-                .getName();
-    }
-
     private void setUserRole(User user) {
-        user.setRole(getUserRole(user));
+        user.setRole(roleRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"))
+                .getName());
     }
 
 }

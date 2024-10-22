@@ -6,7 +6,6 @@ import com.dabel.constant.AccountType;
 import com.dabel.constant.Web;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.CustomerDto;
-import com.dabel.dto.LoanDto;
 import com.dabel.service.branch.BranchFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
 import com.dabel.service.loan.LoanFacadeService;

@@ -99,7 +99,7 @@ public class ChequeFacadeService {
         if(!Helper.isActiveStatedObject(chequeDto))
             throw new IllegalOperationException("Unable to deactivate an inactive cheque");
 
-        chequeDto.setStatus(Status.DEACTIVATED.code());
+        chequeDto.setStatus(Status.INACTIVE.code());
         chequeDto.setFailureReason(remarks);
         chequeDto.setUpdatedBy(Helper.getAuthenticated().getName());
 
