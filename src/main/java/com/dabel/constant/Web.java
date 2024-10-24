@@ -50,8 +50,11 @@ public final class Web {
         String CHEQUE_PAY = CHEQUES + "/pay";
 
         String USERS = "/users";
-        String USERS_UPDATE_NAME = USERS + "/update-username";
+        String USERS_UPDATE_USERNAME = USERS + "/update-username";
         String USERS_UPDATE_INFO = USERS + "/update-info";
+        String USERS_UPDATE_PASSWORD = USERS + "/update-password";
+        String USERS_UPDATE_ROLE = USERS + "/update-role";
+        String USERS_UPDATE_BRANCH = USERS + "/update-branch";
 
 
         String PAGE_404 = "/404";
@@ -107,6 +110,7 @@ public final class Web {
     public interface MessageTag {
         String ERROR = "errorMessage";
         String SUCCESS = "successMessage";
+        String WARNING = "warningMessage";
     }
 
     public interface Menu {

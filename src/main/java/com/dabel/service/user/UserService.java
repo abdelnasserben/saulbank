@@ -5,6 +5,7 @@ import com.dabel.constant.Status;
 import com.dabel.dto.LoginLogDto;
 import com.dabel.dto.UserDto;
 import com.dabel.dto.UserLogDto;
+import com.dabel.exception.IllegalOperationException;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.LoginLogMapper;
 import com.dabel.mapper.UserLogMapper;
@@ -16,6 +17,9 @@ import com.dabel.repository.LoginLogRepository;
 import com.dabel.repository.RoleRepository;
 import com.dabel.repository.UserLogRepository;
 import com.dabel.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +62,7 @@ public class UserService implements UserDetailsService {
     public void create(UserDto userDto) {
 
         //TODO: encode password, set user creator and user status
-        userDto.setPassword(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("123")); //by default, we make password to 123, user can change it later
+        userDto.setPassword(passwordEncoder().encode("123")); //by default, we make password to 123, user can change it later
         userDto.setStatus(Status.ACTIVE.code()); //by default user is active
         userDto.setInitiatedBy(Helper.getAuthenticated().getName());
         User savedUser = userRepository.save(UserMapper.toEntity(userDto));
@@ -133,6 +138,40 @@ public class UserService implements UserDetailsService {
                 .toList();
     }
 
+    public void updateUsername(UserDto userDto, String newUsername) {
+
+        if (userRepository.existsByUsername(newUsername))
+            throw new IllegalOperationException("Username already exists");
+
+        userDto.setUsername(newUsername);
+        userDto.setUpdatedBy(Helper.getAuthenticated().getName());
+        save(userDto);
+    }
+
+    public void updatePassword(UserDto userDto, String newPassword) {
+        userDto.setPassword(passwordEncoder().encode(newPassword));
+        userDto.setUpdatedBy(Helper.getAuthenticated().getName());
+        save(userDto);
+    }
+
+    public void updateRole(UserDto userDto, String newRoleName) {
+        Role currentUserRole = roleRepository.findByUser(UserMapper.toEntity(userDto))
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+        currentUserRole.setName(newRoleName);
+        roleRepository.save(currentUserRole);
+    }
+
+    public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextHolder.clearContext();  // clear actual session
+        request.getSession().invalidate();  // invalidate the HTTP session
+        response.addCookie(new Cookie("JSESSIONID", null));  // clear session cookie
+    }
+
+    public boolean isPasswordValid(UserDto user, String rawPassword) {
+        return passwordEncoder().matches(rawPassword, user.getPassword());
+    }
+
     private User getUser(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
@@ -144,4 +183,7 @@ public class UserService implements UserDetailsService {
                 .getName());
     }
 
+    private PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 }

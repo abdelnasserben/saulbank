@@ -1,8 +1,5 @@
-<div th:unless="${successMessage} == null" class="alert alert-success alert-dismissible fade show" role="alert">
-    <span th:text="${successMessage}">Successfully done !</span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<div th:unless="${errorMessage} == null" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <span th:text="${errorMessage}">Something be wrong !</span>
+<div th:if="${successMessage != null || errorMessage != null || warningMessage != null}" class="alert alert-dismissible fade show" role="alert"
+     th:classappend="${successMessage != null ? 'alert-success' : (errorMessage != null ? 'alert-danger' : 'alert-warning')}">
+    <span th:text="${successMessage != null ? successMessage : (errorMessage != null ? errorMessage : warningMessage)}">Message d'alerte</span>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>

@@ -11,5 +11,4 @@ public class SaulBankApplication {
 	}
 
 }
-//manage user [add fields email, firstName and lastName, details, update password, etc...]
 //role management [only user role can make some operations]

@@ -47,7 +47,7 @@ public class AuthenticatedUserModelAndRequestLoggingInterceptor implements Handl
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-            if(auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+            if(auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
                 userService.saveLog(method, String.valueOf(status), url);
             }
         }

@@ -20,6 +20,10 @@
                         <h1 class="text-dark mb-3">Sign In to Saul</h1>
                     </div>
 
+                    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                        <span th:text="${successMessage}">Message de succes</span>
+                    </div>
+
                     <div th:if="${param.error}" class="alert alert-danger" role="alert">
                         <span th:text="${errorMessage}">Message d'erreur</span>. <br>
                         <span th:unless="${remainingAttempts == null}" th:text="${remainingAttempts + ' remaining attempts'}">3 tentatives restantes</span>
