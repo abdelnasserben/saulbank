@@ -101,14 +101,19 @@ public class UserController implements PageTitleConfig {
         UserDto userDto = userService.findByUsername(username);
 
         if (!newUsername.isEmpty() && !newUsername.isBlank()) {
-            userService.updateUsername(userDto, newUsername);
 
-            String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirect, "Username successfully changed. Please log in again.");
-            if (logoutIfCurrentUser != null)
-                return logoutIfCurrentUser;
+            if(!userService.isUsernameTaken(newUsername)) {
 
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Username successfully changed.");
-            return redirectToUser(newUsername);
+                userService.updateUsername(userDto, newUsername);
+
+                String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirect, "Username successfully changed. Please log in again.");
+                if (logoutIfCurrentUser != null)
+                    return logoutIfCurrentUser;
+
+                redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Username successfully changed.");
+                return redirectToUser(newUsername);
+
+            } else redirect.addFlashAttribute(Web.MessageTag.WARNING, "Username already exists");
 
         } else redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid Information");
 

@@ -5,7 +5,6 @@ import com.dabel.constant.Status;
 import com.dabel.dto.LoginLogDto;
 import com.dabel.dto.UserDto;
 import com.dabel.dto.UserLogDto;
-import com.dabel.exception.IllegalOperationException;
 import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.LoginLogMapper;
 import com.dabel.mapper.UserLogMapper;
@@ -138,11 +137,12 @@ public class UserService implements UserDetailsService {
                 .toList();
     }
 
+    public boolean isUsernameTaken(String username) {
+
+        return userRepository.existsByUsername(username);
+    }
+
     public void updateUsername(UserDto userDto, String newUsername) {
-
-        if (userRepository.existsByUsername(newUsername))
-            throw new IllegalOperationException("Username already exists");
-
         userDto.setUsername(newUsername);
         userDto.setUpdatedBy(Helper.getAuthenticated().getName());
         save(userDto);
