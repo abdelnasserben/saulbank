@@ -11,4 +11,5 @@ public class SaulBankApplication {
 	}
 
 }
+//fix existing tests and implement unit and integration tests to ensure code reliability.
 //role management [only user role can make some operations]

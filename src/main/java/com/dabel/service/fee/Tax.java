@@ -37,8 +37,8 @@ public abstract class Tax {
                         .branch(ledgerDto.getBranch())
                         .build());
 
-        accountService.debit(accountDto, fee.value());
-        accountService.credit(ledgerDto.getAccount(), fee.value());
+        accountService.debitAccount(accountDto, fee.value());
+        accountService.creditAccount(ledgerDto.getAccount(), fee.value());
     }
 
     abstract LedgerType getLedgerType();

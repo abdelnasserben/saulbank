@@ -6,7 +6,6 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.service.account.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -18,17 +17,16 @@ public class CustomerFacadeService {
     private final CustomerService customerService;
     private final AccountService accountService;
 
-    @Autowired
     public CustomerFacadeService(CustomerService customerService, AccountService accountService) {
         this.customerService = customerService;
         this.accountService = accountService;
     }
 
-    public CustomerDto save(CustomerDto customerDto) {
+    public CustomerDto saveCustomer(CustomerDto customerDto) {
         return customerService.save(customerDto);
     }
 
-    public void create(CustomerDto customerDto, String accountName, AccountType accountType, AccountProfile accountProfile) {
+    public void createNewCustomerWithAccount(CustomerDto customerDto, String accountName, AccountType accountType, AccountProfile accountProfile) {
 
         if (customerDto.getCustomerId() != null)
             return;
@@ -42,7 +40,7 @@ public class CustomerFacadeService {
 
         //TODO: define the membership and save trunk
         String accountMembership = accountProfile.equals(AccountProfile.ASSOCIATIVE) ? AccountMembership.ASSOCIATED.name() : AccountMembership.OWNER.name();
-        accountService.save(TrunkDto.builder()
+        accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(AccountDto.builder()
                         .accountName(accountName)
@@ -58,38 +56,23 @@ public class CustomerFacadeService {
                 .build());
     }
 
-    public List<CustomerDto> findAll() {
+    public List<CustomerDto> getAll() {
         return customerService.findAll();
     }
 
-    public CustomerDto findByIdentity(String identityNumber) {
+    public CustomerDto getByIdentityNumber(String identityNumber) {
         return customerService.findByIdentity(identityNumber);
     }
 
-    public CustomerDto findById(Long customerId) {
+    public CustomerDto getById(Long customerId) {
         return customerService.findById(customerId);
     }
 
-    public void update(CustomerDto customerDto) {
+    public void updateCustomerDetails(CustomerDto customerDto) {
 
-        CustomerDto existingCustomer = findById(customerDto.getCustomerId());
+        CustomerDto existingCustomer = getById(customerDto.getCustomerId());
 
-        for(Field field: CustomerDto.class.getDeclaredFields()) {
-            field.setAccessible(true); //allow access private field
-
-            try {
-                Object newValue = field.get(customerDto);
-                Object existingValue = field.get(existingCustomer);
-
-                // Check if the new value is not null, not empty and different of the old value
-                if (newValue != null && !newValue.toString().isEmpty() && !newValue.equals(existingValue)) {
-                    field.set(existingCustomer, newValue);
-                }
-
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        updateNonEmptyFields(existingCustomer, customerDto);
 
         existingCustomer.setStatus(Status.codeOf(customerDto.getStatus()));
         existingCustomer.setUpdatedBy(Helper.getAuthenticated().getName());
@@ -113,5 +96,22 @@ public class CustomerFacadeService {
         }
 
         return (double) filledFields / totalFields * 100;
+    }
+
+    private void updateNonEmptyFields(CustomerDto target, CustomerDto source) {
+        for (Field field : CustomerDto.class.getDeclaredFields()) {
+            field.setAccessible(true);
+
+            try {
+                Object newValue = field.get(source);
+                Object existingValue = field.get(target);
+
+                if (newValue != null && !newValue.toString().isEmpty() && !newValue.equals(existingValue)) {
+                    field.set(target, newValue);
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to access field during update", e);
+            }
+        }
     }
 }

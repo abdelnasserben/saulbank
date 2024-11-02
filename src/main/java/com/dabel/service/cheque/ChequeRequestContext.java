@@ -14,7 +14,7 @@ public class ChequeRequestContext {
     private final Map<String, ChequeRequest> applicationMap = new HashMap<>();
 
     public ChequeRequestContext(Set<ChequeRequest> chequeRequests) {
-        chequeRequests.forEach(type -> applicationMap.put(type.getType().name(), type));
+        chequeRequests.forEach(type -> applicationMap.put(type.getAccountType().name(), type));
     }
 
     public ChequeRequest setContext(String applicationType) {

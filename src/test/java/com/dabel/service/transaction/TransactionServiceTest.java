@@ -41,14 +41,14 @@ class TransactionServiceTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount1 = accountService.save(AccountDto.builder()
+        AccountDto savedAccount1 = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .status("1")
                 .branch(savedBranch)
                 .build());
 
-        AccountDto savedAccount2 = accountService.save(AccountDto.builder()
+        AccountDto savedAccount2 = accountService.saveAccount(AccountDto.builder()
                 .accountName("Sarah Hunt")
                 .accountNumber("987654321")
                 .status("1")

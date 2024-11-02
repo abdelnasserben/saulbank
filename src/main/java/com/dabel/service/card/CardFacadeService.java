@@ -8,7 +8,6 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.dto.TrunkDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -17,11 +16,15 @@ import java.util.List;
 @Service
 public class CardFacadeService {
 
+    public static final String CARD_IS_ALREADY_ACTIVE_MESSAGE = "Card is already active.";
+    public static final String CARD_ACTIVATED_MESSAGE = "Card activated";
+    public static final String CANNOT_DEACTIVATE_AN_INACTIVE_CARD_MESSAGE = "Cannot deactivate an inactive card.";
+
     private final CardService cardService;
     private final CardRequestOperationService requestOperationService;
     private final AccountService accountService;
 
-    @Autowired
+
     public CardFacadeService(CardService cardService, CardRequestOperationService requestOperationService, AccountService accountService) {
         this.cardService = cardService;
         this.requestOperationService = requestOperationService;
@@ -32,12 +35,21 @@ public class CardFacadeService {
         cardService.save(cardDto);
     }
 
-    public CardDto findCardById(Long cardId) {
+    public CardDto getCardById(Long cardId) {
         return cardService.findById(cardId);
     }
 
-    public List<CardDto> findAllCards() {
+    public List<CardDto> getAllCards() {
         return cardService.findAll();
+    }
+
+    public List<CardDto> getAllCardsByCustomer(CustomerDto customerDto) {
+        List<TrunkDto> trunks = accountService.findAllTrunksByCustomer(customerDto);
+
+        return trunks.stream()
+                .map(cardService::findAllByTrunk)
+                .flatMap(Collection::stream)
+                .toList();
     }
 
     public void activateCard(Long cardId) {
@@ -45,13 +57,9 @@ public class CardFacadeService {
         CardDto card = cardService.findById(cardId);
 
         if(Helper.isActiveStatedObject(card))
-            throw new IllegalOperationException("Card already active");
+            throw new IllegalOperationException(CARD_IS_ALREADY_ACTIVE_MESSAGE);
 
-        card.setStatus(Status.ACTIVE.code());
-        card.setFailureReason("Activated");
-        card.setUpdatedBy(Helper.getAuthenticated().getName());
-
-        cardService.save(card);
+        updateCardStatus(card, Status.ACTIVE.code(), CARD_ACTIVATED_MESSAGE);
     }
 
     public void deactivateCard(Long cardId, String remarks) {
@@ -59,46 +67,36 @@ public class CardFacadeService {
         CardDto card = cardService.findById(cardId);
 
         if(!Helper.isActiveStatedObject(card))
-            throw new IllegalOperationException("Unable to deactivate an inactive card");
+            throw new IllegalOperationException(CANNOT_DEACTIVATE_AN_INACTIVE_CARD_MESSAGE);
 
-        card.setStatus(Status.INACTIVE.code());
+        updateCardStatus(card, Status.INACTIVE.code(), remarks);
+    }
+
+    public void initCardRequest(CardRequestDto cardRequestDto) {
+        requestOperationService.init(cardRequestDto);
+    }
+
+    public void approveCardRequest(Long requestId) {
+        requestOperationService.approve(requestOperationService.getCardRequestService().findById(requestId));
+    }
+
+    public void rejectCardRequest(Long requestId, String remarks) {
+        requestOperationService.reject(requestOperationService.getCardRequestService().findById(requestId), remarks);
+    }
+
+    public List<CardRequestDto> getAllCardRequests() {
+        return requestOperationService.getCardRequestService().findAll();
+    }
+
+    public CardRequestDto getCardRequestById(Long requestId) {
+        return requestOperationService.getCardRequestService().findById(requestId);
+    }
+
+    private void updateCardStatus(CardDto card, String status, String remarks) {
+        card.setStatus(status);
         card.setFailureReason(remarks);
         card.setUpdatedBy(Helper.getAuthenticated().getName());
 
         cardService.save(card);
-    }
-
-    /**
-     * For card requests
-     */
-
-    public void sendRequest(CardRequestDto cardRequestDto) {
-        requestOperationService.init(cardRequestDto);
-    }
-
-    public void approveRequest(Long requestId) {
-        requestOperationService.approve(requestOperationService.getCardRequestService().findById(requestId));
-    }
-
-    public void rejectRequest(Long requestId, String remarks) {
-        requestOperationService.reject(requestOperationService.getCardRequestService().findById(requestId), remarks);
-    }
-
-    public List<CardRequestDto> findAllCardRequests() {
-        return requestOperationService.getCardRequestService().findAll();
-    }
-
-    public CardRequestDto findRequestById(Long requestId) {
-        return requestOperationService.getCardRequestService().findById(requestId);
-    }
-
-
-    public List<CardDto> findAllByCustomer(CustomerDto customerDto) {
-        List<TrunkDto> trunks = accountService.findAllTrunks(customerDto);
-
-        return trunks.stream()
-                .map(cardService::findAllByTrunk)
-                .flatMap(Collection::stream)
-                .toList();
     }
 }

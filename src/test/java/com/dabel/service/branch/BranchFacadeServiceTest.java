@@ -45,7 +45,7 @@ class BranchFacadeServiceTest {
         createBranch();
 
         //when
-        List<AccountDto> expected = accountService.findAll();
+        List<AccountDto> expected = accountService.findAllAccounts();
 
         //then
         assertThat(expected.size()).isEqualTo(8); //because branch have 3 vaults and 5 GL
@@ -60,8 +60,8 @@ class BranchFacadeServiceTest {
         createBranch();
 
         //when
-        BranchDto savedBranch = branchFacadeService.findAll().get(0);
-        List<AccountDto> expected = branchFacadeService.findAllVaultsByBranchId(savedBranch.getBranchId());
+        BranchDto savedBranch = branchFacadeService.getAll().get(0);
+        List<AccountDto> expected = branchFacadeService.getAllVaultsByBranchId(savedBranch.getBranchId());
 
         //then
         assertThat(expected.size()).isEqualTo(3); //because branch have 3
@@ -75,8 +75,8 @@ class BranchFacadeServiceTest {
         createBranch();
 
         //when
-        BranchDto savedBranch = branchFacadeService.findAll().get(0);
-        List<LedgerDto> expected = branchFacadeService.findAllLedgersByBranchId(savedBranch.getBranchId());
+        BranchDto savedBranch = branchFacadeService.getAll().get(0);
+        List<LedgerDto> expected = branchFacadeService.getAllLedgersByBranchId(savedBranch.getBranchId());
 
         //then
         assertThat(expected.size()).isEqualTo(5); //because branch have 5 ledgers
@@ -89,8 +89,8 @@ class BranchFacadeServiceTest {
         createBranch();
 
         //when
-        BranchDto savedBranch = branchFacadeService.findAll().get(0);
-        AccountDto expected = branchFacadeService.findVaultByBranchIdAndCurrency(savedBranch.getBranchId(), "KMF");
+        BranchDto savedBranch = branchFacadeService.getAll().get(0);
+        AccountDto expected = branchFacadeService.getVaultByBranchIdAndCurrency(savedBranch.getBranchId(), "KMF");
 
         //then
         assertThat(expected.getCurrency()).isEqualTo("KMF");

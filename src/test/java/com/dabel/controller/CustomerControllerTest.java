@@ -48,11 +48,11 @@ class CustomerControllerTest {
                 .branchAddress("Moroni")
                 .build(), new double[3]);
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE465464")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
@@ -115,7 +115,7 @@ class CustomerControllerTest {
     void shouldDisplayDetailsOfExistingCustomer() throws Exception {
         //given
         createCustomer();
-        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
+        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.getAll().get(0).getCustomerId();
 
         //then
         mockMvc.perform(get(url))
@@ -126,7 +126,7 @@ class CustomerControllerTest {
     void shouldUpdateCustomerInfo() throws Exception {
         //given
         createCustomer();
-        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
+        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.getAll().get(0).getCustomerId();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("firstName", "Sarah");
@@ -143,7 +143,7 @@ class CustomerControllerTest {
     void shouldNotUpdateAnInvalidCustomer() throws Exception {
         //given
         createCustomer();
-        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.findAll().get(0).getCustomerId();
+        String url = Web.Endpoint.CUSTOMERS + "/" + customerFacadeService.getAll().get(0).getCustomerId();
 
         //then
         mockMvc.perform(post(url))

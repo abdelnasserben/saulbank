@@ -50,17 +50,17 @@ class AccountControllerTest {
                 .branchAddress("Moroni")
                 .build(), new double[3]);
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE465465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
     private void saveInactiveTrunk() {
         createCustomerAccount();
-        accountFacadeService.deactivateTrunk(accountFacadeService.findAllTrunks().get(0).getTrunkId());
+        accountFacadeService.deactivateTrunkById(accountFacadeService.getAllTrunks().get(0).getTrunkId());
     }
 
     @BeforeEach
@@ -88,7 +88,7 @@ class AccountControllerTest {
     void shouldDisplayDetailsOfExistingTrunk() throws Exception {
         //given
         createCustomerAccount();
-        String url = Web.Endpoint.ACCOUNTS + "/" + accountFacadeService.findAllTrunks().get(0).getTrunkId();
+        String url = Web.Endpoint.ACCOUNTS + "/" + accountFacadeService.getAllTrunks().get(0).getTrunkId();
 
         //then
         mockMvc.perform(get(url))
@@ -100,7 +100,7 @@ class AccountControllerTest {
     void shouldActivateTrunk() throws Exception {
         //given
         saveInactiveTrunk();
-        String url = Web.Endpoint.ACCOUNT_ACTIVATE + "/" + accountFacadeService.findAllTrunks().get(0).getTrunkId();
+        String url = Web.Endpoint.ACCOUNT_ACTIVATE + "/" + accountFacadeService.getAllTrunks().get(0).getTrunkId();
 
         //then
         mockMvc.perform(post(url))
@@ -111,7 +111,7 @@ class AccountControllerTest {
     void shouldDeactivateTrunk() throws Exception {
         //given
         saveInactiveTrunk();
-        String url = Web.Endpoint.ACCOUNT_DEACTIVATE + "/" + accountFacadeService.findAllTrunks().get(0).getTrunkId();
+        String url = Web.Endpoint.ACCOUNT_DEACTIVATE + "/" + accountFacadeService.getAllTrunks().get(0).getTrunkId();
 
         //then
         mockMvc.perform(post(url))
@@ -142,7 +142,7 @@ class AccountControllerTest {
 
         //then
         mockMvc.perform(get(Web.Endpoint.ACCOUNT_AFFILIATION)
-                        .param("code", accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber()))
+                        .param("code", accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber()))
                 .andExpect(view().name(Web.View.ACCOUNT_AFFILIATION))
                 .andExpect(model().attributeExists("account"));
     }
@@ -151,7 +151,7 @@ class AccountControllerTest {
     void shouldDisplayFormPageOfTrunkAffiliationManagementWithoutMember() throws Exception {
         //given
         createCustomerAccount();
-        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber();
+        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber();
 
         //then
         mockMvc.perform(get(url))
@@ -164,13 +164,13 @@ class AccountControllerTest {
     void shouldDisplayFormPageOfTrunkAffiliationManagementWithMember() throws Exception {
         //given
         createCustomerAccount();
-        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber();
+        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber();
 
         //then
         mockMvc.perform(get(url)
                         .param("member", "NBE465465"))
                 .andExpect(view().name(Web.View.ACCOUNT_AFFILIATION_ADD))
-                .andExpect(model().attribute("customer", customerFacadeService.findAll().get(0)))
+                .andExpect(model().attribute("customer", customerFacadeService.getAll().get(0)))
                 .andExpect(model().attributeExists("trunk"));
     }
 
@@ -178,7 +178,7 @@ class AccountControllerTest {
     void shouldNotAffiliateNotExistingCustomerWithInvalidInformation() throws Exception {
         //given
         createCustomerAccount();
-        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber();
+        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber();
 
         //then
         mockMvc.perform(post(url)
@@ -190,7 +190,7 @@ class AccountControllerTest {
     void shouldAffiliateNotExistingCustomerAsAffiliate() throws Exception {
         //given
         createCustomerAccount();
-        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber();
+        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("member", "");
@@ -209,14 +209,14 @@ class AccountControllerTest {
         //given
         createCustomerAccount();
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("Sarah")
                 .lastName("Hunt")
                 .identityNumber("NBE021465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "Sarah Hunt", AccountType.SAVING, AccountProfile.PERSONAL);
 
-        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber();
+        String url = Web.Endpoint.ACCOUNT_AFFILIATION + "/" + accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber();
 
         //then
         mockMvc.perform(post(url)
@@ -233,11 +233,11 @@ class AccountControllerTest {
                 .firstName("Sarah")
                 .lastName("Hunt")
                 .identityNumber("NBE021465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build();
-        accountFacadeService.addAffiliate(savedNextAffiliate, accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber());
+        accountFacadeService.addAffiliateToAccount(savedNextAffiliate, accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber());
 
-        String url = String.format("%s/%s/remove/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountFacadeService.findAllTrunks().get(0).getTrunkId(), "NBE021465");
+        String url = String.format("%s/%s/remove/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountFacadeService.getAllTrunks().get(0).getTrunkId(), "NBE021465");
 
         //then
         mockMvc.perform(post(url))

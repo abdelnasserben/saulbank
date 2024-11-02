@@ -21,6 +21,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController implements PageTitleConfig {
 
+    private static final String USER_ADDED_SUCCESS_MESSAGE = "New user added successfully !";
+    private static final String USER_INFO_CHANGED_SUCCESS_MESSAGE = "User info successfully changed!";
+    private static final String USERNAME_CHANGED_SUCCESS_MESSAGE = "Username successfully changed.";
+    private static final String PASSWORD_CHANGED_SUCCESS_MESSAGE = "Password successfully changed!";
+    private static final String USER_ROLE_CHANGED_SUCCESS_MESSAGE = "User role successfully changed.";
+    private static final String USER_BRANCH_CHANGED_SUCCESS_MESSAGE = "User branch successfully changed.";
+    private static final String INVALID_INFORMATION_ERROR_MESSAGE = "Invalid information !";
+    private static final String USERNAME_TAKEN_WARNING_MESSAGE = "Username already exists";
+    private static final String CURRENT_PASSWORD_INCORRECT_ERROR_MESSAGE = "Current password is incorrect!";
+    private static final String PASSWORD_CONFIRMATION_ERROR_MESSAGE = "New password and confirmation do not match or are empty!";
+
     private final BranchFacadeService branchFacadeService;
     private final UserService userService;
 
@@ -40,14 +51,14 @@ public class UserController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.USERS + "/{username}")
-    public String userDetails(Model model, @PathVariable String username) {
+    public String showUserDetails(Model model, @PathVariable String username) {
 
         UserDto user = userService.findByUsername(username);
         configPageTitle(model, "User Details");
         model.addAttribute("user", StatedObjectFormatter.format(user));
         model.addAttribute("loginSessions", StatedObjectFormatter.format(userService.getLoginLogs(user)));
         model.addAttribute("userLogs", userService.getLogs(user));
-        model.addAttribute("branches", branchFacadeService.findAll());
+        model.addAttribute("branches", branchFacadeService.getAll());
 
         return Web.View.USERS_DETAILS;
     }
@@ -55,18 +66,18 @@ public class UserController implements PageTitleConfig {
     @PostMapping(value = Web.Endpoint.USERS)
     public String addUser(Model model, @Valid UserDto userDto, BindingResult binding,
                           @RequestParam(required = false, defaultValue = "0") long branchCode,
-                          RedirectAttributes redirect) {
+                          RedirectAttributes redirectAttributes) {
 
         if(binding.hasErrors() || branchCode <= 0) {
             prepareUserListPage(model);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
+            model.addAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
             return Web.View.USERS;
         }
 
         //TODO: set user branch and save
-        userDto.setBranch(branchFacadeService.findById(branchCode));
+        userDto.setBranch(branchFacadeService.getById(branchCode));
         userService.create(userDto);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "New user added successfully !");
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, USER_ADDED_SUCCESS_MESSAGE);
 
         return "redirect:" + Web.Endpoint.USERS;
     }
@@ -83,9 +94,9 @@ public class UserController implements PageTitleConfig {
             userDto.setLastName(lastName);
 
             userService.save(userDto);
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "User info successfully changed!");
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, USER_INFO_CHANGED_SUCCESS_MESSAGE);
 
-        } else redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid information !");
+        } else redirect.addFlashAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
 
         return redirectToUser(username);
     }
@@ -93,7 +104,7 @@ public class UserController implements PageTitleConfig {
     @PutMapping(value = Web.Endpoint.USERS_UPDATE_USERNAME + "/{username}")
     public String updateUsername(@PathVariable String username,
                                  @RequestParam(defaultValue = "") String newUsername,
-                                 RedirectAttributes redirect,
+                                 RedirectAttributes redirectAttributes,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
 
@@ -106,16 +117,16 @@ public class UserController implements PageTitleConfig {
 
                 userService.updateUsername(userDto, newUsername);
 
-                String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirect, "Username successfully changed. Please log in again.");
+                String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirectAttributes, USERNAME_CHANGED_SUCCESS_MESSAGE + ". Please log in again.");
                 if (logoutIfCurrentUser != null)
                     return logoutIfCurrentUser;
 
-                redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Username successfully changed.");
+                redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, USERNAME_CHANGED_SUCCESS_MESSAGE);
                 return redirectToUser(newUsername);
 
-            } else redirect.addFlashAttribute(Web.MessageTag.WARNING, "Username already exists");
+            } else redirectAttributes.addFlashAttribute(Web.MessageTag.WARNING, USERNAME_TAKEN_WARNING_MESSAGE);
 
-        } else redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid Information");
+        } else redirectAttributes.addFlashAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
 
         return redirectToUser(username);
     }
@@ -125,7 +136,7 @@ public class UserController implements PageTitleConfig {
                                      @RequestParam String currentPassword,
                                      @RequestParam String newPassword,
                                      @RequestParam String confirmPassword,
-                                     RedirectAttributes redirect,
+                                     RedirectAttributes redirectAttributes,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
@@ -136,22 +147,22 @@ public class UserController implements PageTitleConfig {
             if (userService.isPasswordValid(user, currentPassword)) {
                 userService.updatePassword(user, newPassword);
 
-                String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirect, "Password successfully changed. Please log in again.");
+                String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirectAttributes, PASSWORD_CHANGED_SUCCESS_MESSAGE + ". Please log in again.");
                 if (logoutIfCurrentUser != null)
                     return logoutIfCurrentUser;
 
-                redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Password successfully changed!");
+                redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, PASSWORD_CHANGED_SUCCESS_MESSAGE);
 
-            } else redirect.addFlashAttribute(Web.MessageTag.ERROR, "Current password is incorrect!");
+            } else redirectAttributes.addFlashAttribute(Web.MessageTag.ERROR, CURRENT_PASSWORD_INCORRECT_ERROR_MESSAGE);
 
-        } else redirect.addFlashAttribute(Web.MessageTag.ERROR, "New password and confirmation do not match or are empty!");
+        } else redirectAttributes.addFlashAttribute(Web.MessageTag.ERROR, PASSWORD_CONFIRMATION_ERROR_MESSAGE);
 
         return redirectToUser(username);
     }
 
     @PutMapping(value = Web.Endpoint.USERS_UPDATE_ROLE + "/{username}")
     public String updateUserRole(@PathVariable String username, @RequestParam UserRole newRole,
-                                 RedirectAttributes redirect,
+                                 RedirectAttributes redirectAttributes,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
 
@@ -161,13 +172,13 @@ public class UserController implements PageTitleConfig {
         if (!userDto.getRole().equalsIgnoreCase(newRole.name())) {
             userService.updateRole(userDto, newRole.name());
 
-            String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirect, "User role successfully changed. Please log in again.");
+            String logoutIfCurrentUser = handleLogoutIfCurrentUser(currentUser, username, request, response, redirectAttributes, USER_ROLE_CHANGED_SUCCESS_MESSAGE + ". Please log in again.");
             if (logoutIfCurrentUser != null)
                 return logoutIfCurrentUser;
 
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "User role successfully changed.");
+            redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, USER_ROLE_CHANGED_SUCCESS_MESSAGE);
 
-        } else redirect.addFlashAttribute(Web.MessageTag.WARNING, "The user already holds the '" + newRole.name() + "' role. No changes were made.");
+        } else redirectAttributes.addFlashAttribute(Web.MessageTag.WARNING, "The user already holds the '" + newRole.name() + "' role. No changes were made.");
 
         return redirectToUser(username);
     }
@@ -181,11 +192,11 @@ public class UserController implements PageTitleConfig {
         UserDto user = userService.findByUsername(username);
 
         if (newBranchCode <= 0) {
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid Information");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
             return redirectToUser(username);
         }
 
-        BranchDto branchDto = branchFacadeService.findById(newBranchCode);
+        BranchDto branchDto = branchFacadeService.getById(newBranchCode);
 
         if (user.getBranch().getBranchId() == newBranchCode) {
             redirect.addFlashAttribute(Web.MessageTag.WARNING, "The user is already assigned to the '" + branchDto.getBranchName() + "' branch. No changes were made.");
@@ -194,7 +205,7 @@ public class UserController implements PageTitleConfig {
 
         user.setBranch(branchDto);
         userService.save(user);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "User branch successfully changed.");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, USER_BRANCH_CHANGED_SUCCESS_MESSAGE);
 
         return redirectToUser(username);
     }
@@ -215,7 +226,7 @@ public class UserController implements PageTitleConfig {
     private void prepareUserListPage(Model model) {
         configPageTitle(model, Web.Menu.Bank.Users.ROOT);
         model.addAttribute("users", StatedObjectFormatter.format(userService.findAll()));
-        model.addAttribute("branches", branchFacadeService.findAll());
+        model.addAttribute("branches", branchFacadeService.getAll());
     }
 
     @Override

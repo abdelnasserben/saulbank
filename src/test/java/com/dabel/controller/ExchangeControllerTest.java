@@ -49,7 +49,7 @@ class ExchangeControllerTest {
                 .saleCurrency("KMF")
                 .customerIdentityNumber("NBE546646")
                 .customerFullName("John Doe")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build());
     }
 
@@ -114,7 +114,7 @@ class ExchangeControllerTest {
     void shouldDisplayDetailsOfAnExistingExchange() throws Exception {
         //given
         initExchange();
-        String url = Web.Endpoint.EXCHANGES + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
+        String url = Web.Endpoint.EXCHANGES + "/" + exchangeFacadeService.getAll().get(0).getExchangeId();
 
         //then
         mockMvc.perform(get(url))
@@ -125,7 +125,7 @@ class ExchangeControllerTest {
     void shouldApproveExchange() throws Exception {
         //given
         initExchange();
-        String url = Web.Endpoint.EXCHANGE_APPROVE + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
+        String url = Web.Endpoint.EXCHANGE_APPROVE + "/" + exchangeFacadeService.getAll().get(0).getExchangeId();
 
         //then
         mockMvc.perform(post(url))
@@ -136,7 +136,7 @@ class ExchangeControllerTest {
     void shouldNotRejectExchangeWithoutReason() throws Exception {
         //given
         initExchange();
-        String url = Web.Endpoint.EXCHANGE_REJECT + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
+        String url = Web.Endpoint.EXCHANGE_REJECT + "/" + exchangeFacadeService.getAll().get(0).getExchangeId();
 
         //then
         mockMvc.perform(post(url)
@@ -148,7 +148,7 @@ class ExchangeControllerTest {
     void shouldRejectExchange() throws Exception {
         //given
         initExchange();
-        String url = Web.Endpoint.EXCHANGE_REJECT + "/" + exchangeFacadeService.findAll().get(0).getExchangeId();
+        String url = Web.Endpoint.EXCHANGE_REJECT + "/" + exchangeFacadeService.getAll().get(0).getExchangeId();
 
         //then
         mockMvc.perform(post(url)

@@ -43,7 +43,7 @@ class DepositTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -55,7 +55,7 @@ class DepositTest {
                 .build());
 
         //TODO: create vault because a deposit requires one.
-        accountService.save(AccountDto.builder()
+        accountService.saveAccount(AccountDto.builder()
                 .accountName("Vault Code 1")
                 .accountNumber("987654321")
                 .currency("KMF")

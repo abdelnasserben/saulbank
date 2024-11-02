@@ -22,9 +22,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 
 @Controller
 public class TransactionController implements PageTitleConfig {
+
+    private static final String INVALID_INFORMATION_ERROR_MESSAGE = "Please provide valid transaction information!";
+    private static final String REJECT_REASON_ERROR_MESSAGE = "A rejection reason is required!";
+    private static final String TRANSACTION_INITIATED_SUCCESS_MESSAGE = "Transaction initiated successfully.";
+    private static final String TRANSACTION_APPROVED_SUCCESS_MESSAGE = "Transaction approved successfully!";
+    private static final String TRANSACTION_REJECTED_SUCCESS_MESSAGE = "Transaction rejected successfully!";
+
 
     private final TransactionFacadeService transactionFacadeService;
     private final AccountFacadeService accountFacadeService;
@@ -38,22 +47,21 @@ public class TransactionController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.TRANSACTIONS)
-    public String listingTransaction(Model model) {
+    public String listTransactions(Model model) {
 
         configPageTitle(model, Web.Menu.Transaction.ROOT);
-        model.addAttribute("transactions", StatedObjectFormatter.format(
-                transactionFacadeService.findAll().stream()
-                        .filter(transactionDto -> !transactionDto.getTransactionType().equals(TransactionType.FEE.name()))
-                        .toList())
-        );
+        List<TransactionDto> transactions = transactionFacadeService.getAll().stream()
+                .filter(transaction -> !TransactionType.FEE.name().equals(transaction.getTransactionType()))
+                .toList();
 
+        model.addAttribute("transactions", StatedObjectFormatter.format(transactions));
         return Web.View.TRANSACTIONS;
     }
 
     @GetMapping(value = Web.Endpoint.TRANSACTIONS + "/{transactionId}")
-    public String transactionDetails(@PathVariable Long transactionId, Model model) {
+    public String showTransactionDetails(@PathVariable Long transactionId, Model model) {
 
-        TransactionDto transactionDto = transactionFacadeService.findById(transactionId);
+        TransactionDto transactionDto = transactionFacadeService.getById(transactionId);
 
         model.addAttribute("transaction", StatedObjectFormatter.format(transactionDto));
         configPageTitle(model, "Transaction Details");
@@ -61,43 +69,30 @@ public class TransactionController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.TRANSACTION_INIT)
-    public String initTransaction(Model model, TransactionDto transactionDto) {
+    public String initializeTransaction(Model model, TransactionDto transactionDto) {
         configPageTitle(model, Web.Menu.Transaction.INIT);
 
         return Web.View.TRANSACTION_INIT;
     }
 
     @PostMapping(value = Web.Endpoint.TRANSACTION_INIT)
-    public String initTransaction(Model model, @Valid TransactionDto transactionDto, BindingResult binding,
-                                  @RequestParam String initiatorAccountNumber,
-                                  @RequestParam(name = "receiverAccountNumber", required = false) String receiverAccountNumber,
-                                  RedirectAttributes redirect) {
+    public String handleTransactionInitialization(Model model, @Valid TransactionDto transactionDto, BindingResult bindingResult,
+                                                  @RequestParam String initiatorAccountNumber,
+                                                  @RequestParam(name = "receiverAccountNumber", required = false) String receiverAccountNumber,
+                                                  RedirectAttributes redirectAttributes) {
 
-        if(binding.hasErrors() || transactionDto.getTransactionType().equalsIgnoreCase(TransactionType.TRANSFER.name()) && receiverAccountNumber.isEmpty()) {
+        if(bindingResult.hasErrors() || isInvalidTransfer(transactionDto, receiverAccountNumber)) {
             configPageTitle(model, Web.Menu.Transaction.INIT);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid information!");
+            model.addAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
 
             return Web.View.TRANSACTION_INIT;
         }
 
-        //TODO: set initiator account
-        AccountDto initiatorAccount = accountFacadeService.findTrunkByNumber(initiatorAccountNumber).getAccount();
-        transactionDto.setInitiatorAccount(initiatorAccount);
-
-        //TODO: set receiver account when transaction is a transfer
-        if(transactionDto.getTransactionType().equalsIgnoreCase(TransactionType.TRANSFER.name())) {
-            AccountDto receiverAccount = accountFacadeService.findTrunkByNumber(receiverAccountNumber).getAccount();
-            transactionDto.setReceiverAccount(receiverAccount);
-        }
-
-        //TODO: set branch - We'll replace this automatically by user authenticated
-        BranchDto branchDto = userService.getAuthenticated().getBranch();
-        transactionDto.setBranch(branchDto);
-        transactionDto.setSourceType(SourceType.ONLINE.name());
-        transactionDto.setSourceValue(branchDto.getBranchName());
+        setupTransactionAccounts(transactionDto, initiatorAccountNumber, receiverAccountNumber);
+        setTransactionBranchAndSource(transactionDto);
 
         transactionFacadeService.init(transactionDto);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, transactionDto.getTransactionType() + " successfully initiated.");
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, TRANSACTION_INITIATED_SUCCESS_MESSAGE);
 
         return "redirect:" + Web.Endpoint.TRANSACTION_INIT;
     }
@@ -106,21 +101,46 @@ public class TransactionController implements PageTitleConfig {
     public String approveTransaction(@PathVariable Long transactionId, RedirectAttributes redirect) {
 
         transactionFacadeService.approve(transactionId);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Transaction successfully approved!");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, TRANSACTION_APPROVED_SUCCESS_MESSAGE);
 
-        return "redirect:" + Web.Endpoint.TRANSACTIONS + "/" + transactionId;
+        return redirectToTransactionDetails(transactionId);
     }
 
     @PostMapping(value = Web.Endpoint.TRANSACTION_REJECT + "/{transactionId}")
-    public String rejectTransaction(@PathVariable Long transactionId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+    public String rejectTransaction(@PathVariable Long transactionId, @RequestParam String rejectReason, RedirectAttributes redirectAttributes) {
 
         if(rejectReason.isBlank())
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");
+            redirectAttributes.addFlashAttribute(Web.MessageTag.ERROR, REJECT_REASON_ERROR_MESSAGE);
         else {
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Transaction successfully rejected!");
+            redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, TRANSACTION_REJECTED_SUCCESS_MESSAGE);
             transactionFacadeService.reject(transactionId, rejectReason);
         }
 
+        return redirectToTransactionDetails(transactionId);
+    }
+
+    private boolean isInvalidTransfer(TransactionDto transactionDto, String receiverAccountNumber) {
+        return TransactionType.TRANSFER.name().equalsIgnoreCase(transactionDto.getTransactionType()) && receiverAccountNumber.isBlank();
+    }
+
+    private void setupTransactionAccounts(TransactionDto transactionDto, String initiatorAccountNumber, String receiverAccountNumber) {
+        AccountDto initiatorAccount = accountFacadeService.getTrunkByNumber(initiatorAccountNumber).getAccount();
+        transactionDto.setInitiatorAccount(initiatorAccount);
+
+        if (TransactionType.TRANSFER.name().equalsIgnoreCase(transactionDto.getTransactionType())) {
+            AccountDto receiverAccount = accountFacadeService.getTrunkByNumber(receiverAccountNumber).getAccount();
+            transactionDto.setReceiverAccount(receiverAccount);
+        }
+    }
+
+    private void setTransactionBranchAndSource(TransactionDto transactionDto) {
+        BranchDto branchDto = userService.getAuthenticated().getBranch();
+        transactionDto.setBranch(branchDto);
+        transactionDto.setSourceType(SourceType.ONLINE.name());
+        transactionDto.setSourceValue(branchDto.getBranchName());
+    }
+
+    private static String redirectToTransactionDetails(Long transactionId) {
         return "redirect:" + Web.Endpoint.TRANSACTIONS + "/" + transactionId;
     }
 

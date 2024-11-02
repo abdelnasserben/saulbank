@@ -46,7 +46,7 @@ class TransferTest {
                 .status("1")
                 .build());
 
-        AccountDto initiator = accountService.save(AccountDto.builder()
+        AccountDto initiator = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -66,14 +66,14 @@ class TransferTest {
                 .build());
 
         //TODO: create trunk because a transfer requires one.
-        accountService.save(TrunkDto.builder()
+        accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(initiator)
                 .membership("OWNER")
                 .build());
 
         //TODO: create vault because a transfer requires one.
-        accountService.save(AccountDto.builder()
+        accountService.saveAccount(AccountDto.builder()
                 .accountName("Vault Code 1")
                 .accountNumber("987654321")
                 .currency("KMF")
@@ -85,7 +85,7 @@ class TransferTest {
                 .build());
 
         //TODO: create receiver account because a transfer requires one.
-        AccountDto receiverAccount = accountService.save(AccountDto.builder()
+        AccountDto receiverAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("Sarah Hunt")
                 .accountNumber("0987654321")
                 .currency("KMF")
@@ -185,7 +185,7 @@ class TransferTest {
         TransactionDto transactionDto = getTransactionDto();
 
         //TODO: create ledger for transfer fees
-        accountService.save(LedgerDto.builder()
+        accountService.saveLedger(LedgerDto.builder()
                 .ledgerType("TRANSFER")
                 .account(AccountDto.builder()
                         .accountName("Transfer ledger")

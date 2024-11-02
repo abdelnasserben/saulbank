@@ -21,10 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 public class AccountController implements PageTitleConfig {
+
+    private static final String MESSAGE_ACCOUNT_ACTIVATED = "Account successfully activated!";
+    private static final String MESSAGE_ACCOUNT_DEACTIVATED = "Account successfully deactivated!";
+    private static final String MESSAGE_AFFILIATION_SUCCESS = "Successful affiliation!";
+    private static final String MESSAGE_AFFILIATE_REMOVED = "Affiliate removed successfully!";
+    private static final String ERROR_ACCOUNT_NOT_FOUND = "Account not found";
+    private static final String ERROR_INVALID_INFORMATION = "Invalid Information!";
 
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
@@ -36,9 +42,9 @@ public class AccountController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNTS)
-    public String listingTrunks(Model model) {
+    public String listAllAccounts(Model model) {
 
-        List<TrunkDto> customerAccounts = accountFacadeService.findAllTrunks().stream()
+        List<TrunkDto> customerAccounts = accountFacadeService.getAllTrunks().stream()
                 .peek(trunkDto -> StatedObjectFormatter.format(trunkDto.getAccount()))
                 .toList();
 
@@ -48,51 +54,51 @@ public class AccountController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNTS + "/{trunkId}")
-    public String trunkDetails(Model model, @PathVariable Long trunkId) {
+    public String showAccountDetails(Model model, @PathVariable Long trunkId) {
+        TrunkDto trunk = accountFacadeService.getTrunkById(trunkId);
+        StatedObjectFormatter.format(trunk.getAccount());
 
-        TrunkDto trunkDto = Stream.of(accountFacadeService.findTrunkById(trunkId))
-                .peek(t -> StatedObjectFormatter.format(t.getAccount()))
-                .findFirst()
-                .get();
         configPageTitle(model, "Account Details");
-        model.addAttribute("trunk", trunkDto);
+        model.addAttribute("trunk", trunk);
         return Web.View.ACCOUNT_DETAILS;
     }
 
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_ACTIVATE + "/{trunkId}")
-    public String activateTrunk(@PathVariable Long trunkId, RedirectAttributes redirect) {
+    public String activateAccount(@PathVariable Long trunkId, RedirectAttributes redirectAttributes) {
 
-        accountFacadeService.activateTrunk(trunkId);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Account successfully activated !");
+        accountFacadeService.activateTrunkById(trunkId);
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, MESSAGE_ACCOUNT_ACTIVATED);
 
-        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNTS, trunkId);
+        return buildRedirectUrl(Web.Endpoint.ACCOUNTS, trunkId);
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_DEACTIVATE + "/{trunkId}")
-    public String deactivateTrunk(@PathVariable Long trunkId, RedirectAttributes redirect) {
+    public String deactivateAccount(@PathVariable Long trunkId, RedirectAttributes redirectAttributes) {
 
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Account successfully deactivated!");
-        accountFacadeService.deactivateTrunk(trunkId);
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS,  MESSAGE_ACCOUNT_DEACTIVATED);
+        accountFacadeService.deactivateTrunkById(trunkId);
 
-        return String.format("redirect:%s/%d", Web.Endpoint.ACCOUNTS, trunkId);
+        return buildRedirectUrl(Web.Endpoint.ACCOUNTS, trunkId);
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION)
-    public String displayTrunkAffiliationsDetails(Model model, @RequestParam(name = "code", required = false) String code) {
+    public String showAccountAffiliations(Model model, @RequestParam(name = "code", required = false) String accountNumber) {
 
-        if(code != null) {
+        if(accountNumber != null) {
             try {
-                AccountDto accountDto = accountFacadeService.findTrunkByNumber(code).getAccount();
-                List<TrunkDto> trunks = accountFacadeService.findAllTrunks(accountDto).stream()
-                        .peek(t -> StatedObjectFormatter.format(t.getAccount()))
-                        .peek(t -> StatedObjectFormatter.format(t.getCustomer()))
+                AccountDto account = accountFacadeService.getTrunkByNumber(accountNumber).getAccount();
+                List<TrunkDto> affiliatedAccounts = accountFacadeService.getAllTrunksByAccount(account).stream()
+                        .peek(t -> {
+                            StatedObjectFormatter.format(t.getAccount());
+                            StatedObjectFormatter.format(t.getCustomer());
+                        })
                         .toList();
 
-                model.addAttribute("account", StatedObjectFormatter.format(accountDto));
-                model.addAttribute("trunks", trunks);
+                model.addAttribute("account", StatedObjectFormatter.format(account));
+                model.addAttribute("trunks", affiliatedAccounts);
             } catch (ResourceNotFoundException ex) {
-                model.addAttribute(Web.MessageTag.ERROR, "Account not found");
+                model.addAttribute(Web.MessageTag.ERROR, ERROR_ACCOUNT_NOT_FOUND);
             }
         }
 
@@ -101,58 +107,58 @@ public class AccountController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{accountNumber}")
-    public String displayManageTrunkAffiliationPage(Model model, @PathVariable String accountNumber, @RequestParam(name="member", required = false) String customerIdentity) {
+    public String showAffiliationManagementPage(Model model, @PathVariable String accountNumber, @RequestParam(name="member", required = false) String customerIdentity) {
+        TrunkDto trunk = accountFacadeService.getTrunkByNumber(accountNumber);
+        StatedObjectFormatter.format(trunk.getAccount());
 
-        TrunkDto trunkDto = Stream.of(accountFacadeService.findTrunkByNumber(accountNumber))
-                .peek(t -> StatedObjectFormatter.format(t.getAccount()))
-                .findFirst()
-                .get();
+        CustomerDto customer = (customerIdentity != null) ? customerFacadeService.getByIdentityNumber(customerIdentity) : new CustomerDto();
 
-        if(customerIdentity != null)
-            model.addAttribute("customer", customerFacadeService.findByIdentity(customerIdentity));
-        else model.addAttribute("customer",  new CustomerDto());
-
-        model.addAttribute("trunk",  trunkDto);
+        model.addAttribute("customer", customer);
+        model.addAttribute("trunk",  trunk);
         configPageTitle(model, Web.Menu.Account.AFFILIATION_ADD);
         return Web.View.ACCOUNT_AFFILIATION_ADD;
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{accountNumber}")
-    public String addNewAffiliate(Model model, @Valid CustomerDto customerDto, BindingResult binding,
-                                         @PathVariable String accountNumber,
-                                         @RequestParam(name = "member") String customerIdentity,
-                                         RedirectAttributes redirect) {
+    public String addAffiliate(Model model, @Valid CustomerDto customerDto, BindingResult bindingResult,
+                               @PathVariable String accountNumber,
+                               @RequestParam(name = "member") String customerIdentity,
+                               RedirectAttributes redirectAttributes) {
 
-        CustomerDto nextAffiliate;
-        if(customerIdentity.isEmpty()) {
-            if(binding.hasErrors()) {
-                redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid Information!");
-                return String.format("redirect:%s/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
-            }
+        CustomerDto affiliate = customerIdentity.isEmpty() ? validateCustomerData(customerDto, bindingResult, redirectAttributes) : customerFacadeService.getByIdentityNumber(customerIdentity);
 
-            nextAffiliate = customerDto;
+        if (affiliate == null)
+            return buildRedirectUrl(Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
 
-        } else nextAffiliate = customerFacadeService.findByIdentity(customerIdentity);
+        accountFacadeService.addAffiliateToAccount(affiliate, accountNumber);
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, MESSAGE_AFFILIATION_SUCCESS);
 
-
-        accountFacadeService.addAffiliate(nextAffiliate, accountNumber);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful affiliation!");
-
-        return String.format("redirect:%s/%s", Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
+        return  buildRedirectUrl(Web.Endpoint.ACCOUNT_AFFILIATION, accountNumber);
     }
 
     @PostMapping(value = Web.Endpoint.ACCOUNT_AFFILIATION + "/{trunkId}/" + "remove/" + "{customerIdentityNumber}")
-    public String removeAffiliate(@PathVariable Long trunkId, @PathVariable String customerIdentityNumber, RedirectAttributes redirect) {
+    public String removeAffiliate(@PathVariable Long trunkId, @PathVariable String customerIdentityNumber, RedirectAttributes redirectAttributes) {
 
-        TrunkDto trunkDto = accountFacadeService.findTrunkById(trunkId);
-        CustomerDto customerDto = customerFacadeService.findByIdentity(customerIdentityNumber);
+        TrunkDto trunk = accountFacadeService.getTrunkById(trunkId);
+        CustomerDto customer = customerFacadeService.getByIdentityNumber(customerIdentityNumber);
 
-        accountFacadeService.removeAffiliate(customerDto, trunkDto.getAccount().getAccountNumber());
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Affiliate removed successfully!");
+        accountFacadeService.removeAffiliateFromAccount(customer, trunk.getAccount().getAccountNumber());
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, MESSAGE_AFFILIATE_REMOVED);
 
-        return String.format("redirect:%s?code=%s", Web.Endpoint.ACCOUNT_AFFILIATION, trunkDto.getAccount().getAccountNumber());
+        return String.format("redirect:%s?code=%s", Web.Endpoint.ACCOUNT_AFFILIATION, trunk.getAccount().getAccountNumber());
     }
 
+    private String buildRedirectUrl(String endpoint, Object identifier) {
+        return String.format("redirect:%s/%s", endpoint, identifier);
+    }
+
+    private CustomerDto validateCustomerData(CustomerDto customerDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute(Web.MessageTag.ERROR, ERROR_INVALID_INFORMATION);
+            return null;
+        }
+        return customerDto;
+    }
 
     @Override
     public String[] getMenuAndSubMenu() {

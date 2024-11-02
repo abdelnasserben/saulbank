@@ -53,7 +53,7 @@ class ExchangeOperationServiceTest {
 
     //TODO: an exchange requires two Vaults of the two currencies involved
     private void createVaults(ExchangeDto exchangeDto) {
-        accountService.save(AccountDto.builder()
+        accountService.saveAccount(AccountDto.builder()
                 .accountName("Vault Code 1")
                 .accountNumber("987654321")
                 .currency(exchangeDto.getPurchaseCurrency())
@@ -64,7 +64,7 @@ class ExchangeOperationServiceTest {
                 .branch(exchangeDto.getBranch())
                 .build());
 
-        accountService.save(AccountDto.builder()
+        accountService.saveAccount(AccountDto.builder()
                 .accountName("Vault Code 1")
                 .accountNumber("123456789")
                 .currency(exchangeDto.getSaleCurrency())

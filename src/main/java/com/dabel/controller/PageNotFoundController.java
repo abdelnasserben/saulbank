@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageNotFoundController {
 
     @GetMapping(value = Web.Endpoint.PAGE_404)
-    public String pageNotFound() {
+    public String sho404Page() {
         return Web.View.PAGE_404;
     }
 }

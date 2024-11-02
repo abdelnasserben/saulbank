@@ -26,6 +26,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class LoanController implements PageTitleConfig {
 
+    private static final String SUCCESS_LOAN_PAY_MESSAGE = "Loan successfully paid";
+    private static final String SUCCESS_LOAN_REQUEST_MESSAGE = "Loan successfully requested";
+    private static final String SUCCESS_LOAN_APPROVE_MESSAGE = "Loan successfully approved!";
+    private static final String SUCCESS_LOAN_REJECT_MESSAGE = "Loan successfully rejected!";
+    private static final String ERROR_INVALID_INFO_MESSAGE = "Invalid information!";
+    private static final String ERROR_REJECT_REASON_MESSAGE = "Reject reason is mandatory!";
+    private static final String ERROR_NEGATIVE_AMOUNT_MESSAGE = "Amount must be positive";
+
     private final LoanFacadeService loanFacadeService;
     private final CustomerFacadeService customerFacadeService;
     private final AccountFacadeService accountFacadeService;
@@ -42,17 +50,17 @@ public class LoanController implements PageTitleConfig {
     /*** FOR LOAN REQUESTS ***/
 
     @GetMapping(value = Web.Endpoint.LOANS)
-    public String listingLoans(Model model) {
+    public String listLoans(Model model) {
         configPageTitle(model, Web.Menu.Loan.ROOT);
-        model.addAttribute("loans", StatedObjectFormatter.format(loanFacadeService.findAll()));
+        model.addAttribute("loans", StatedObjectFormatter.format(loanFacadeService.getAllLoans()));
 
         return Web.View.LOANS;
     }
 
     @GetMapping(value = Web.Endpoint.LOANS + "/{loanId}")
-    public String loanDetails(@PathVariable Long loanId, Model model) {
+    public String showLoanDetails(@PathVariable Long loanId, Model model) {
 
-        LoanDto loanDto = loanFacadeService.findById(loanId);
+        LoanDto loanDto = loanFacadeService.getLoanById(loanId);
 
         configPageTitle(model, "Loan Details");
         model.addAttribute("loan", StatedObjectFormatter.format(loanDto));
@@ -60,16 +68,16 @@ public class LoanController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.LOANS + "/{loanId}")
-    public String payLoan(@PathVariable Long loanId, Model model,
-                          @RequestParam(defaultValue = "0") double amount,
-                          RedirectAttributes redirect) {
+    public String repayLoan(@PathVariable Long loanId, Model model,
+                            @RequestParam(defaultValue = "0") double amount,
+                            RedirectAttributes redirect) {
 
         if(amount <= 0)
-            throw new IllegalOperationException("Amount must be positive");
+            throw new IllegalOperationException(ERROR_NEGATIVE_AMOUNT_MESSAGE);
 
-        loanFacadeService.repay(loanId, amount);
+        loanFacadeService.repayLoan(loanId, amount);
 
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Loan successfully payed");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_LOAN_PAY_MESSAGE);
         return "redirect:" + Web.Endpoint.LOANS + "/" + loanId;
     }
 
@@ -77,10 +85,10 @@ public class LoanController implements PageTitleConfig {
     /*** FOR LOAN REQUESTS ***/
 
     @GetMapping(value = Web.Endpoint.LOAN_REQUESTS)
-    public String listingRequests(Model model) {
+    public String listLoanRequests(Model model) {
 
         configPageTitle(model, Web.Menu.Loan.REQUESTS);
-        model.addAttribute("loanRequests", StatedObjectFormatter.format(loanFacadeService.findAllRequests()));
+        model.addAttribute("loanRequests", StatedObjectFormatter.format(loanFacadeService.getAllLoanRequests()));
 
         return Web.View.LOAN_REQUESTS;
     }
@@ -93,35 +101,26 @@ public class LoanController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.LOAN_REQUEST)
-    public String requestLoan(Model model, @Valid LoanRequestDto loanRequestDto, BindingResult binding,
-                              @RequestParam String customerIdentityNumber,
-                              @RequestParam String beneficiaryAccount,
-                              RedirectAttributes redirect) {
+    public String submitLoanRequest(Model model, @Valid LoanRequestDto loanRequestDto, BindingResult bindingResult,
+                                    @RequestParam String customerIdentityNumber,
+                                    @RequestParam String beneficiaryAccount,
+                                    RedirectAttributes redirectAttributes) {
 
-        if(binding.hasErrors() || customerIdentityNumber.isEmpty() || customerIdentityNumber.isBlank() || beneficiaryAccount.isEmpty() || beneficiaryAccount.isBlank() ) {
-            configPageTitle(model, Web.Menu.Loan.REQUEST);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
-            return Web.View.LOAN_REQUEST;
+        if (bindingResult.hasErrors() || customerIdentityNumber.isBlank() || beneficiaryAccount.isBlank()) {
+            return handleLoanRequestError(model);
         }
 
-        //TODO: setup loan request info [borrower and his associated account, branch]
-        CustomerDto borrower = customerFacadeService.findByIdentity(customerIdentityNumber);
-        AccountDto associatedAccount = accountFacadeService.findTrunkByCustomerAndAccountNumber(borrower, beneficiaryAccount).getAccount();
-        loanRequestDto.setBorrower(borrower);
-        loanRequestDto.setAssociatedAccount(associatedAccount);
+        initializeLoanRequest(loanRequestDto, customerIdentityNumber, beneficiaryAccount);
+        loanFacadeService.initLoanRequest(loanRequestDto);
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_LOAN_REQUEST_MESSAGE);
 
-        loanRequestDto.setBranch(userService.getAuthenticated().getBranch());
-
-        loanFacadeService.initRequest(loanRequestDto);
-
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Loan successfully requested");
         return "redirect:" + Web.Endpoint.LOAN_REQUEST;
     }
 
     @GetMapping(value = Web.Endpoint.LOAN_REQUESTS + "/{requestId}")
-    public String requestDetails(@PathVariable Long requestId, Model model) {
+    public String showLoanRequestDetails(@PathVariable Long requestId, Model model) {
 
-        LoanRequestDto requestDto = loanFacadeService.findRequestById(requestId);
+        LoanRequestDto requestDto = loanFacadeService.getLoanRequestById(requestId);
 
         configPageTitle(model, "Request Details");
         model.addAttribute("requestDto", StatedObjectFormatter.format(requestDto));
@@ -129,24 +128,43 @@ public class LoanController implements PageTitleConfig {
     }
 
     @PostMapping(value = Web.Endpoint.LOAN_REQUESTS_APPROVE + "/{requestId}")
-    public String approveLoanRequest(@PathVariable Long requestId, RedirectAttributes redirect) {
+    public String approveLoanRequest(@PathVariable Long requestId, RedirectAttributes redirectAttributes) {
 
-        loanFacadeService.approveRequest(requestId);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Loan successfully approved!");
+        loanFacadeService.approveLoanRequest(requestId);
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_LOAN_APPROVE_MESSAGE);
 
-        return "redirect:" + Web.Endpoint.LOAN_REQUESTS + "/" + requestId;
+        return redirectToLoanRequestDetails(requestId);
     }
 
     @PostMapping(value = Web.Endpoint.LOAN_REQUESTS_REJECT + "/{requestId}")
-    public String rejectLoanRequest(@PathVariable Long requestId, @RequestParam String rejectReason, RedirectAttributes redirect) {
+    public String rejectLoanRequest(@PathVariable Long requestId, @RequestParam String rejectReason, RedirectAttributes redirectAttributes) {
 
         if(rejectReason.isBlank())
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");
+            redirectAttributes.addFlashAttribute(Web.MessageTag.ERROR, ERROR_REJECT_REASON_MESSAGE);
         else {
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Loan successfully rejected!");
-            loanFacadeService.rejectRequest(requestId, rejectReason);
+            redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_LOAN_REJECT_MESSAGE);
+            loanFacadeService.rejectLoanRequest(requestId, rejectReason);
         }
 
+        return redirectToLoanRequestDetails(requestId);
+    }
+
+    private void initializeLoanRequest(LoanRequestDto loanRequestDto, String customerIdentityNumber, String beneficiaryAccount) {
+        CustomerDto borrower = customerFacadeService.getByIdentityNumber(customerIdentityNumber);
+        AccountDto associatedAccount = accountFacadeService.getTrunkByCustomerAndNumber(borrower, beneficiaryAccount).getAccount();
+
+        loanRequestDto.setBorrower(borrower);
+        loanRequestDto.setAssociatedAccount(associatedAccount);
+        loanRequestDto.setBranch(userService.getAuthenticated().getBranch());
+    }
+
+    private String handleLoanRequestError(Model model) {
+        model.addAttribute("pageTitle", Web.Menu.Loan.REQUEST);
+        model.addAttribute(Web.MessageTag.ERROR, ERROR_INVALID_INFO_MESSAGE);
+        return Web.View.LOAN_REQUEST;
+    }
+
+    private String redirectToLoanRequestDetails(Long requestId) {
         return "redirect:" + Web.Endpoint.LOAN_REQUESTS + "/" + requestId;
     }
 

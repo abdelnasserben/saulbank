@@ -5,12 +5,12 @@ import com.dabel.app.Helper;
 import com.dabel.constant.Currency;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
+import com.dabel.dto.BranchDto;
 import com.dabel.dto.ExchangeDto;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.EvaluableOperation;
 import com.dabel.service.account.AccountService;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +20,6 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
     private final ExchangeService exchangeService;
     private final AccountService accountService;
 
-    @Autowired
     public ExchangeOperationService(ExchangeService exchangeService, AccountService accountService) {
         this.exchangeService = exchangeService;
         this.accountService = accountService;
@@ -28,21 +27,15 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
 
     @Override
     public void init(ExchangeDto exchangeDto) {
-        String purchaseCurrency = exchangeDto.getPurchaseCurrency();
-        String saleCurrency = exchangeDto.getSaleCurrency();
 
-        if(!purchaseCurrency.equalsIgnoreCase(Currency.KMF.name()) && !saleCurrency.equalsIgnoreCase(Currency.KMF.name()))
-            throw new IllegalOperationException("An exchange must involve KMF currency");
+        //TODO: validate exchange currencies
+        validateCurrencies(exchangeDto.getPurchaseCurrency(), exchangeDto.getSaleCurrency());
 
-        if(purchaseCurrency.equalsIgnoreCase(saleCurrency))
-            throw new IllegalOperationException("Currencies must be different");
-
-        //TODO: convert amount and set status of exchange before saving
-        double saleAmount = CurrencyExchanger.exchange(purchaseCurrency, saleCurrency, exchangeDto.getPurchaseAmount());
+        //TODO: set up exchange sale amount
+        double saleAmount = CurrencyExchanger.exchange(exchangeDto.getPurchaseCurrency(), exchangeDto.getSaleCurrency(), exchangeDto.getPurchaseAmount());
         exchangeDto.setSaleAmount(saleAmount);
-        exchangeDto.setStatus(Status.PENDING.code());
-        exchangeDto.setInitiatedBy(Helper.getAuthenticated().getName());
-        exchangeService.save(exchangeDto);
+
+        applyExchangeUpdates(exchangeDto, Status.PENDING.code(), null);
     }
 
     @Override
@@ -50,42 +43,58 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
 
         //TODO: define purchase account and sale account
         AccountDto purchaseAccount, saleAccount;
+        BranchDto branch = exchangeDto.getBranch();
 
         saleAccount = switch (CurrencyExchanger.getExchangeType(exchangeDto.getPurchaseCurrency(), exchangeDto.getSaleCurrency())) {
             case KMF_EUR -> {
-                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
-                yield accountService.findVault(exchangeDto.getBranch(), Currency.EUR.name());
+                purchaseAccount = retrieveVaultByBranchAndCurrency(branch, Currency.KMF.name());
+                yield retrieveVaultByBranchAndCurrency(branch, Currency.EUR.name());
             }
             case EUR_KMF -> {
-                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.EUR.name());
-                yield accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
+                purchaseAccount = retrieveVaultByBranchAndCurrency(branch, Currency.EUR.name());
+                yield retrieveVaultByBranchAndCurrency(branch, Currency.KMF.name());
             }
             case KMF_USD -> {
-                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
-                yield accountService.findVault(exchangeDto.getBranch(), Currency.USD.name());
+                purchaseAccount = retrieveVaultByBranchAndCurrency(branch, Currency.KMF.name());
+                yield retrieveVaultByBranchAndCurrency(branch, Currency.USD.name());
             }
             case USD_KMF -> {
-                purchaseAccount = accountService.findVault(exchangeDto.getBranch(), Currency.USD.name());
-                yield accountService.findVault(exchangeDto.getBranch(), Currency.KMF.name());
+                purchaseAccount = retrieveVaultByBranchAndCurrency(branch, Currency.USD.name());
+                yield retrieveVaultByBranchAndCurrency(branch, Currency.KMF.name());
             }
+            default -> throw new IllegalOperationException("Unsupported currency exchange operation");
         };
 
-        accountService.debit(saleAccount, exchangeDto.getSaleAmount());
-        accountService.credit(purchaseAccount, exchangeDto.getPurchaseAmount());
+        accountService.debitAccount(saleAccount, exchangeDto.getSaleAmount());
+        accountService.creditAccount(purchaseAccount, exchangeDto.getPurchaseAmount());
 
-        exchangeDto.setStatus(Status.APPROVED.code());
-        exchangeDto.setFailureReason("Approved");
-        exchangeDto.setUpdatedBy(Helper.getAuthenticated().getName());
-
-        exchangeService.save(exchangeDto);
+        applyExchangeUpdates(exchangeDto, Status.APPROVED.code(), "Approved");
     }
 
     @Override
     public void reject(ExchangeDto exchangeDto, String remarks) {
-        exchangeDto.setStatus(Status.REJECTED.code());
-        exchangeDto.setFailureReason(remarks);
-        exchangeDto.setUpdatedBy(Helper.getAuthenticated().getName());
+        applyExchangeUpdates(exchangeDto, Status.REJECTED.code(), remarks);
+    }
 
+    private void validateCurrencies(String purchaseCurrency, String saleCurrency) {
+        if (!purchaseCurrency.equalsIgnoreCase(Currency.KMF.name()) &&
+                !saleCurrency.equalsIgnoreCase(Currency.KMF.name())) {
+            throw new IllegalOperationException("An exchange must involve KMF currency");
+        }
+
+        if (purchaseCurrency.equalsIgnoreCase(saleCurrency)) {
+            throw new IllegalOperationException("Currencies must be different");
+        }
+    }
+
+    private AccountDto retrieveVaultByBranchAndCurrency(BranchDto branchDto, String currency) {
+        return accountService.findVaultByBranchAndCurrency(branchDto, currency);
+    }
+
+    private void applyExchangeUpdates(ExchangeDto exchangeDto, String status, String failureReason) {
+        exchangeDto.setStatus(status);
+        exchangeDto.setFailureReason(failureReason);
+        exchangeDto.setUpdatedBy(Helper.getAuthenticated().getName());
         exchangeService.save(exchangeDto);
     }
 }

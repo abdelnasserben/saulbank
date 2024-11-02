@@ -32,6 +32,10 @@ import java.util.List;
 @Controller
 public class CustomerController implements PageTitleConfig {
 
+    private static final String INVALID_INFORMATION_ERROR_MESSAGE = "Invalid information!";
+    private static final String CUSTOMER_ADDED_SUCCESS_MESSAGE = "Customer added successfully!";
+    private static final String CUSTOMER_UPDATED_SUCCESS_MESSAGE = "Customer information updated successfully!";
+
     private final CustomerFacadeService customerFacadeService;
     private final AccountFacadeService accountFacadeService;
     private final TransactionFacadeService transactionFacadeService;
@@ -52,32 +56,32 @@ public class CustomerController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMERS)
-    public String listingCustomers(Model model) {
+    public String listCustomers(Model model) {
 
         configPageTitle(model, Web.Menu.Customer.ROOT);
-        model.addAttribute("customers", StatedObjectFormatter.format(customerFacadeService.findAll()));
+        model.addAttribute("customers", StatedObjectFormatter.format(customerFacadeService.getAll()));
         return Web.View.CUSTOMERS;
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMER_ADD)
-    public String addNewCustomer(Model model, CustomerDto customerDto) {
+    public String showCustomerAddPage(Model model, CustomerDto customerDto) {
         configPageTitle(model, Web.Menu.Customer.ADD);
         return Web.View.CUSTOMER_ADD;
     }
 
     @PostMapping(value = Web.Endpoint.CUSTOMER_ADD)
-    public String addNewCustomer(Model model, @Valid CustomerDto customerDto,
-                                 @RequestParam String accountName,
-                                 @RequestParam AccountType accountType,
-                                 @RequestParam AccountProfile accountProfile,
-                                 @RequestParam MultipartFile avatar,
-                                 @RequestParam MultipartFile signature,
-                                 BindingResult binding, RedirectAttributes redirect) {
+    public String processAddCustomer(Model model, @Valid CustomerDto customerDto,
+                                     @RequestParam String accountName,
+                                     @RequestParam AccountType accountType,
+                                     @RequestParam AccountProfile accountProfile,
+                                     @RequestParam MultipartFile avatar,
+                                     @RequestParam MultipartFile signature,
+                                     BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if(binding.hasErrors()) {
+        if(bindingResult.hasErrors()) {
             configPageTitle(model, Web.Menu.Customer.ADD);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
-            return "customers-add";
+            model.addAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
+            return Web.View.CUSTOMER_ADD;
         }
 
         customerDto.setBranch(userService.getAuthenticated().getBranch());
@@ -88,18 +92,18 @@ public class CustomerController implements PageTitleConfig {
         customerDto.setProfilePicture(savedAvatarName);
         customerDto.setSignaturePicture(savedSignatureName);
 
-        customerFacadeService.create(customerDto, accountName, accountType, accountProfile);
+        customerFacadeService.createNewCustomerWithAccount(customerDto, accountName, accountType, accountProfile);
 
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Customer added successfully !");
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, CUSTOMER_ADDED_SUCCESS_MESSAGE);
         return "redirect:" + Web.Endpoint.CUSTOMER_ADD;
     }
 
     @GetMapping(value = Web.Endpoint.CUSTOMERS + "/{customerId}")
-    public String customerDetails(@PathVariable Long customerId, Model model) {
+    public String showCustomerDetails(@PathVariable Long customerId, Model model) {
 
-        CustomerDto customerDto = customerFacadeService.findById(customerId);
+        CustomerDto customerDto = customerFacadeService.getById(customerId);
 
-        List<TrunkDto> customerAccounts = accountFacadeService.findAllTrunks(customerDto).stream()
+        List<TrunkDto> customerAccounts = accountFacadeService.getAllTrunksByCustomer(customerDto).stream()
                 .peek(trunkDto -> StatedObjectFormatter.format(trunkDto.getAccount()))
                 .toList();
         double totalBalance = customerAccounts.stream()
@@ -108,17 +112,17 @@ public class CustomerController implements PageTitleConfig {
                 .sum();
 
         List<TransactionDto> lastTenCustomerTransactions = customerAccounts.stream()
-                .map(trunkDto -> transactionFacadeService.findAllByAccount(trunkDto.getAccount()))
+                .map(trunkDto -> transactionFacadeService.getAccountTransactions(trunkDto.getAccount()))
                 .flatMap(Collection::stream)
                 .filter(transactionDto -> !transactionDto.getTransactionType().equals(TransactionType.FEE.name()))
                 .limit(10)
                 .toList();
 
-        List<ExchangeDto> lastTenCustomerExchanges = exchangeFacadeService.findAllByCustomerIdentity(customerDto.getIdentityNumber()).stream()
+        List<ExchangeDto> lastTenCustomerExchanges = exchangeFacadeService.getAllByCustomerIdentityNumber(customerDto.getIdentityNumber()).stream()
                 .limit(10)
                 .toList();
 
-        List<LoanDto> customerLoans = loanFacadeService.findAllByCustomerIdentityNumber(customerDto.getIdentityNumber()).stream()
+        List<LoanDto> customerLoans = loanFacadeService.getCustomerLoansByHisIdentityNumber(customerDto.getIdentityNumber()).stream()
                 .toList();
 
         double totalLoan = customerLoans.stream()
@@ -127,7 +131,7 @@ public class CustomerController implements PageTitleConfig {
                 .sum();
 
         List<CardDto> customerCards = customerAccounts.stream()
-                .map(trunkDto -> cardFacadeService.findAllByCustomer(trunkDto.getCustomer()))
+                .map(trunkDto -> cardFacadeService.getAllCardsByCustomer(trunkDto.getCustomer()))
                 .flatMap(Collection::stream)
                 .peek(c -> c.setCardNumber(Helper.hideCardNumber(c.getCardNumber())))
                 .toList();
@@ -155,10 +159,10 @@ public class CustomerController implements PageTitleConfig {
     public String updateCustomerGeneralInfo(@Valid CustomerDto customerDto, BindingResult binding, RedirectAttributes redirect) {
 
         if(binding.hasErrors())
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Invalid information !");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, INVALID_INFORMATION_ERROR_MESSAGE);
         else {
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Customer information updated successfully !");
-            customerFacadeService.update(customerDto);
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, CUSTOMER_UPDATED_SUCCESS_MESSAGE);
+            customerFacadeService.updateCustomerDetails(customerDto);
         }
 
         return String.format("redirect:%s/%d", Web.Endpoint.CUSTOMERS, customerDto.getCustomerId());

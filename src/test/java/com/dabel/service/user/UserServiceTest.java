@@ -3,7 +3,6 @@ package com.dabel.service.user;
 import com.dabel.dto.LoginLogDto;
 import com.dabel.dto.UserDto;
 import com.dabel.dto.UserLogDto;
-import com.dabel.exception.IllegalOperationException;
 import com.dabel.mapper.LoginLogMapper;
 import com.dabel.mapper.UserMapper;
 import com.dabel.model.Role;
@@ -69,7 +68,7 @@ class UserServiceTest {
         userDto = UserDto.builder()
                 .username("testUser")
                 .password(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode("123"))
-                .role("ROLE_USER")
+                .roles("ROLE_USER")
                 .build();
         user = UserMapper.toEntity(userDto);
     }
@@ -119,7 +118,7 @@ class UserServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals("testUser", result.get(0).getUsername());
-        assertEquals("ROLE_MANAGER", result.get(0).getRole());
+        assertEquals("ROLE_MANAGER", result.get(0).getRoles());
     }
 
     @Test
@@ -140,7 +139,7 @@ class UserServiceTest {
         // Then
         assertNotNull(result);
         assertEquals(username, result.getUsername());
-        assertEquals("ROLE_MANAGER", result.getRole());
+        assertEquals("ROLE_MANAGER", result.getRoles());
     }
 
     @Test
@@ -198,7 +197,7 @@ class UserServiceTest {
         assertEquals("testUser", result.getUsername());
         assertEquals("Test", result.getFirstName());
         assertEquals("User", result.getLastName());
-        assertEquals("ROLE_MANAGER", result.getRole());
+        assertEquals("ROLE_MANAGER", result.getRoles());
     }
 
     @Test
@@ -216,7 +215,7 @@ class UserServiceTest {
         assertEquals("anonymous", result.getUsername());
         assertEquals("Unknown firstname", result.getFirstName());
         assertEquals("Unknown lastName", result.getLastName());
-        assertEquals("ROLE_ANONYMOUS", result.getRole());
+        assertEquals("ROLE_ANONYMOUS", result.getRoles());
     }
 
     @Test

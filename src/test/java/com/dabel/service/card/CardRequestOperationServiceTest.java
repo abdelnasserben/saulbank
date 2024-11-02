@@ -41,7 +41,7 @@ class CardRequestOperationServiceTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -60,7 +60,7 @@ class CardRequestOperationServiceTest {
                 .branch(savedBranch)
                 .build());
 
-        TrunkDto savedTrunk = accountService.save(TrunkDto.builder()
+        TrunkDto savedTrunk = accountService.saveTrunk(TrunkDto.builder()
                 .account(savedAccount)
                 .customer(savedCustomer)
                 .membership("OWNER")
@@ -153,7 +153,7 @@ class CardRequestOperationServiceTest {
         CardRequestDto requestDto = getCardRequestDto();
 
         //TODO: save ledger for card application fees
-        accountService.save(LedgerDto.builder()
+        accountService.saveLedger(LedgerDto.builder()
                 .ledgerType("CARD_REQUEST")
                 .account(AccountDto.builder()
                         .accountName("Card ledger")

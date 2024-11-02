@@ -55,27 +55,27 @@ class CardControllerTest {
                 .branchAddress("Moroni")
                 .build(), new double[3]);
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE465465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
     private void adjustCustomerAccountBalance() {
-        AccountDto accountDto = accountFacadeService.findAllTrunks().get(0).getAccount();
+        AccountDto accountDto = accountFacadeService.getAllTrunks().get(0).getAccount();
         accountDto.setBalance(50000);
-        accountFacadeService.save(accountDto);
+        accountFacadeService.saveAccount(accountDto);
     }
 
     private void saveCardRequest() {
         createCustomer();
         adjustCustomerAccountBalance();
-        cardFacadeService.sendRequest(CardRequestDto.builder()
-                .trunk(accountFacadeService.findAllTrunks().get(0))
+        cardFacadeService.initCardRequest(CardRequestDto.builder()
+                .trunk(accountFacadeService.getAllTrunks().get(0))
                 .cardType("VISA")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build());
     }
 
@@ -87,10 +87,10 @@ class CardControllerTest {
                 .cardNumber("4111111111111111")
                 .cardName("John Doe")
                 .expirationDate(LocalDate.of(2027, 3, 31))
-                .trunk(accountFacadeService.findAllTrunks().get(0))
+                .trunk(accountFacadeService.getAllTrunks().get(0))
                 .status(status)
                 .cvc("123")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build());
     }
 
@@ -141,8 +141,8 @@ class CardControllerTest {
         adjustCustomerAccountBalance();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("customerIdentityNumber", customerFacadeService.findAll().get(0).getIdentityNumber());
-        params.add("accountNumber", accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber());
+        params.add("customerIdentityNumber", customerFacadeService.getAll().get(0).getIdentityNumber());
+        params.add("accountNumber", accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber());
         params.add("cardType", "VISA");
 
         //then
@@ -162,7 +162,7 @@ class CardControllerTest {
     void shouldDisplayDetailsOfExistingCardRequest() throws Exception {
         //given
         saveCardRequest();
-        String url = Web.Endpoint.CARD_REQUESTS + "/" + cardFacadeService.findAllCardRequests().get(0).getRequestId();
+        String url = Web.Endpoint.CARD_REQUESTS + "/" + cardFacadeService.getAllCardRequests().get(0).getRequestId();
 
         //then
         mockMvc.perform(get(url))
@@ -173,7 +173,7 @@ class CardControllerTest {
     void shouldNotApproveCardRequestWithInvalidCardInformation() throws Exception {
         //given
         saveCardRequest();
-        String url = Web.Endpoint.CARD_REQUEST_APPROVE + "/" + cardFacadeService.findAllCardRequests().get(0).getRequestId();
+        String url = Web.Endpoint.CARD_REQUEST_APPROVE + "/" + cardFacadeService.getAllCardRequests().get(0).getRequestId();
 
         //then
         mockMvc.perform(post(url))
@@ -193,7 +193,7 @@ class CardControllerTest {
         params.add("expiryYear", "2027");
         params.add("cvc", "123");
 
-        String url = Web.Endpoint.CARD_REQUEST_APPROVE + "/" + cardFacadeService.findAllCardRequests().get(0).getRequestId();
+        String url = Web.Endpoint.CARD_REQUEST_APPROVE + "/" + cardFacadeService.getAllCardRequests().get(0).getRequestId();
 
         //then
         mockMvc.perform(post(url)
@@ -205,7 +205,7 @@ class CardControllerTest {
     void shouldNotRejectCardRequestWithoutReason() throws Exception {
         //given
         saveCardRequest();
-        String url = Web.Endpoint.CARD_REQUEST_REJECT + "/" + cardFacadeService.findAllCardRequests().get(0).getRequestId();
+        String url = Web.Endpoint.CARD_REQUEST_REJECT + "/" + cardFacadeService.getAllCardRequests().get(0).getRequestId();
 
         //then
         mockMvc.perform(post(url)
@@ -217,7 +217,7 @@ class CardControllerTest {
     void shouldRejectCardRequest() throws Exception {
         //given
         saveCardRequest();
-        String url = Web.Endpoint.CARD_REQUEST_REJECT + "/" + cardFacadeService.findAllCardRequests().get(0).getRequestId();
+        String url = Web.Endpoint.CARD_REQUEST_REJECT + "/" + cardFacadeService.getAllCardRequests().get(0).getRequestId();
 
         //then
         mockMvc.perform(post(url)
@@ -247,7 +247,7 @@ class CardControllerTest {
     void shouldDisplayDetailsOfExistingCard() throws Exception {
         //given
         saveCard("0");
-        String url = Web.Endpoint.CARDS + "/" + cardFacadeService.findAllCards().get(0).getCardId();
+        String url = Web.Endpoint.CARDS + "/" + cardFacadeService.getAllCards().get(0).getCardId();
 
         //then
         mockMvc.perform(get(url))
@@ -258,7 +258,7 @@ class CardControllerTest {
     void shouldActivateCard() throws Exception {
         //given
         saveCard("0");
-        String url = Web.Endpoint.CARD_ACTIVATE + "/" + cardFacadeService.findAllCards().get(0).getCardId();
+        String url = Web.Endpoint.CARD_ACTIVATE + "/" + cardFacadeService.getAllCards().get(0).getCardId();
 
         //then
         mockMvc.perform(post(url))
@@ -269,7 +269,7 @@ class CardControllerTest {
     void shouldNotDeactivateCardWithoutReason() throws Exception {
         //given
         saveCard("0");
-        String url = Web.Endpoint.CARD_DEACTIVATE + "/" + cardFacadeService.findAllCards().get(0).getCardId();
+        String url = Web.Endpoint.CARD_DEACTIVATE + "/" + cardFacadeService.getAllCards().get(0).getCardId();
 
         //then
         mockMvc.perform(post(url)
@@ -281,7 +281,7 @@ class CardControllerTest {
     void shouldDeactivateCardWithReason() throws Exception {
         //given
         saveCard("1");
-        String url = Web.Endpoint.CARD_DEACTIVATE + "/" + cardFacadeService.findAllCards().get(0).getCardId();
+        String url = Web.Endpoint.CARD_DEACTIVATE + "/" + cardFacadeService.getAllCards().get(0).getCardId();
 
         //then
         mockMvc.perform(post(url)

@@ -44,7 +44,7 @@ class CardFacadeServiceTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .accountType("SAVING")
@@ -61,7 +61,7 @@ class CardFacadeServiceTest {
                 .branch(savedBranch)
                 .build());
 
-        TrunkDto savedTrunk = accountService.save(TrunkDto.builder()
+        TrunkDto savedTrunk = accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(savedAccount)
                 .membership("OWNER")
@@ -75,7 +75,7 @@ class CardFacadeServiceTest {
                 .cvc("123")
                 .status("0")
                 .build());
-        return cardFacadeService.findAllCards().get(0);
+        return cardFacadeService.getAllCards().get(0);
     }
 
     @BeforeEach
@@ -88,7 +88,7 @@ class CardFacadeServiceTest {
         //given
         //when
         cardFacadeService.activateCard(getSavedCard().getCardId());
-        CardDto expected = cardFacadeService.findAllCards().get(0);
+        CardDto expected = cardFacadeService.getAllCards().get(0);
 
         //then
         assertThat(expected.getStatus()).isEqualTo("1");
@@ -117,7 +117,7 @@ class CardFacadeServiceTest {
 
         //when
         cardFacadeService.deactivateCard(savedCard.getCardId(), "Just a reason");
-        CardDto expected = cardFacadeService.findAllCards().get(0);
+        CardDto expected = cardFacadeService.getAllCards().get(0);
 
         //then
         assertThat(expected.getStatus()).isEqualTo("5"); //deactivated status = 5
@@ -141,7 +141,7 @@ class CardFacadeServiceTest {
         CardDto savedCard = getSavedCard();
 
         //when
-        List<CardDto> expected = cardFacadeService.findAllByCustomer(savedCard.getTrunk().getCustomer());
+        List<CardDto> expected = cardFacadeService.getAllCardsByCustomer(savedCard.getTrunk().getCustomer());
 
         //then
         assertThat(expected.size()).isEqualTo(1);

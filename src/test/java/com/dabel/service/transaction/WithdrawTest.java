@@ -46,7 +46,7 @@ class WithdrawTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -66,14 +66,14 @@ class WithdrawTest {
                 .build());
 
         //TODO: create trunk because a withdraw requires one.
-        accountService.save(TrunkDto.builder()
+        accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(savedAccount)
                 .membership("OWNER")
                 .build());
 
         //TODO: create vault because a withdraw requires one.
-        accountService.save(AccountDto.builder()
+        accountService.saveAccount(AccountDto.builder()
                 .accountName("Vault Code 1")
                 .accountNumber("987654321")
                 .currency("KMF")
@@ -160,7 +160,7 @@ class WithdrawTest {
         TransactionDto transactionDto = getTransactionDto();
 
         //TODO: create with ledger for withdraw fees
-        accountService.save(LedgerDto.builder()
+        accountService.saveLedger(LedgerDto.builder()
                 .ledgerType("WITHDRAW")
                 .account(AccountDto.builder()
                         .accountName("Withdraw ledger")

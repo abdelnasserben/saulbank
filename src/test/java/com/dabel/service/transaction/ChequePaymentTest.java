@@ -54,7 +54,7 @@ class ChequePaymentTest {
                 .status("1")
                 .build());
 
-        AccountDto initiator = accountService.save(AccountDto.builder()
+        AccountDto initiator = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -84,10 +84,10 @@ class ChequePaymentTest {
     private TransactionDto getTransactionDto() {
 
         //TODO: save trunk because a cheque payment requires one.
-        TrunkDto savedTrunk = accountService.save(getTrunkDto());
+        TrunkDto savedTrunk = accountService.saveTrunk(getTrunkDto());
 
         //TODO: create receiver account because a transfer requires one.
-        AccountDto receiverAccount = accountService.save(AccountDto.builder()
+        AccountDto receiverAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("Sarah Hunt")
                 .accountNumber("0057654321")
                 .currency("KMF")

@@ -45,7 +45,7 @@ class ChequeServiceTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -64,7 +64,7 @@ class ChequeServiceTest {
                 .branch(savedBranch)
                 .build());
 
-        TrunkDto savedTrunk = accountService.save(TrunkDto.builder()
+        TrunkDto savedTrunk = accountService.saveTrunk(TrunkDto.builder()
                 .account(savedAccount)
                 .customer(savedCustomer)
                 .membership("OWNER")

@@ -21,6 +21,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class View360Controller implements PageTitleConfig {
 
+    private static final String ERROR_INVALID_INFORMATION_MESSAGE = "Invalid information!";
+    private static final String SUCCESS_BRANCH_ADDED_MESSAGE = "New branch added successfully!";
+    private static final String ERROR_BRANCH_NOT_FOUND_MESSAGE = "Branch not found";
+    private static final String ERROR_AMOUNT_NEGATIVE_MESSAGE = "Amount must be positive!";
+    private static final String SUCCESS_ADJUSTMENT_MESSAGE = "Successful adjustment";
+
     private final BranchFacadeService branchFacadeService;
     private final AccountFacadeService accountFacadeService;
     private final TransactionFacadeService transactionFacadeService;
@@ -36,41 +42,41 @@ public class View360Controller implements PageTitleConfig {
     @GetMapping(value = Web.Endpoint.VIEW360_BRANCHES)
     public String listBranches(Model model, BranchDto branchDTO) {
 
-        branchListingAndConfigTitle(model);
+        configureBranchListingAndTitle(model);
         return Web.View.BRANCHES;
     }
 
     @PostMapping(value = Web.Endpoint.VIEW360_BRANCHES)
-    public String addNewBranch(Model model, @Valid BranchDto branchDto, BindingResult binding,
+    public String createBranch(Model model, @Valid BranchDto branchDto, BindingResult binding,
                                @RequestParam(required = false, defaultValue = "0") double assetKMF,
                                @RequestParam(required = false, defaultValue = "0") double assetEUR,
                                @RequestParam(required = false, defaultValue = "0") double assetUSD,
                                RedirectAttributes redirect) {
 
         if(binding.hasErrors() || assetKMF < 0 || assetEUR < 0 || assetUSD < 0) {
-            branchListingAndConfigTitle(model);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
+            configureBranchListingAndTitle(model);
+            model.addAttribute(Web.MessageTag.ERROR, ERROR_INVALID_INFORMATION_MESSAGE);
             return Web.View.BRANCHES;
         }
 
         double[] vaultsAssets = new double[]{assetKMF, assetEUR, assetUSD};
         branchFacadeService.create(branchDto, vaultsAssets);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "New branch added successfully !");
+        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_BRANCH_ADDED_MESSAGE);
 
         return "redirect:" + Web.Endpoint.VIEW360_BRANCHES;
     }
 
     @GetMapping(value = Web.Endpoint.VIEW360_VAULT_GL)
-    public String listBranchAccounts(Model model, @RequestParam(name="code", required = false) Long code) {
+    public String showBranchAccounts(Model model, @RequestParam(name="code", required = false) Long branchId) {
 
-        if(code != null) {
+        if(branchId != null) {
             try {
-                BranchDto branchDto = branchFacadeService.findById(code);
+                BranchDto branchDto = branchFacadeService.getById(branchId);
                 model.addAttribute("branch", StatedObjectFormatter.format(branchDto));
-                model.addAttribute("vaults", branchFacadeService.findAllVaultsByBranchId(branchDto.getBranchId()));
-                model.addAttribute("ledgers", branchFacadeService.findAllLedgersByBranchId(branchDto.getBranchId()));
+                model.addAttribute("vaults", branchFacadeService.getAllVaultsByBranchId(branchDto.getBranchId()));
+                model.addAttribute("ledgers", branchFacadeService.getAllLedgersByBranchId(branchDto.getBranchId()));
             } catch (ResourceNotFoundException ex) {
-                model.addAttribute(Web.MessageTag.ERROR, "Branch not found");
+                model.addAttribute(Web.MessageTag.ERROR, ERROR_BRANCH_NOT_FOUND_MESSAGE);
             }
         }
 
@@ -85,20 +91,20 @@ public class View360Controller implements PageTitleConfig {
                               @RequestParam(required = false) String operationType,
                               RedirectAttributes redirect) {
 
-        BranchDto branchDto = branchFacadeService.findById(code);
+        BranchDto branchDto = branchFacadeService.getById(code);
 
         if(amount <= 0) {
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Amount must be positive !");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, ERROR_AMOUNT_NEGATIVE_MESSAGE);
         } else {
             //TODO: find branch and his vault by currency
-            AccountDto vault = branchFacadeService.findVaultByBranchIdAndCurrency(branchDto.getBranchId(), currency);
+            AccountDto vault = branchFacadeService.getVaultByBranchIdAndCurrency(branchDto.getBranchId(), currency);
 
             //TODO: make the operation
             if(operationType.equalsIgnoreCase("debit"))
-                accountFacadeService.debit(vault, amount);
-            else accountFacadeService.credit(vault, amount);
+                accountFacadeService.debitAccount(vault, amount);
+            else accountFacadeService.creditAccount(vault, amount);
 
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Successful adjustment");
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_ADJUSTMENT_MESSAGE);
         }
 
         return String.format("redirect:%s?code=%d", Web.Endpoint.VIEW360_VAULT_GL, code);
@@ -106,25 +112,25 @@ public class View360Controller implements PageTitleConfig {
 
     /** For accounts **/
     @GetMapping(value = Web.Endpoint.VIEW360_ACCOUNTS)
-    public String listAccounts(Model model) {
+    public String listAllAccounts(Model model) {
 
         configPageTitle(model, Web.Menu.Bank.View360.ACCOUNTS);
-        model.addAttribute("accounts", StatedObjectFormatter.format(accountFacadeService.findAll()));
+        model.addAttribute("accounts", StatedObjectFormatter.format(accountFacadeService.getAllAccounts()));
         return Web.View.VIEW360_ACCOUNTS;
     }
 
     /** For transactions **/
     @GetMapping(value = Web.Endpoint.VIEW360_TRANSACTIONS)
-    public String listingTransactions(Model model) {
+    public String listAllTransactions(Model model) {
 
         configPageTitle(model, Web.Menu.Bank.View360.TRANSACTIONS);
-        model.addAttribute("transactions", StatedObjectFormatter.format(transactionFacadeService.findAll()));
+        model.addAttribute("transactions", StatedObjectFormatter.format(transactionFacadeService.getAll()));
         return Web.View.TRANSACTIONS;
     }
 
-    private void branchListingAndConfigTitle(Model model) {
+    private void configureBranchListingAndTitle(Model model) {
         configPageTitle(model, Web.Menu.Bank.View360.BRANCHES);
-        model.addAttribute("branches", StatedObjectFormatter.format(branchFacadeService.findAll()));
+        model.addAttribute("branches", StatedObjectFormatter.format(branchFacadeService.getAll()));
     }
 
     @Override

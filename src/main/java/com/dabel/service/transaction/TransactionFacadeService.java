@@ -37,15 +37,15 @@ public class TransactionFacadeService {
         transactionContext.setContext(transactionDto.getTransactionType()).reject(transactionDto, remarks);
     }
 
-    public List<TransactionDto> findAll() {
+    public List<TransactionDto> getAll() {
         return transactionService.findAll();
     }
 
-    public TransactionDto findById(Long transactionId) {
+    public TransactionDto getById(Long transactionId) {
         return transactionService.findById(transactionId);
     }
 
-    public List<TransactionDto> findAllByAccount(AccountDto accountDto) {
+    public List<TransactionDto> getAccountTransactions(AccountDto accountDto) {
         return transactionService.findAllByAccount(accountDto);
     }
 }

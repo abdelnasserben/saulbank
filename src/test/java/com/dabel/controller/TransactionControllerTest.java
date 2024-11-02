@@ -54,11 +54,11 @@ class TransactionControllerTest {
                 .branchAddress("Moroni")
                 .build(), new double[3]);
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE547978")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
@@ -67,12 +67,12 @@ class TransactionControllerTest {
 
         transactionFacadeService.init(TransactionDto.builder()
                 .transactionType("DEPOSIT")
-                .initiatorAccount(accountFacadeService.findAllTrunks().get(0).getAccount())
+                .initiatorAccount(accountFacadeService.getAllTrunks().get(0).getAccount())
                 .currency("KMF")
                 .amount(500)
                 .customerIdentity("NBE547978")
                 .customerFullName("John Doe")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build());
     }
 
@@ -105,7 +105,7 @@ class TransactionControllerTest {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("transactionType", "DEPOSIT");
-        params.add("initiatorAccountNumber", accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber());
+        params.add("initiatorAccountNumber", accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber());
         params.add("currency", "KMF");
 
         //then
@@ -121,7 +121,7 @@ class TransactionControllerTest {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("transactionType", "DEPOSIT");
-        params.add("initiatorAccountNumber", accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber());
+        params.add("initiatorAccountNumber", accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber());
         params.add("currency", "KMF");
         params.add("amount", "500");
         params.add("customerIdentity", "NBE547978");
@@ -138,16 +138,16 @@ class TransactionControllerTest {
         //given
         saveCustomerAccount();
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("Mark")
                 .lastName("Patrick")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "Mark Patrick", AccountType.SAVING, AccountProfile.PERSONAL);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("transactionType", "TRANSFER");
-        params.add("initiatorAccountNumber", accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber());
-        params.add("receiverAccountNumber", accountFacadeService.findAllTrunks().get(1).getAccount().getAccountNumber());
+        params.add("initiatorAccountNumber", accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber());
+        params.add("receiverAccountNumber", accountFacadeService.getAllTrunks().get(1).getAccount().getAccountNumber());
         params.add("currency", "KMF");
         params.add("amount", "500");
         params.add("customerIdentity", "NBE547978");
@@ -170,7 +170,7 @@ class TransactionControllerTest {
     void shouldDisplayDetailsOfAnExistingTransaction() throws Exception {
         //given
         initTransaction();
-        String url = Web.Endpoint.TRANSACTIONS + "/" + transactionFacadeService.findAll().get(0).getTransactionId();
+        String url = Web.Endpoint.TRANSACTIONS + "/" + transactionFacadeService.getAll().get(0).getTransactionId();
 
         //then
         mockMvc.perform(get(url))
@@ -181,7 +181,7 @@ class TransactionControllerTest {
     void shouldApproveTransaction() throws Exception {
         //given
         initTransaction();
-        String url = Web.Endpoint.TRANSACTION_APPROVE + "/" + transactionFacadeService.findAll().get(0).getTransactionId();
+        String url = Web.Endpoint.TRANSACTION_APPROVE + "/" + transactionFacadeService.getAll().get(0).getTransactionId();
 
         //then
         mockMvc.perform(post(url))
@@ -192,7 +192,7 @@ class TransactionControllerTest {
     void shouldNotRejectTransactionWithoutReason() throws Exception {
         //given
         initTransaction();
-        String url = Web.Endpoint.TRANSACTION_REJECT + "/" + transactionFacadeService.findAll().get(0).getTransactionId();
+        String url = Web.Endpoint.TRANSACTION_REJECT + "/" + transactionFacadeService.getAll().get(0).getTransactionId();
 
         //then
         mockMvc.perform(post(url)
@@ -204,7 +204,7 @@ class TransactionControllerTest {
     void shouldRejectTransaction() throws Exception {
         //given
         initTransaction();
-        String url = Web.Endpoint.TRANSACTION_REJECT + "/" + transactionFacadeService.findAll().get(0).getTransactionId();
+        String url = Web.Endpoint.TRANSACTION_REJECT + "/" + transactionFacadeService.getAll().get(0).getTransactionId();
 
         //then
         mockMvc.perform(post(url)

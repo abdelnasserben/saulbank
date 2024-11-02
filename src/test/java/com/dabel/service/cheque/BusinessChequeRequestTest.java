@@ -42,7 +42,7 @@ class BusinessChequeRequestTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -61,7 +61,7 @@ class BusinessChequeRequestTest {
                 .branch(savedBranch)
                 .build());
 
-        TrunkDto savedTrunk = accountService.save(TrunkDto.builder()
+        TrunkDto savedTrunk = accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(savedAccount)
                 .membership("OWNER")
@@ -149,7 +149,7 @@ class BusinessChequeRequestTest {
         ChequeRequestDto requestDto = getChequeRequestDto();
 
         //TODO: save ledger for cheque application fees
-        accountService.save(LedgerDto.builder()
+        accountService.saveLedger(LedgerDto.builder()
                 .ledgerType("CHEQUE_REQUEST")
                 .account(AccountDto.builder()
                         .accountName("Cheque ledger")
@@ -188,6 +188,6 @@ class BusinessChequeRequestTest {
 
     @Test
     void shouldReturnSBusinessAsChequeRequestType() {
-        assertThat(businessChequeRequest.getType()).isEqualTo(AccountType.BUSINESS);
+        assertThat(businessChequeRequest.getAccountType()).isEqualTo(AccountType.BUSINESS);
     }
 }

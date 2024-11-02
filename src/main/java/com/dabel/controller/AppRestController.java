@@ -10,7 +10,6 @@ import com.dabel.dto.CustomerDto;
 import com.dabel.service.account.AccountFacadeService;
 import com.dabel.service.cheque.ChequeFacadeService;
 import com.dabel.service.customer.CustomerFacadeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,40 +18,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppRestController {
 
+    private static final String CUSTOMER_PATH = "/rest/customer";
+    private static final String ACCOUNT_PATH = "/rest/account";
+    private static final String CURRENCY_CONVERSION_PATH = "/rest/baseCurrencyInfo";
+    private static final String LOAN_TOTAL_DUE_PATH = "/rest/loanTotalDue";
+    private static final String CHEQUE_PATH = "/rest/cheque";
+
     private final AccountFacadeService accountFacadeService;
     private final CustomerFacadeService customerFacadeService;
     private final ChequeFacadeService chequeFacadeService;
 
-    @Autowired
     public AppRestController(AccountFacadeService accountFacadeService, CustomerFacadeService customerFacadeService, ChequeFacadeService chequeFacadeService) {
         this.accountFacadeService = accountFacadeService;
         this.customerFacadeService = customerFacadeService;
         this.chequeFacadeService = chequeFacadeService;
     }
 
-    @GetMapping("/rest/customer/" + "{identityNumber}")
+    @GetMapping(CUSTOMER_PATH + "/{identityNumber}")
     public ResponseEntity<CustomerDto> getCustomerInformation(@PathVariable String identityNumber) {
 
-        return ResponseEntity.ok(customerFacadeService.findByIdentity(identityNumber));
+        return ResponseEntity.ok(customerFacadeService.getByIdentityNumber(identityNumber));
     }
 
-    @GetMapping("/rest/customer/accounts/" + "{identityNumber}")
+    @GetMapping(CUSTOMER_PATH + "/accounts/{identityNumber}")
     public ResponseEntity<Object[]> getCustomerAccounts(@PathVariable String identityNumber) {
 
-        CustomerDto customerDto = customerFacadeService.findByIdentity(identityNumber);
-        return ResponseEntity.ok(accountFacadeService.findAllTrunks(customerDto)
-                .stream()
+        CustomerDto customer = customerFacadeService.getByIdentityNumber(identityNumber);
+        Object[] accountNumbers = accountFacadeService.getAllTrunksByCustomer(customer).stream()
                 .map(trunkDto -> trunkDto.getAccount().getAccountNumber())
-                .toArray());
+                .toArray();
+        return ResponseEntity.ok(accountNumbers);
     }
 
-    @GetMapping("/rest/account/" + "{accountNumber}")
+    @GetMapping(ACCOUNT_PATH + "/{accountNumber}")
     public ResponseEntity<AccountDto> getAccountInformation(@PathVariable String accountNumber) {
 
-        return ResponseEntity.ok(accountFacadeService.findByNumber(accountNumber));
+        return ResponseEntity.ok(accountFacadeService.getAccountByNumber(accountNumber));
     }
 
-    @GetMapping("/rest/baseCurrencyInfo/" + "{currency1}-{currency2}-{amount}")
+    @GetMapping(CURRENCY_CONVERSION_PATH + "/{currency1}-{currency2}-{amount}")
     public ResponseEntity<double[]> getCurrencyConversionBase(@PathVariable Currency currency1, @PathVariable Currency currency2, @PathVariable double amount) {
 
         if(currency1.equals(currency2))
@@ -70,13 +74,13 @@ public class AppRestController {
         return ResponseEntity.ok(new double[]{conversionRate, conversionAmount});
     }
 
-    @GetMapping("/rest/loanTotalDue/" + "{amount}-{interestRate}")
+    @GetMapping(LOAN_TOTAL_DUE_PATH + "/{amount}-{interestRate}")
     public ResponseEntity<Double> getLoanTotalDueAmount(@PathVariable double amount, @PathVariable double interestRate) {
 
         return ResponseEntity.ok(Helper.calculateTotalAmountOfLoan(amount, interestRate));
     }
 
-    @GetMapping("/rest/cheque/" + "{chequeNumber}")
+    @GetMapping(CHEQUE_PATH + "/{chequeNumber}")
     ResponseEntity<ChequeDto> getChequeInformation(@PathVariable String chequeNumber) {
         return ResponseEntity.ok(chequeFacadeService.findChequeByNumber(chequeNumber));
     }

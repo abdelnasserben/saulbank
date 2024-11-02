@@ -40,7 +40,7 @@ class ChequeFacadeServiceTest {
                 .status("1")
                 .build());
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -59,7 +59,7 @@ class ChequeFacadeServiceTest {
                 .branch(savedBranch)
                 .build());
 
-        accountService.save(TrunkDto.builder()
+        accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(savedAccount)
                 .membership("OWNER")
@@ -117,7 +117,7 @@ class ChequeFacadeServiceTest {
         Exception expected = assertThrows(IllegalOperationException.class, () -> chequeFacadeService.activateCheque(savedCheque.getChequeId()));
 
         //then
-        assertThat(expected.getMessage()).isEqualTo("Cheque already active");
+        assertThat(expected.getMessage()).isEqualTo("Cheque already active, cannot activate again.");
     }
 
     @Test
@@ -133,7 +133,7 @@ class ChequeFacadeServiceTest {
         ChequeDto expected = chequeFacadeService.findAllCheques().get(0);
 
         //then
-        assertThat(expected.getStatus()).isEqualTo("5"); //deactivated status = 5
+        assertThat(expected.getStatus()).isEqualTo("2"); //deactivated status = 2
         assertThat(expected.getFailureReason()).isEqualTo("Just a reason");
     }
 
@@ -149,7 +149,7 @@ class ChequeFacadeServiceTest {
         Exception expected = assertThrows(IllegalOperationException.class, () -> chequeFacadeService.deactivateCheque(savedCheque.getChequeId(), "Just reason"));
 
         //then
-        assertThat(expected.getMessage()).isEqualTo("Unable to deactivate an inactive cheque");
+        assertThat(expected.getMessage()).isEqualTo("Cheque is inactive, cannot deactivate again.");
     }
 
     @Test
@@ -165,7 +165,7 @@ class ChequeFacadeServiceTest {
         ChequeRequestDto savedRequest = chequeFacadeService.findAllRequests().get(0);
 
         //TODO: save ledger for cheque application fees
-        accountService.save(LedgerDto.builder()
+        accountService.saveLedger(LedgerDto.builder()
                 .ledgerType("CHEQUE_REQUEST")
                 .account(AccountDto.builder()
                         .accountName("Cheque ledger")
@@ -183,7 +183,7 @@ class ChequeFacadeServiceTest {
         ChequeDto savedCheque = chequeFacadeService.findAllCheques().get(0);
 
         //TODO: save receiver account because a cheque payment requires one
-        accountService.save(AccountDto.builder()
+        accountService.saveAccount(AccountDto.builder()
                 .accountName("Sarah Hunt")
                 .accountNumber("0987654321")
                 .currency("KMF")
@@ -222,6 +222,6 @@ class ChequeFacadeServiceTest {
         Exception expected = assertThrows(IllegalOperationException.class, () -> chequeFacadeService.initPay(postChequeDto));
 
         //then
-        assertThat(expected.getMessage()).isEqualTo("Cheque must be active");
+        assertThat(expected.getMessage()).isEqualTo("Cheque must be active.");
     }
 }

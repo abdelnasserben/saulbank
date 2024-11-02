@@ -55,7 +55,7 @@ class AccountFacadeServiceTest {
                 .branch(savedBranch)
                 .build();
 
-        return accountFacadeService.save(TrunkDto.builder()
+        return accountFacadeService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(savedAccount)
                 .membership("OWNER")
@@ -73,8 +73,8 @@ class AccountFacadeServiceTest {
         TrunkDto savedTrunk = saveTrunk("0");
 
         //when
-        accountFacadeService.activateTrunk(savedTrunk.getTrunkId());
-        TrunkDto expected = accountFacadeService.findTrunkById(savedTrunk.getTrunkId());
+        accountFacadeService.activateTrunkById(savedTrunk.getTrunkId());
+        TrunkDto expected = accountFacadeService.getTrunkById(savedTrunk.getTrunkId());
 
         //then
         assertThat(savedTrunk.getAccount().getStatus()).isEqualTo("0");
@@ -87,8 +87,8 @@ class AccountFacadeServiceTest {
         TrunkDto savedTrunk = saveTrunk("1");
 
         //when
-        accountFacadeService.deactivateTrunk(savedTrunk.getTrunkId());
-        TrunkDto expected = accountFacadeService.findTrunkById(savedTrunk.getTrunkId());
+        accountFacadeService.deactivateTrunkById(savedTrunk.getTrunkId());
+        TrunkDto expected = accountFacadeService.getTrunkById(savedTrunk.getTrunkId());
 
         //then
         assertThat(savedTrunk.getAccount().getStatus()).isEqualTo("1");

@@ -53,8 +53,8 @@ class CustomerFacadeServiceTest {
     void shouldCreateCustomerWithHisTrunk() {
         //given
         //when
-        customerFacadeService.create(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
-        TrunkDto expected = accountService.findTrunk(accountService.findAll().get(0).getAccountNumber());
+        customerFacadeService.createNewCustomerWithAccount(getCustomerDto(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
+        TrunkDto expected = accountService.findTrunkByAccountNumber(accountService.findAllAccounts().get(0).getAccountNumber());
 
         //then
         assertThat(expected.getAccount().getAccountName()).isEqualTo("John Doe");
@@ -64,11 +64,11 @@ class CustomerFacadeServiceTest {
     @Test
     void shouldUpdateCustomerInfo() {
         //given
-        CustomerDto savedCustomer = customerFacadeService.save(getCustomerDto());
+        CustomerDto savedCustomer = customerFacadeService.saveCustomer(getCustomerDto());
 
         //when
         savedCustomer.setFirstName("Sarah");
-        customerFacadeService.update(getCustomerDto());
+        customerFacadeService.updateCustomerDetails(savedCustomer);
 
         //then
         assertThat(savedCustomer.getFirstName()).isEqualTo("Sarah");

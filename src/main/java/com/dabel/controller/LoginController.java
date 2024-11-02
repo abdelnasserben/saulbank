@@ -18,7 +18,7 @@ public class LoginController {
 
 
     @GetMapping("/login")
-    public String getLoginPage(@RequestParam(value = "error", required = false) String error, Model model, HttpServletRequest request) {
+    public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model, HttpServletRequest request) {
 
         if (error != null) {
             String message = getSecurityLastExceptionMessage(request);

@@ -5,7 +5,6 @@ import com.dabel.exception.ResourceNotFoundException;
 import com.dabel.mapper.LoanMapper;
 import com.dabel.model.LoanRequest;
 import com.dabel.repository.LoanRequestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,6 @@ LoanRequestService {
 
     private final LoanRequestRepository loanRequestRepository;
 
-    @Autowired
     public LoanRequestService(LoanRequestRepository loanRequestRepository) {
         this.loanRequestRepository = loanRequestRepository;
     }

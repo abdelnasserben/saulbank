@@ -53,18 +53,18 @@ class ChequeControllerTest {
                 .branchAddress("Moroni")
                 .build(), new double[3]);
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE465465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
     private void adjustCustomerAccountBalance() {
-        AccountDto accountDto = accountFacadeService.findAllTrunks().get(0).getAccount();
+        AccountDto accountDto = accountFacadeService.getAllTrunks().get(0).getAccount();
         accountDto.setBalance(50000);
-        accountFacadeService.save(accountDto);
+        accountFacadeService.saveAccount(accountDto);
     }
 
     private void saveChequeRequest() {
@@ -72,7 +72,7 @@ class ChequeControllerTest {
         adjustCustomerAccountBalance();
 
         chequeFacadeService.sendRequest(PostChequeRequestDto.builder()
-                .accountNumber(accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber())
+                .accountNumber(accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber())
                 .customerIdentityNumber("NBE465465")
                 .build());
     }
@@ -83,9 +83,9 @@ class ChequeControllerTest {
         chequeFacadeService.saveCheque(ChequeDto.builder()
                 .chequeNumber("12345678")
                 .serial(chequeFacadeService.findAllRequests().get(0))
-                .trunk(accountFacadeService.findAllTrunks().get(0))
+                .trunk(accountFacadeService.getAllTrunks().get(0))
                 .status(status)
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build());
     }
 
@@ -120,8 +120,8 @@ class ChequeControllerTest {
         adjustCustomerAccountBalance();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("accountNumber", accountFacadeService.findAllTrunks().get(0).getAccount().getAccountNumber());
-        params.add("customerIdentityNumber", customerFacadeService.findAll().get(0).getIdentityNumber());
+        params.add("accountNumber", accountFacadeService.getAllTrunks().get(0).getAccount().getAccountNumber());
+        params.add("customerIdentityNumber", customerFacadeService.getAll().get(0).getIdentityNumber());
 
         //then
         mockMvc.perform(post(Web.Endpoint.CHEQUE_REQUESTS)
@@ -276,16 +276,16 @@ class ChequeControllerTest {
         //given
         saveCheque("1");
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("Sarah")
                 .lastName("Hunt")
                 .identityNumber("NBE021465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "Sarah Hunt", AccountType.SAVING, AccountProfile.PERSONAL);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("chequeNumber", chequeFacadeService.findAllCheques().get(0).getChequeNumber());
-        params.add("beneficiaryAccountNumber", accountFacadeService.findAllTrunks().get(1).getAccount().getAccountNumber());
+        params.add("beneficiaryAccountNumber", accountFacadeService.getAllTrunks().get(1).getAccount().getAccountNumber());
         params.add("amount", "500");
 
         //then

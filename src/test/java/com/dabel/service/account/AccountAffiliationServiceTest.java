@@ -49,7 +49,7 @@ class AccountAffiliationServiceTest {
 
         BranchDto savedBranch = savedBranch();
 
-        AccountDto savedAccount = accountService.save(AccountDto.builder()
+        AccountDto savedAccount = accountService.saveAccount(AccountDto.builder()
                 .accountNumber(accountNumber)
                 .accountName(String.format("%s %s", customerFirstName, customerLastName))
                 .currency("KMF")
@@ -68,7 +68,7 @@ class AccountAffiliationServiceTest {
                 .branch(savedBranch)
                 .build());
 
-        return accountService.save(TrunkDto.builder()
+        return accountService.saveTrunk(TrunkDto.builder()
                 .customer(savedCustomer)
                 .account(savedAccount)
                 .membership("OWNER")
@@ -95,7 +95,7 @@ class AccountAffiliationServiceTest {
         //when
         accountAffiliationService.affiliate(newCustomer, "123456789");
         CustomerDto savedNewCustomer = customerService.findByIdentity("NBE001245");
-        List<TrunkDto> expectedNewCustomerTrunks = accountService.findAllTrunks(savedNewCustomer);
+        List<TrunkDto> expectedNewCustomerTrunks = accountService.findAllTrunksByCustomer(savedNewCustomer);
 
         //then
         assertThat(expectedNewCustomerTrunks.size()).isEqualTo(1);
@@ -111,7 +111,7 @@ class AccountAffiliationServiceTest {
 
         //when
         accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "123456789");
-        List<TrunkDto> expectedSarahTrunks = accountService.findAllTrunks(sarahTrunk.getCustomer());
+        List<TrunkDto> expectedSarahTrunks = accountService.findAllTrunksByCustomer(sarahTrunk.getCustomer());
 
         //then
         assertThat(expectedSarahTrunks.size()).isEqualTo(2);
@@ -168,7 +168,7 @@ class AccountAffiliationServiceTest {
 
         //when
         accountAffiliationService.disaffiliate(sarahTrunk.getCustomer(), "123456789");
-        List<TrunkDto> expectedSarahTrunksAfterDisaffiliating = accountService.findAllTrunks(sarahTrunk.getCustomer());
+        List<TrunkDto> expectedSarahTrunksAfterDisaffiliating = accountService.findAllTrunksByCustomer(sarahTrunk.getCustomer());
 
         //then
 
@@ -184,11 +184,11 @@ class AccountAffiliationServiceTest {
         TrunkDto sarahTrunk = saveTrunk("987654321", "1", "sarah", "Hunt", "NBE001245", "1");
 
         accountAffiliationService.affiliate(sarahTrunk.getCustomer(), "123456789");
-        TrunkDto johnTrunkAfterAffiliating = accountService.findTrunk("123456789");
+        TrunkDto johnTrunkAfterAffiliating = accountService.findTrunkByAccountNumber("123456789");
 
         //when
         accountAffiliationService.disaffiliate(sarahTrunk.getCustomer(), "123456789");
-        TrunkDto johnTrunkAfterDisaffiliating = accountService.findTrunk("123456789");
+        TrunkDto johnTrunkAfterDisaffiliating = accountService.findTrunkByAccountNumber("123456789");
 
         //then
         assertThat(johnTrunkBeforeAffiliating.getAccount().getAccountProfile()).isEqualTo("PERSONAL");

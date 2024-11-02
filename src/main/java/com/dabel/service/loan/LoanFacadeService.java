@@ -19,19 +19,19 @@ public class LoanFacadeService {
         this.loanRequestOperationService = loanRequestOperationService;
     }
 
-    public List<LoanDto> findAll() {
+    public List<LoanDto> getAllLoans() {
         return this.loanService.findAll();
     }
 
-    public LoanDto findById(Long loanId) {
+    public LoanDto getLoanById(Long loanId) {
         return this.loanService.findById(loanId);
     }
 
-    public List<LoanDto> findAllByCustomerIdentityNumber(String customerIdentityNumber) {
+    public List<LoanDto> getCustomerLoansByHisIdentityNumber(String customerIdentityNumber) {
         return this.loanService.findAllByCustomerIdentity(customerIdentityNumber);
     }
 
-    public void repay(Long loanId, double amount) {
+    public void repayLoan(Long loanId, double amount) {
         loanRequestOperationService.repay(loanId, amount);
     }
 
@@ -39,24 +39,24 @@ public class LoanFacadeService {
      * For loan requests
      */
 
-    public List<LoanRequestDto> findAllRequests() {
+    public List<LoanRequestDto> getAllLoanRequests() {
         return loanRequestOperationService.getLoanRequestService().findAll();
     }
 
-    public void initRequest(LoanRequestDto requestDto) {
+    public void initLoanRequest(LoanRequestDto requestDto) {
         loanRequestOperationService.init(requestDto);
     }
 
-    public LoanRequestDto findRequestById(Long requestId) {
+    public LoanRequestDto getLoanRequestById(Long requestId) {
         return loanRequestOperationService.getLoanRequestService().findById(requestId);
     }
 
-    public void approveRequest(Long requestId) {
+    public void approveLoanRequest(Long requestId) {
         LoanRequestDto loanRequestDto = loanRequestOperationService.getLoanRequestService().findById(requestId);
         loanRequestOperationService.approve(loanRequestDto);
     }
 
-    public void rejectRequest(Long requestId, String rejectReason) {
+    public void rejectLoanRequest(Long requestId, String rejectReason) {
         LoanRequestDto loanRequestDto = loanRequestOperationService.getLoanRequestService().findById(requestId);
         loanRequestOperationService.reject(loanRequestDto, rejectReason);
     }

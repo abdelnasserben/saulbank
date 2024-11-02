@@ -50,11 +50,11 @@ class LoanControllerTest {
                 .branchAddress("Moroni")
                 .build(), new double[3]);
 
-        customerFacadeService.create(CustomerDto.builder()
+        customerFacadeService.createNewCustomerWithAccount(CustomerDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .identityNumber("NBE465465")
-                .branch(branchFacadeService.findAll().get(0))
+                .branch(branchFacadeService.getAll().get(0))
                 .build(), "John Doe", AccountType.SAVING, AccountProfile.PERSONAL);
     }
 
@@ -106,7 +106,7 @@ class LoanControllerTest {
         createCustomer();
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("customerIdentityNumber", customerFacadeService.findAll().get(0).getIdentityNumber());
+        params.add("customerIdentityNumber", customerFacadeService.getAll().get(0).getIdentityNumber());
         params.add("loanType", "GOLD");
         params.add("issuedAmount", "5000");
         params.add("interestRate", "5");

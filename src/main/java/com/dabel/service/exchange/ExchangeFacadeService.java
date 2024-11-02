@@ -21,22 +21,22 @@ public class ExchangeFacadeService {
     }
 
     public void approve(Long operationId) {
-        exchangeOperationService.approve(this.findById(operationId));
+        exchangeOperationService.approve(this.getById(operationId));
     }
 
     public void reject(Long operationId, String remarks) {
-        exchangeOperationService.reject(this.findById(operationId), remarks);
+        exchangeOperationService.reject(this.getById(operationId), remarks);
     }
 
-    public List<ExchangeDto> findAll() {
+    public List<ExchangeDto> getAll() {
         return this.exchangeOperationService.getExchangeService().findAll();
     }
 
-    public ExchangeDto findById(Long exchangeId) {
+    public ExchangeDto getById(Long exchangeId) {
         return this.exchangeOperationService.getExchangeService().findById(exchangeId);
     }
 
-    public List<ExchangeDto> findAllByCustomerIdentity(String customerIdentity) {
+    public List<ExchangeDto> getAllByCustomerIdentityNumber(String customerIdentity) {
         return this.exchangeOperationService.getExchangeService().findAllByCustomerIdentity(customerIdentity);
     }
 

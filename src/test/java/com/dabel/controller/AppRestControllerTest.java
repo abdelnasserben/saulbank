@@ -44,7 +44,7 @@ class AppRestControllerTest {
     @Test
     void shouldGetCustomerByHisIdentityNumber() throws Exception {
         //given
-        customerFacadeService.save(CustomerDto.builder()
+        customerFacadeService.saveCustomer(CustomerDto.builder()
                 .identityNumber("NBE46546")
                 .firstName("John")
                 .lastName("Doe")
@@ -70,7 +70,7 @@ class AppRestControllerTest {
     @Test
     void shouldGetAccountByHisNumber() throws Exception {
         //given
-        accountFacadeService.save(AccountDto.builder()
+        accountFacadeService.saveAccount(AccountDto.builder()
                 .accountNumber("0071001997")
                 .accountName("John Doe")
                 .accountType("BUSINESS")

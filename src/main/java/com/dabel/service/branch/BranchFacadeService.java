@@ -6,23 +6,33 @@ import com.dabel.dto.AccountDto;
 import com.dabel.dto.BranchDto;
 import com.dabel.dto.LedgerDto;
 import com.dabel.service.account.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service facade for managing branch operations, including creating and retrieving branches,
+ * vaults, and ledgers, as well as initializing accounts and ledgers associated with a branch.
+ */
 @Service
 public class BranchFacadeService {
 
     private final BranchService branchService;
     private final AccountService accountService;
+    private String currentUsername;
 
-    @Autowired
     public BranchFacadeService(BranchService branchService, AccountService accountService) {
         this.branchService = branchService;
         this.accountService = accountService;
     }
 
+
+    /**
+     * Creates a new branch and its associated vaults and general ledger accounts if branch ID is null.
+     *
+     * @param branchDto   Data transfer object representing the branch.
+     * @param vaultsAsset Array containing initial asset values for each currency vault.
+     */
     public void create(BranchDto branchDto, double[] vaultsAsset) {
 
         if (branchDto.getBranchId() == null) {
@@ -35,158 +45,106 @@ public class BranchFacadeService {
         } else branchService.save(branchDto);
     }
 
-    public BranchDto findById(Long branchId) {
+    public BranchDto getById(Long branchId) {
         return branchService.findById(branchId);
     }
 
-    public List<BranchDto> findAll() {
+    public List<BranchDto> getAll() {
         return branchService.findAll();
     }
 
+    public List<AccountDto> getAllVaultsByBranchId(Long branchId) {
+        BranchDto branchDto = branchService.findById(branchId);
+        return accountService.findAllVaultsByBranch(branchDto);
+    }
+
+    public List<LedgerDto> getAllLedgersByBranchId(Long branchId) {
+        BranchDto branchDto = branchService.findById(branchId);
+        return accountService.findAllLedgersByBranch(branchDto);
+    }
+
+    public AccountDto getVaultByBranchIdAndCurrency(Long branchId, String currency) {
+        BranchDto branchDto = branchService.findById(branchId);
+        return accountService.findVaultByBranchAndCurrency(branchDto, currency);
+    }
+
+
+    /**
+     * Creates general ledger accounts for various branch fees.
+     *
+     * @param savedBranch The branch for which general ledgers are created.
+     */
     private void createGL(BranchDto savedBranch) {
 
-        String currentUsername = Helper.getAuthenticated().getName();
+        currentUsername = Helper.getAuthenticated().getName();
 
-        AccountDto forWithdrawLedger = accountService.save(AccountDto.builder()
-                .accountName(String.format("GL Withdraw Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Helper.generateAccountNumber())
-                .accountType(AccountType.BUSINESS.name())
-                .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.KMF.name())
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
-                .initiatedBy(currentUsername)
-                .build());
-
-        AccountDto forTransferLedger = accountService.save(AccountDto.builder()
-                .accountName(String.format("GL Transfer Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Helper.generateAccountNumber())
-                .accountType(AccountType.BUSINESS.name())
-                .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.KMF.name())
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
-                .initiatedBy(currentUsername)
-                .build());
-
-        AccountDto forLoanLedger = accountService.save(AccountDto.builder()
-                .accountName(String.format("GL Loan Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Helper.generateAccountNumber())
-                .accountType(AccountType.BUSINESS.name())
-                .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.KMF.name())
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
-                .initiatedBy(currentUsername)
-                .build());
-
-        AccountDto forCardApplicationLedger = accountService.save(AccountDto.builder()
-                .accountName(String.format("GL Card Application Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Helper.generateAccountNumber())
-                .accountType(AccountType.BUSINESS.name())
-                .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.KMF.name())
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
-                .initiatedBy(currentUsername)
-                .build());
-
-        AccountDto forChequeApplicationLedger = accountService.save(AccountDto.builder()
-                .accountName(String.format("GL Cheque Application Fees Branch %d", savedBranch.getBranchId()))
-                .accountNumber(Helper.generateAccountNumber())
-                .accountType(AccountType.BUSINESS.name())
-                .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.KMF.name())
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
-                .initiatedBy(currentUsername)
-                .build());
-
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.WITHDRAW.name())
-                .account(forWithdrawLedger)
-                .build());
-
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.TRANSFER.name())
-                .account(forTransferLedger)
-                .build());
-
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.LOAN.name())
-                .account(forLoanLedger)
-                .build());
-
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.CARD_REQUEST.name())
-                .account(forCardApplicationLedger)
-                .build());
-
-        accountService.save(LedgerDto.builder()
-                .ledgerType(LedgerType.CHEQUE_REQUEST.name())
-                .account(forChequeApplicationLedger)
-                .build());
+        createAndSaveLedger(savedBranch, "GL Withdraw Fees Branch", LedgerType.WITHDRAW);
+        createAndSaveLedger(savedBranch, "GL Transfer Fees Branch", LedgerType.TRANSFER);
+        createAndSaveLedger(savedBranch, "GL Loan Fees Branch", LedgerType.LOAN);
+        createAndSaveLedger(savedBranch, "GL Card Application Fees Branch", LedgerType.CARD_REQUEST);
+        createAndSaveLedger(savedBranch, "GL Cheque Application Fees Branch", LedgerType.CHEQUE_REQUEST);
     }
 
+
+    /**
+     * Creates vault accounts in different currencies for a branch.
+     *
+     * @param savedBranch The branch for which vaults are created.
+     * @param vaultsAsset Array of initial balances for each currency vault.
+     */
     private void createVaults(BranchDto savedBranch, double[] vaultsAsset) {
 
-        String currentUsername = Helper.getAuthenticated().getName();
+        createAndSaveVault(savedBranch, Currency.KMF, vaultsAsset[0]);
+        createAndSaveVault(savedBranch, Currency.EUR, vaultsAsset[1]);
+        createAndSaveVault(savedBranch, Currency.USD, vaultsAsset[2]);
+    }
 
-        //TODO: build and save vault kmf
-        accountService.save(AccountDto.builder()
-                .accountName(String.format("Vault KMF %d", savedBranch.getBranchId()))
+
+    /**
+     * Helper method to create and save a ledger account for a branch.
+     *
+     * @param branch Branch associated with the ledger.
+     * @param accountName Template for naming the account.
+     * @param ledgerType Type of ledger to create.
+     */
+    private void createAndSaveLedger(BranchDto branch, String accountName, LedgerType ledgerType) {
+        AccountDto account = accountService.saveAccount(AccountDto.builder()
+                .accountName(String.format(accountName + " %d", branch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.SYSTEM.name())
                 .currency(Currency.KMF.name())
-                .balance(vaultsAsset[0])
-                .isVault(1)
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
+                .branch(branch)
+                .status(branch.getStatus())
                 .initiatedBy(currentUsername)
                 .build());
 
-        //TODO: build and save vault eur
-        accountService.save(AccountDto.builder()
-                .accountName(String.format("Vault EUR %d", savedBranch.getBranchId()))
+        accountService.saveLedger(LedgerDto.builder()
+                .ledgerType(ledgerType.name())
+                .account(account)
+                .build());
+    }
+
+
+    /**
+     * Helper method to create and save a vault account for a branch.
+     *
+     * @param branch  Branch associated with the vault.
+     * @param currency Currency of the vault account.
+     * @param balance Initial balance for the vault account.
+     */
+    private void createAndSaveVault(BranchDto branch, Currency currency, double balance) {
+        accountService.saveAccount(AccountDto.builder()
+                .accountName(String.format("Vault %s %d", currency, branch.getBranchId()))
                 .accountNumber(Helper.generateAccountNumber())
                 .accountType(AccountType.BUSINESS.name())
                 .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.EUR.name())
-                .balance(vaultsAsset[1])
+                .currency(currency.name())
+                .balance(balance)
                 .isVault(1)
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
+                .branch(branch)
+                .status(branch.getStatus())
                 .initiatedBy(currentUsername)
                 .build());
-
-        //TODO: build and save vault usd
-        accountService.save(AccountDto.builder()
-                .accountName(String.format("Vault USD %d", savedBranch.getBranchId()))
-                .accountNumber(Helper.generateAccountNumber())
-                .accountType(AccountType.BUSINESS.name())
-                .accountProfile(AccountProfile.SYSTEM.name())
-                .currency(Currency.USD.name())
-                .balance(vaultsAsset[2])
-                .isVault(1)
-                .branch(savedBranch)
-                .status(savedBranch.getStatus())
-                .initiatedBy(currentUsername)
-                .build());
-    }
-
-    public List<AccountDto> findAllVaultsByBranchId(Long branchId) {
-        BranchDto branchDto = branchService.findById(branchId);
-        return accountService.findAllVaults(branchDto);
-    }
-
-    public List<LedgerDto> findAllLedgersByBranchId(Long branchId) {
-        BranchDto branchDto = branchService.findById(branchId);
-        return accountService.findAllLedgers(branchDto);
-    }
-
-    public AccountDto findVaultByBranchIdAndCurrency(Long branchId, String currency) {
-        BranchDto branchDto = branchService.findById(branchId);
-        return accountService.findVault(branchDto, currency);
     }
 }

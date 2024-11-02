@@ -1,13 +1,10 @@
 package com.dabel.service.cheque;
 
-import com.dabel.app.Fee;
 import com.dabel.app.Helper;
 import com.dabel.constant.AccountType;
 import com.dabel.constant.BankFees;
-import com.dabel.constant.LedgerType;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
-import com.dabel.dto.ChequeDto;
 import com.dabel.dto.ChequeRequestDto;
 import com.dabel.exception.BalanceInsufficientException;
 import com.dabel.exception.IllegalOperationException;
@@ -17,6 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusinessChequeRequest extends ChequeRequest {
 
+    private static final int NUMBER_OF_CHEQUES = 50;
+
     public BusinessChequeRequest(ChequeService chequeService, ChequeRequestService chequeRequestService, FeeService feeService) {
         super(chequeService, chequeRequestService, feeService);
     }
@@ -24,61 +23,54 @@ public class BusinessChequeRequest extends ChequeRequest {
     @Override
     public void init(ChequeRequestDto chequeRequestDto) {
 
-        AccountDto accountDto = chequeRequestDto.getTrunk().getAccount();
+        AccountDto account = chequeRequestDto.getTrunk().getAccount();
 
-        if(!Helper.isBusinessAccount(accountDto))
-            throw new IllegalOperationException("Only business account is eligible for this operation");
-
-        if(!Helper.isActiveStatedObject(accountDto) || !Helper.isActiveStatedObject(chequeRequestDto.getTrunk().getCustomer()))
-            throw new IllegalOperationException("The account and its owner must be active for this operation");
-
-        chequeRequestDto.setInitiatedBy(currentUsername());
-
-        if(accountDto.getBalance() < BankFees.Basic.BUSINESS_CHEQUE) {
-            chequeRequestDto.setStatus(Status.FAILED.code());
-            chequeRequestDto.setFailureReason("Account balance is insufficient for cheque request fees");
-            chequeRequestService.save(chequeRequestDto);
-            throw new BalanceInsufficientException("Account balance is insufficient for application fees");
+        if (!isEligibleForBusinessCheque(account, chequeRequestDto)) {
+            throw new IllegalOperationException("Only active business accounts are eligible for this operation.");
         }
 
-        chequeRequestDto.setInitiatedBy(currentUsername());
-        chequeRequestDto.setStatus(Status.PENDING.code());
-        chequeRequestService.save(chequeRequestDto);
+        chequeRequestDto.setInitiatedBy(getCurrentUsername());
+        processChequeRequestInit(chequeRequestDto, account);
     }
 
     @Override
     public void approve(ChequeRequestDto chequeRequestDto) {
 
-        if(!chequeRequestDto.getStatus().equals(Status.PENDING.code()))
-            return;
+        if (!Status.PENDING.code().equals(chequeRequestDto.getStatus()))
+            return;  // Only pending requests can be approved
 
+        approveChequeRequest(chequeRequestDto);
+    }
+
+
+    private boolean isEligibleForBusinessCheque(AccountDto account, ChequeRequestDto chequeRequestDto) {
+        return Helper.isBusinessAccount(account)
+                && Helper.isActiveStatedObject(account)
+                && Helper.isActiveStatedObject(chequeRequestDto.getTrunk().getCustomer());
+    }
+
+    private void processChequeRequestInit(ChequeRequestDto chequeRequestDto, AccountDto account) {
+        if (account.getBalance() < BankFees.Basic.BUSINESS_CHEQUE) {
+            super.saveFailedRequest(chequeRequestDto);
+            throw new BalanceInsufficientException(ACCOUNT_BALANCE_IS_INSUFFICIENT_FOR_CHEQUE_APPLICATION_FEES);
+        }
+
+        chequeRequestDto.setStatus(Status.PENDING.code());
+        chequeRequestService.save(chequeRequestDto);
+    }
+
+    private void approveChequeRequest(ChequeRequestDto chequeRequestDto) {
         chequeRequestDto.setStatus(Status.APPROVED.code());
-        chequeRequestDto.setUpdatedBy(currentUsername());
+        chequeRequestDto.setUpdatedBy(getCurrentUsername());
 
-        //TODO: apply fees
-        Fee fee = new Fee(chequeRequestDto.getBranch(), BankFees.Basic.BUSINESS_CHEQUE, "Cheque application request");
-        feeService.apply(chequeRequestDto.getTrunk().getAccount(), LedgerType.CHEQUE_REQUEST, fee);
-
+        applyChequeRequestFee(chequeRequestDto, BankFees.Basic.BUSINESS_CHEQUE);
         chequeRequestService.save(chequeRequestDto);
 
-        //TODO: generate 50 cheques for this trunk
-        String chequeNumber = Helper.generateChequeNumber();
-        for (int i = 1; i <= 50; i++) {
-            ChequeDto chequeDto = ChequeDto.builder()
-                    .trunk(chequeRequestDto.getTrunk())
-                    .serial(chequeRequestDto)
-                    .chequeNumber(chequeNumber + (i <= 9 ? "0" + i : i))
-                    .status(Status.ACTIVE.code())
-                    .branch(chequeRequestDto.getBranch())
-                    .initiatedBy(currentUsername())
-                    .build();
-
-            chequeService.save(chequeDto);
-        }
+        generateCheques(chequeRequestDto, NUMBER_OF_CHEQUES);
     }
 
     @Override
-    AccountType getType() {
+    AccountType getAccountType() {
         return AccountType.BUSINESS;
     }
 }

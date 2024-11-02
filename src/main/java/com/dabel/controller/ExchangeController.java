@@ -20,6 +20,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ExchangeController implements PageTitleConfig {
 
+    private static final String SUCCESS_INITIATE_MESSAGE = "Exchange successfully initiated";
+    private static final String SUCCESS_APPROVE_MESSAGE = "Exchange successfully approved!";
+    private static final String SUCCESS_REJECT_MESSAGE = "Exchange successfully rejected!";
+    private static final String ERROR_INVALID_INFORMATION = "Invalid information!";
+    private static final String ERROR_REJECT_REASON_REQUIRED = "Reject reason is required!";
+
     private final ExchangeFacadeService exchangeFacadeService;
     private final UserService userService;
 
@@ -30,17 +36,17 @@ public class ExchangeController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.EXCHANGES)
-    public String listingExchanges(Model model) {
+    public String listExchanges(Model model) {
         configPageTitle(model, Web.Menu.Exchange.ROOT);
-        model.addAttribute("exchanges", StatedObjectFormatter.format(exchangeFacadeService.findAll()));
+        model.addAttribute("exchanges", StatedObjectFormatter.format(exchangeFacadeService.getAll()));
 
         return Web.View.EXCHANGES;
     }
 
     @GetMapping(value = Web.Endpoint.EXCHANGES + "/{exchangeId}")
-    public String exchangeDetails(@PathVariable Long exchangeId, Model model) {
+    public String showExchangeDetails(@PathVariable Long exchangeId, Model model) {
 
-        ExchangeDto exchange = exchangeFacadeService.findById(exchangeId);
+        ExchangeDto exchange = exchangeFacadeService.getById(exchangeId);
 
         configPageTitle(model, "Exchange Details");
         model.addAttribute("exchange", StatedObjectFormatter.format(exchange));
@@ -48,51 +54,52 @@ public class ExchangeController implements PageTitleConfig {
     }
 
     @GetMapping(value = Web.Endpoint.EXCHANGE_INIT)
-    public String initExchange(Model model, ExchangeDto exchangeDto) {
+    public String initializeExchange(Model model, ExchangeDto exchangeDto) {
         configPageTitle(model, Web.Menu.Exchange.INIT);
 
         return Web.View.EXCHANGE_INIT;
     }
 
     @PostMapping(value = Web.Endpoint.EXCHANGE_INIT)
-    public String initExchange(Model model, @Valid ExchangeDto exchangeDto, BindingResult binding, RedirectAttributes redirect) {
+    public String handleInitializeExchange(Model model, @Valid ExchangeDto exchangeDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if(binding.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             configPageTitle(model, Web.Menu.Exchange.INIT);
-            model.addAttribute(Web.MessageTag.ERROR, "Invalid information !");
+            model.addAttribute(Web.MessageTag.ERROR, ERROR_INVALID_INFORMATION);
             return Web.View.EXCHANGE_INIT;
         }
 
         exchangeDto.setBranch(userService.getAuthenticated().getBranch());
-
         exchangeFacadeService.init(exchangeDto);
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_INITIATE_MESSAGE);
 
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully initiated");
         return "redirect:" + Web.Endpoint.EXCHANGE_INIT;
     }
 
     @PostMapping(value = Web.Endpoint.EXCHANGE_APPROVE + "/{exchangeId}")
-    public String approveExchange(@PathVariable Long exchangeId, RedirectAttributes redirect) {
+    public String approveExchange(@PathVariable Long exchangeId, RedirectAttributes redirectAttributes) {
 
         exchangeFacadeService.approve(exchangeId);
-        redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully approved!");
-
-        return "redirect:" + Web.Endpoint.EXCHANGES + "/" + exchangeId;
+        redirectAttributes.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_APPROVE_MESSAGE);
+        return redirectToExchangeDetails(exchangeId);
     }
 
     @PostMapping(value = Web.Endpoint.EXCHANGE_REJECT + "/{exchangeId}")
     public String rejectExchange(@PathVariable Long exchangeId, @RequestParam String rejectReason, RedirectAttributes redirect) {
 
         if(rejectReason.isBlank())
-            redirect.addFlashAttribute(Web.MessageTag.ERROR, "Reject reason is mandatory!");
+            redirect.addFlashAttribute(Web.MessageTag.ERROR, ERROR_REJECT_REASON_REQUIRED);
         else {
-            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, "Exchange successfully rejected!");
+            redirect.addFlashAttribute(Web.MessageTag.SUCCESS, SUCCESS_REJECT_MESSAGE);
             exchangeFacadeService.reject(exchangeId, rejectReason);
         }
 
-        return "redirect:" + Web.Endpoint.EXCHANGES + "/" + exchangeId;
+        return redirectToExchangeDetails(exchangeId);
     }
 
+    private String redirectToExchangeDetails(Long exchangeId) {
+        return "redirect:" + Web.Endpoint.EXCHANGES + "/" + exchangeId;
+    }
 
     @Override
     public String[] getMenuAndSubMenu() {

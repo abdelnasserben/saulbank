@@ -4,101 +4,98 @@ import com.dabel.app.Helper;
 import com.dabel.constant.Status;
 import com.dabel.dto.AccountDto;
 import com.dabel.dto.CustomerDto;
-import com.dabel.dto.LedgerDto;
 import com.dabel.dto.TrunkDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service facade for managing account and trunk operations, including saving, retrieving,
+ * activating, and deactivating accounts and trunks, as well as handling account affiliations.
+ */
 @Service
 public class AccountFacadeService {
 
     private final AccountService accountService;
     private final AccountAffiliationService accountAffiliationService;
 
-    @Autowired
     public AccountFacadeService(AccountAffiliationService accountAffiliationService) {
         this.accountAffiliationService = accountAffiliationService;
         this.accountService = this.accountAffiliationService.getAccountService();
     }
 
-    public AccountDto save(AccountDto accountDto) {
-        return accountService.save(accountDto);
+    public void saveAccount(AccountDto accountDto) {
+        accountService.saveAccount(accountDto);
     }
 
-    public TrunkDto save(TrunkDto trunkDto) {
-        return accountService.save(trunkDto);
+    public TrunkDto saveTrunk(TrunkDto trunkDto) {
+        return accountService.saveTrunk(trunkDto);
     }
 
-    public LedgerDto save(LedgerDto ledgerDto) {
-        return accountService.save(ledgerDto);
+    public List<AccountDto> getAllAccounts() {
+        return accountService.findAllAccounts();
     }
 
-    public List<AccountDto> findAll() {
-        return accountService.findAll();
+    public AccountDto getAccountByNumber(String accountNumber) {
+        return accountService.findAccountByNumber(accountNumber);
     }
 
-    public AccountDto findByNumber(String accountNumber) {
-        return accountService.findByNumber(accountNumber);
-    }
-
-    public List<TrunkDto> findAllTrunks() {
+    public List<TrunkDto> getAllTrunks() {
         return accountService.findAllTrunks();
     }
 
-    public TrunkDto findTrunkById(Long trunkId) {
-        return accountService.findTrunk(trunkId);
+    public TrunkDto getTrunkById(Long trunkId) {
+        return accountService.findTrunkById(trunkId);
     }
 
-    public TrunkDto findTrunkByNumber(String accountNumber) {
-        return accountService.findTrunk(accountNumber);
+    public TrunkDto getTrunkByNumber(String accountNumber) {
+        return accountService.findTrunkByAccountNumber(accountNumber);
     }
 
-    public TrunkDto findTrunkByCustomerAndAccountNumber(CustomerDto customerDto, String accountNumber) {
-        return accountService.findTrunk(customerDto, accountNumber);
+    public TrunkDto getTrunkByCustomerAndNumber(CustomerDto customerDto, String accountNumber) {
+        return accountService.findTrunkByCustomerAndAccountNumber(customerDto, accountNumber);
     }
 
-    public List<TrunkDto> findAllTrunks(CustomerDto customerDto) {
-        return accountService.findAllTrunks(customerDto);
+    public List<TrunkDto> getAllTrunksByCustomer(CustomerDto customerDto) {
+        return accountService.findAllTrunksByCustomer(customerDto);
     }
 
-    public List<TrunkDto> findAllTrunks(AccountDto accountDto) {
-        return accountService.findAllTrunks(accountDto);
+    public List<TrunkDto> getAllTrunksByAccount(AccountDto accountDto) {
+        return accountService.findAllTrunksByAccount(accountDto);
     }
 
-    public void activateTrunk(Long trunkId) {
-        AccountDto accountDto = findTrunkById(trunkId).getAccount();
+    public void activateTrunkById(Long trunkId) {
+        AccountDto accountDto = getTrunkById(trunkId).getAccount();
         if(!Helper.isActiveStatedObject(accountDto)) {
             accountDto.setStatus(Status.ACTIVE.code());
             accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
-            accountService.save(accountDto);
+            accountService.saveAccount(accountDto);
         }
     }
 
-    public void deactivateTrunk(Long trunkId) {
-        AccountDto accountDto = findTrunkById(trunkId).getAccount();
+    public void deactivateTrunkById(Long trunkId) {
+        AccountDto accountDto = getTrunkById(trunkId).getAccount();
         if(!Helper.isActiveStatedObject(accountDto))
             return;
 
         accountDto.setStatus(Status.INACTIVE.code());
         accountDto.setUpdatedBy(Helper.getAuthenticated().getName());
-        accountService.save(accountDto);
+        accountService.saveAccount(accountDto);
     }
 
-    public void addAffiliate(CustomerDto customerDto, String accountNumber) {
+    public void addAffiliateToAccount(CustomerDto customerDto, String accountNumber) {
         accountAffiliationService.affiliate(customerDto, accountNumber);
     }
 
-    public void removeAffiliate(CustomerDto customerDto, String accountNumber) {
+    public void removeAffiliateFromAccount(CustomerDto customerDto, String accountNumber) {
         accountAffiliationService.disaffiliate(customerDto, accountNumber);
     }
 
-    public void debit(AccountDto accountDto, double amount) {
-        accountService.debit(accountDto, amount);
+    public void debitAccount(AccountDto accountDto, double amount) {
+        accountService.debitAccount(accountDto, amount);
     }
 
-    public void credit(AccountDto accountDto, double amount) {
-        accountService.credit(accountDto, amount);
+    public void creditAccount(AccountDto accountDto, double amount) {
+        accountService.creditAccount(accountDto, amount);
     }
 }

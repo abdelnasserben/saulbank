@@ -54,8 +54,8 @@ public class DataLoader {
                     .branchAddress("Mutsamudu, Chitsangani")
                     .build(), new double[]{2500, 1800, 1000});
 
-            BranchDto savedBranch1 = branchFacadeService.findAll().get(0);
-            BranchDto savedBranch2 = branchFacadeService.findAll().get(1);
+            BranchDto savedBranch1 = branchFacadeService.getAll().get(0);
+            BranchDto savedBranch2 = branchFacadeService.getAll().get(1);
 
             //TODO: create users
             UserDto user1 = UserDto.builder()
@@ -87,7 +87,7 @@ public class DataLoader {
                 AccountType accountType = random.nextBoolean() ? AccountType.SAVING : AccountType.BUSINESS;
                 customer.setBranch( random.nextBoolean() ? savedBranch1 : savedBranch2);
 
-                customerFacadeService.create(customer, accountName, accountType, AccountProfile.PERSONAL);
+                customerFacadeService.createNewCustomerWithAccount(customer, accountName, accountType, AccountProfile.PERSONAL);
             }
 
             //TODO: Save avatars and signatures photos
@@ -100,427 +100,165 @@ public class DataLoader {
         };
     }
 
+    public CustomerDto createCustomer(String firstName, String lastName, String gender, String nationality,
+                                      String identityType, String identityNumber, LocalDate identityExpiration,
+                                      String identityIssue, LocalDate birthDate, String birthPlace,
+                                      String profession, String email, String phone, String address, String postCode) {
+
+        String profileAndSignatureImageName = identityNumber + ".jpg";
+
+        return CustomerDto.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .gender(gender)
+                .nationality(nationality)
+                .identityType(identityType)
+                .identityNumber(identityNumber)
+                .identityExpiration(identityExpiration)
+                .identityIssue(identityIssue)
+                .birthDate(birthDate)
+                .birthPlace(birthPlace)
+                .profession(profession)
+                .email(email)
+                .phone(phone)
+                .residence(Country.KM.getName())
+                .address(address)
+                .postCode(postCode)
+                .profilePicture(profileAndSignatureImageName)
+                .signaturePicture(profileAndSignatureImageName)
+                .build();
+    }
+
     private List<CustomerDto> customersList() {
-        CustomerDto customer1 = CustomerDto.builder()
-                .firstName("Ali")
-                .lastName("Madi")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN001234")
-                .identityExpiration(LocalDate.of(2030, 8, 12))
-                .identityIssue("Moroni")
-                .birthDate(LocalDate.of(1990, 5, 21))
-                .birthPlace("Hopital El Maarouf")
-                .profession("Entrepreneur")
-                .email("ali.madi@gmail.com")
-                .phone("+2693214567")
-                .residence(Country.KM.getName())
-                .address("Rue des Palmiers")
-                .postCode("97600")
-                .profilePicture("NIN001234.jpg")
-                .signaturePicture("NIN001234.jpg")
-                .build();
+        CustomerDto customer1 = createCustomer("Ali", "Madi", "MALE", Country.KM.getName(), "CARD",
+                "NIN001234", LocalDate.of(2030, 8, 12), "Moroni",
+                LocalDate.of(1990, 5, 21), "Hopital El Maarouf", "Entrepreneur",
+                "ali.madi@gmail.com", "+2693214567", "Rue des Palmiers", "97600");
 
-        CustomerDto customer2 = CustomerDto.builder()
-                .firstName("Fatima")
-                .lastName("Said")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE100237")
-                .identityExpiration(LocalDate.of(2029, 1, 15))
-                .identityIssue("Anjouan")
-                .birthDate(LocalDate.of(1993, 12, 30))
-                .birthPlace("Hopital de Hombo")
-                .profession("Teacher")
-                .email("fatima.said@yahoo.com")
-                .phone("+2694432768")
-                .residence(Country.KM.getName())
-                .address("Avenue Ahmed Abdallah")
-                .postCode("97610")
-                .profilePicture("NBE100237.jpg")
-                .signaturePicture("NBE100237.jpg")
-                .build();
+        CustomerDto customer2 = createCustomer("Fatima", "Said", "FEMALE", Country.KM.getName(), "PASSPORT",
+                "NBE100237", LocalDate.of(2029, 1, 15), "Anjouan",
+                LocalDate.of(1993, 12, 30), "Hopital de Hombo", "Teacher",
+                "fatima.said@yahoo.com", "+2694432768", "Avenue Ahmed Abdallah", "97610");
 
-        CustomerDto customer3 = CustomerDto.builder()
-                .firstName("Youssouf")
-                .lastName("Mohamed")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN450912")
-                .identityExpiration(LocalDate.of(2028, 3, 25))
-                .identityIssue("Mutsamudu")
-                .birthDate(LocalDate.of(1988, 7, 14))
-                .birthPlace("Hopital de Domoni")
-                .profession("Mechanic")
-                .email("youssouf.mohamed@outlook.com")
-                .phone("+2696753120")
-                .residence(Country.KM.getName())
-                .address("Quartier Bazimini")
-                .postCode("97620")
-                .profilePicture("NIN450912.jpg")
-                .signaturePicture("NIN450912.jpg")
-                .build();
+        CustomerDto customer3 = createCustomer("Youssouf", "Mohamed", "MALE", Country.KM.getName(), "CARD",
+                "NIN450912", LocalDate.of(2028, 3, 25), "Mutsamudu",
+                LocalDate.of(1988, 7, 14), "Hopital de Domoni", "Mechanic",
+                "youssouf.mohamed@outlook.com", "+2696753120", "Quartier Bazimini", "97620");
 
-        CustomerDto customer4 = CustomerDto.builder()
-                .firstName("Amina")
-                .lastName("Bacar"
-                ).gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE209876")
-                .identityExpiration(LocalDate.of(2031, 6, 5))
-                .identityIssue("Fomboni")
-                .birthDate(LocalDate.of(1995, 9, 18))
-                .birthPlace("Centre Médical de Fomboni")
-                .profession("Pharmacist")
-                .email("amina.bacar@gmail.com")
-                .phone("+2698743210")
-                .residence(Country.KM.getName())
-                .address("Rue de la Corniche")
-                .postCode("97630")
-                .profilePicture("NBE209876.jpg")
-                .signaturePicture("NBE209876.jpg")
-                .build();
+        CustomerDto customer4 = createCustomer("Amina", "Bacar", "FEMALE", Country.KM.getName(), "PASSPORT",
+                "NBE209876", LocalDate.of(2031, 6, 5), "Fomboni",
+                LocalDate.of(1995, 9, 18), "Centre Médical de Fomboni", "Pharmacist",
+                "amina.bacar@gmail.com", "+2698743210", "Rue de la Corniche", "97630");
 
-        CustomerDto customer5 = CustomerDto.builder()
-                .firstName("Houssein")
-                .lastName("Abdallah")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN378456")
-                .identityExpiration(LocalDate.of(2027, 11, 20))
-                .identityIssue("Moroni")
-                .birthDate(LocalDate.of(1991, 2, 10))
-                .birthPlace("Hopital El Maarouf")
-                .profession("Civil Engineer")
-                .email("houssein.abdallah@km.com")
-                .phone("+2698746532")
-                .residence(Country.KM.getName())
-                .address("Route Nationale 1")
-                .postCode("97640")
-                .profilePicture("NIN378456.jpg")
-                .signaturePicture("NIN378456.jpg")
-                .build();
+        CustomerDto customer5 = createCustomer("Houssein", "Abdallah", "MALE", Country.KM.getName(), "CARD",
+                "NIN378456", LocalDate.of(2027, 11, 20), "Moroni",
+                LocalDate.of(1991, 2, 10), "Hopital El Maarouf", "Civil Engineer",
+                "houssein.abdallah@km.com", "+2698746532", "Route Nationale 1", "97640");
 
-        CustomerDto customer6 = CustomerDto.builder()
-                .firstName("Saïda")
-                .lastName("Ahmed")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE567324")
-                .identityExpiration(LocalDate.of(2028, 9, 14))
-                .identityIssue("Anjouan")
-                .birthDate(LocalDate.of(1987, 4, 11))
-                .birthPlace("Centre de Santé de Sima")
-                .profession("Nurse")
-                .email("saida.ahmed@gmail.com")
-                .phone("+2693458769")
-                .residence(Country.KM.getName())
-                .address("Rue des Tisserands")
-                .postCode("97650")
-                .profilePicture("NBE567324.jpg")
-                .signaturePicture("NBE567324.jpg")
-                .build();
+        CustomerDto customer6 = createCustomer(
+                "Saïda", "Ahmed", "FEMALE", Country.KM.getName(), "PASSPORT",
+                "NBE567324", LocalDate.of(2028, 9, 14), "Anjouan",
+                LocalDate.of(1987, 4, 11), "Centre de Santé de Sima", "Nurse",
+                "saida.ahmed@gmail.com", "+2693458769", "Rue des Tisserands", "97650"
+        );
 
-        CustomerDto customer7 = CustomerDto.builder()
-                .firstName("Ibrahim")
-                .lastName("Said")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN876453")
-                .identityExpiration(LocalDate.of(2032, 2, 22))
-                .identityIssue("Moroni")
-                .birthDate(LocalDate.of(1996, 3, 17))
-                .birthPlace("Clinique Salama")
-                .profession("Software Developer")
-                .email("ibrahim.said@protonmail.com")
-                .phone("+2697342185")
-                .residence(Country.KM.getName())
-                .address("Rue des Lotus")
-                .postCode("97600")
-                .profilePicture("NIN876453.jpg")
-                .signaturePicture("NIN876453.jpg")
-                .build();
+        CustomerDto customer7 = createCustomer(
+                "Ibrahim", "Said", "MALE", Country.KM.getName(), "CARD",
+                "NIN876453", LocalDate.of(2032, 2, 22), "Moroni",
+                LocalDate.of(1996, 3, 17), "Clinique Salama", "Software Developer",
+                "ibrahim.said@protonmail.com", "+2697342185", "Rue des Lotus", "97600"
+        );
 
-        CustomerDto customer8 = CustomerDto.builder()
-                .firstName("Fahida")
-                .lastName("Ali")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE023945")
-                .identityExpiration(LocalDate.of(2031, 12, 12))
-                .identityIssue("Fomboni")
-                .birthDate(LocalDate.of(1992, 6, 28))
-                .birthPlace("Centre Médical de Fomboni")
-                .profession("Bank Teller")
-                .email("fahida.ali@outlook.com")
-                .phone("+2697564132")
-                .residence(Country.KM.getName())
-                .address("Quartier Djoumoichongo")
-                .postCode("97630")
-                .profilePicture("NBE023945.jpg")
-                .signaturePicture("NBE023945.jpg")
-                .build();
+        CustomerDto customer8 = createCustomer(
+                "Fahida", "Ali", "FEMALE", Country.KM.getName(), "PASSPORT",
+                "NBE023945", LocalDate.of(2031, 12, 12), "Fomboni",
+                LocalDate.of(1992, 6, 28), "Centre Médical de Fomboni", "Bank Teller",
+                "fahida.ali@outlook.com", "+2697564132", "Quartier Djoumoichongo", "97630"
+        );
 
-        CustomerDto customer9 = CustomerDto.builder()
-                .firstName("Salim")
-                .lastName("Bourhane")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN034512")
-                .identityExpiration(LocalDate.of(2029, 8, 29))
-                .identityIssue("Mutsamudu")
-                .birthDate(LocalDate.of(1990, 7, 23))
-                .birthPlace("Centre Hospitalier de Mutsamudu")
-                .profession("Police Officer")
-                .email("salim.bourhane@km.com")
-                .phone("+2698346217")
-                .residence(Country.KM.getName())
-                .address("Quartier Citadelle")
-                .postCode("97620")
-                .profilePicture("NIN034512.jpg")
-                .signaturePicture("NIN034512.jpg")
-                .build();
+        CustomerDto customer9 = createCustomer(
+                "Salim", "Bourhane", "MALE", Country.KM.getName(), "CARD",
+                "NIN034512", LocalDate.of(2029, 8, 29), "Mutsamudu",
+                LocalDate.of(1990, 7, 23), "Centre Hospitalier de Mutsamudu", "Police Officer",
+                "salim.bourhane@km.com", "+2698346217", "Quartier Citadelle", "97620"
+        );
 
-        CustomerDto customer10 = CustomerDto.builder()
-                .firstName("Oumou")
-                .lastName("Aboubacar")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE256748")
-                .identityExpiration(LocalDate.of(2027, 4, 20))
-                .identityIssue("Moroni")
-                .birthDate(LocalDate.of(1985, 11, 6))
-                .birthPlace("Hopital El Maarouf")
-                .profession("Businesswoman")
-                .email("oumou.aboubacar@gmail.com")
-                .phone("+2696123487")
-                .residence(Country.KM.getName())
-                .address("Rue des Cocotiers")
-                .postCode("97600")
-                .profilePicture("NBE256748.jpg")
-                .signaturePicture("NBE256748.jpg")
-                .build();
+        CustomerDto customer10 = createCustomer(
+                "Oumou", "Aboubacar", "FEMALE", Country.KM.getName(), "PASSPORT",
+                "NBE256748", LocalDate.of(2027, 4, 20), "Moroni",
+                LocalDate.of(1985, 11, 6), "Hopital El Maarouf", "Businesswoman",
+                "oumou.aboubacar@gmail.com", "+2696123487", "Rue des Cocotiers", "97600"
+        );
 
-        CustomerDto customer11 = CustomerDto.builder()
-                .firstName("Mariam")
-                .lastName("Soeuf")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN563291")
-                .identityExpiration(LocalDate.of(2032, 10, 11))
-                .identityIssue("Mutsamudu")
-                .birthDate(LocalDate.of(1994, 9, 13))
-                .birthPlace("Hopital de Hombo")
-                .profession("Receptionist")
-                .email("mariam.soeuf@hotmail.com")
-                .phone("+2698532146")
-                .residence(Country.KM.getName())
-                .address("Rue de la Liberté")
-                .postCode("97620")
-                .profilePicture("NIN563291.jpg")
-                .signaturePicture("NIN563291.jpg")
-                .build();
+        CustomerDto customer11 = createCustomer(
+                "Mariam", "Soeuf", "FEMALE", Country.KM.getName(), "CARD",
+                "NIN563291", LocalDate.of(2032, 10, 11), "Mutsamudu",
+                LocalDate.of(1994, 9, 13), "Hopital de Hombo", "Receptionist",
+                "mariam.soeuf@hotmail.com", "+2698532146", "Rue de la Liberté", "97620"
+        );
 
-        CustomerDto customer12 = CustomerDto.builder()
-                .firstName("Ahmed")
-                .lastName("Assoumani")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE432876")
-                .identityExpiration(LocalDate.of(2031, 5, 9))
-                .identityIssue("Fomboni")
-                .birthDate(LocalDate.of(1989, 10, 22))
-                .birthPlace("Centre Médical de Fomboni")
-                .profession("Accountant")
-                .email("ahmed.assoumani@km.com")
-                .phone("+2699468123")
-                .residence(Country.KM.getName())
-                .address("Avenue Ali Soilihi")
-                .postCode("97630")
-                .profilePicture("NBE432876.jpg")
-                .signaturePicture("NBE432876.jpg")
-                .build();
+        CustomerDto customer12 = createCustomer(
+                "Ahmed", "Assoumani", "MALE", Country.KM.getName(), "PASSPORT",
+                "NBE432876", LocalDate.of(2031, 5, 9), "Fomboni",
+                LocalDate.of(1989, 10, 22), "Centre Médical de Fomboni", "Accountant",
+                "ahmed.assoumani@km.com", "+2699468123", "Avenue Ali Soilihi", "97630"
+        );
 
-        CustomerDto customer13 = CustomerDto.builder()
-                .firstName("Aziza")
-                .lastName("Mohamed")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN987654")
-                .identityExpiration(LocalDate.of(2029, 11, 17))
-                .identityIssue("Moroni")
-                .birthDate(LocalDate.of(1997, 1, 10))
-                .birthPlace("Hopital El Maarouf")
-                .profession("Sales Manager")
-                .email("aziza.mohamed@km.com")
-                .phone("+2699563418")
-                .residence(Country.KM.getName())
-                .address("Rue de la Paix")
-                .postCode("97600")
-                .profilePicture("NIN987654.jpg")
-                .signaturePicture("NIN987654.jpg")
-                .build();
+        CustomerDto customer13 = createCustomer(
+                "Aziza", "Mohamed", "FEMALE", Country.KM.getName(), "CARD",
+                "NIN987654", LocalDate.of(2029, 11, 17), "Moroni",
+                LocalDate.of(1997, 1, 10), "Hopital El Maarouf", "Sales Manager",
+                "aziza.mohamed@km.com", "+2699563418", "Rue de la Paix", "97600"
+        );
 
-        CustomerDto customer14 = CustomerDto.builder()
-                .firstName("Omar")
-                .lastName("Ali")
-                .gender("MALE")
-                .nationality(Country.KM.getName())
-                .identityType("PASSPORT")
-                .identityNumber("NBE654321")
-                .identityExpiration(LocalDate.of(2033, 2, 4))
-                .identityIssue("Anjouan")
-                .birthDate(LocalDate.of(1992, 4, 6))
-                .birthPlace("Hopital de Hombo")
-                .profession("Tour Guide")
-                .email("omar.ali@km.com")
-                .phone("+2698653214")
-                .residence(Country.KM.getName())
-                .address("Quartier Mbéni")
-                .postCode("97610")
-                .profilePicture("NBE654321.jpg")
-                .signaturePicture("NBE654321.jpg")
-                .build();
+        CustomerDto customer14 = createCustomer(
+                "Omar", "Ali", "MALE", Country.KM.getName(), "PASSPORT",
+                "NBE654321", LocalDate.of(2033, 2, 4), "Anjouan",
+                LocalDate.of(1992, 4, 6), "Hopital de Hombo", "Tour Guide",
+                "omar.ali@km.com", "+2698653214", "Quartier Mbéni", "97610"
+        );
 
-        CustomerDto customer15 = CustomerDto.builder()
-                .firstName("Shamima")
-                .lastName("Abdallah")
-                .gender("FEMALE")
-                .nationality(Country.KM.getName())
-                .identityType("CARD")
-                .identityNumber("NIN432109")
-                .identityExpiration(LocalDate.of(2028, 7, 23))
-                .identityIssue("Mutsamudu")
-                .birthDate(LocalDate.of(1991, 12, 2))
-                .birthPlace("Hopital de Domoni")
-                .profession("Secretary")
-                .email("shamima.abdallah@gmail.com")
-                .phone("+2697349865")
-                .residence(Country.KM.getName())
-                .address("Quartier Mirontsi")
-                .postCode("97620")
-                .profilePicture("NIN432109.jpg")
-                .signaturePicture("NIN432109.jpg")
-                .build();
+        CustomerDto customer15 = createCustomer(
+                "Shamima", "Abdallah", "FEMALE", Country.KM.getName(), "CARD",
+                "NIN432109", LocalDate.of(2028, 7, 23), "Mutsamudu",
+                LocalDate.of(1991, 12, 2), "Hopital de Domoni", "Secretary",
+                "shamima.abdallah@gmail.com", "+2697349865", "Quartier Mirontsi", "97620"
+        );
 
-        CustomerDto customer16 = CustomerDto.builder()
-                .firstName("Jean")
-                .lastName("Dupont")
-                .gender("MALE")
-                .nationality(Country.FR.getName())
-                .identityType("PASSPORT")
-                .identityNumber("FRA987654")
-                .identityExpiration(LocalDate.of(2030, 10, 1))
-                .identityIssue("Paris")
-                .birthDate(LocalDate.of(1985, 4, 22))
-                .birthPlace("Hôpital Necker")
-                .profession("Financial Analyst")
-                .email("jean.dupont@gmail.com")
-                .phone("+2693217890")
-                .residence(Country.KM.getName())
-                .address("Rue des Bananiers")
-                .postCode("97600")
-                .profilePicture("FRA987654.jpg")
-                .signaturePicture("FRA987654.jpg")
-                .build();
+        CustomerDto customer16 = createCustomer(
+                "Jean", "Dupont", "MALE", Country.FR.getName(), "PASSPORT",
+                "FRA987654", LocalDate.of(2030, 10, 1), "Paris",
+                LocalDate.of(1985, 4, 22), "Hôpital Necker", "Financial Analyst",
+                "jean.dupont@gmail.com", "+2693217890", "Rue des Bananiers", "97600"
+        );
 
-        CustomerDto customer17 = CustomerDto.builder()
-                .firstName("John")
-                .lastName("Smith")
-                .gender("MALE")
-                .nationality(Country.US.getName())
-                .identityType("PASSPORT")
-                .identityNumber("USA123456")
-                .identityExpiration(LocalDate.of(2028, 5, 15))
-                .identityIssue("New York")
-                .birthDate(LocalDate.of(1987, 3, 10))
-                .birthPlace("St. Mary’s Hospital")
-                .profession("Marketing Director")
-                .email("john.smith@yahoo.com")
-                .phone("+2694456789")
-                .residence(Country.KM.getName())
-                .address("Avenue des Coquillages")
-                .postCode("97600")
-                .profilePicture("USA123456.jpg")
-                .signaturePicture("USA123456.jpg")
-                .build();
+        CustomerDto customer17 = createCustomer(
+                "John", "Smith", "MALE", Country.US.getName(), "PASSPORT",
+                "USA123456", LocalDate.of(2028, 5, 15), "New York",
+                LocalDate.of(1987, 3, 10), "St. Mary’s Hospital", "Marketing Director",
+                "john.smith@yahoo.com", "+2694456789", "Avenue des Coquillages", "97600"
+        );
 
-        CustomerDto customer18 = CustomerDto.builder()
-                .firstName("Cheikh")
-                .lastName("Diop")
-                .gender("MALE")
-                .nationality(Country.SN.getName())
-                .identityType("PASSPORT")
-                .identityNumber("SEN456789")
-                .identityExpiration(LocalDate.of(2029, 7, 18))
-                .identityIssue("Dakar")
-                .birthDate(LocalDate.of(1990, 9, 20))
-                .birthPlace("Hôpital de Fann")
-                .profession("IT Consultant")
-                .email("cheikh.diop@senegal.com")
-                .phone("+2695678901")
-                .residence(Country.KM.getName())
-                .address("Rue des Jasmins")
-                .postCode("97620")
-                .profilePicture("SEN456789.jpg")
-                .signaturePicture("SEN456789.jpg")
-                .build();
+        CustomerDto customer18 = createCustomer(
+                "Cheikh", "Diop", "MALE", Country.SN.getName(), "PASSPORT",
+                "SEN456789", LocalDate.of(2029, 7, 18), "Dakar",
+                LocalDate.of(1990, 9, 20), "Hôpital de Fann", "IT Consultant",
+                "cheikh.diop@senegal.com", "+2695678901", "Rue des Jasmins", "97620"
+        );
 
-        CustomerDto customer19 = CustomerDto.builder()
-                .firstName("Awa")
-                .lastName("Kone")
-                .gender("FEMALE")
-                .nationality(Country.CI.getName())
-                .identityType("PASSPORT")
-                .identityNumber("CIV789012")
-                .identityExpiration(LocalDate.of(2031, 11, 25))
-                .identityIssue("Abidjan")
-                .birthDate(LocalDate.of(1994, 6, 12))
-                .birthPlace("CHU de Treichville")
-                .profession("HR Manager")
-                .email("awa.kone@gmail.com")
-                .phone("+2696789012")
-                .residence(Country.KM.getName())
-                .address("Rue des Manguiers")
-                .postCode("97610")
-                .profilePicture("CIV789012.jpg")
-                .signaturePicture("CIV789012.jpg")
-                .build();
+        CustomerDto customer19 = createCustomer(
+                "Awa", "Kone", "FEMALE", Country.CI.getName(), "PASSPORT",
+                "CIV789012", LocalDate.of(2031, 11, 25), "Abidjan",
+                LocalDate.of(1994, 6, 12), "CHU de Treichville", "HR Manager",
+                "awa.kone@gmail.com", "+2696789012", "Rue des Manguiers", "97610"
+        );
 
-        CustomerDto customer20 = CustomerDto.builder()
-                .firstName("Khalid")
-                .lastName("El Amrani")
-                .gender("MALE")
-                .nationality(Country.MA.getName())
-                .identityType("PASSPORT")
-                .identityNumber("MAR654321")
-                .identityExpiration(LocalDate.of(2027, 4, 30))
-                .identityIssue("Casablanca")
-                .birthDate(LocalDate.of(1992, 12, 5))
-                .birthPlace("Clinique Chifa")
-                .profession("Architect")
-                .email("khalid.elamrani@ma.com")
-                .phone("+2697890123")
-                .residence(Country.KM.getName())
-                .address("Avenue des Étoiles")
-                .postCode("97630")
-                .profilePicture("MAR654321.jpg")
-                .signaturePicture("MAR654321.jpg")
-                .build();
-
+        CustomerDto customer20 = createCustomer(
+                "Khalid", "El Amrani", "MALE", Country.MA.getName(), "PASSPORT",
+                "MAR654321", LocalDate.of(2027, 4, 30), "Casablanca",
+                LocalDate.of(1992, 12, 5), "Clinique Chifa", "Architect",
+                "khalid.elamrani@ma.com", "+2697890123", "Avenue des Étoiles", "97630"
+        );
 
         return Arrays.asList(
                 customer1, customer2, customer3, customer4, customer5,

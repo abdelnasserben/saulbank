@@ -66,7 +66,7 @@
 								</span>
 							</div>
 							<!--end::Heading-->
-							<form th:action="@{/branches/accounts?code={code}(code=${vaults[0].branch.branchId})}"
+							<form th:action="@{/view360/branches/accounts?code={code}(code=${vaults[0].branch.branchId})}"
 								method="post" class="row">
 								<div class="col-md-4">
 									<input type="hidden" name="currency" th:value="${vaults[0].currency}"
@@ -128,7 +128,7 @@
 							</div>
 							<!--end::Heading-->
 
-							<form th:action="@{/branches/accounts?code={code}(code=${vaults[1].branch.branchId})}"
+							<form th:action="@{/view360/branches/accounts?code={code}(code=${vaults[1].branch.branchId})}"
 								method="post" class="row">
 								<div class="col-md-4">
 									<input type="hidden" name="currency" th:value="${vaults[1].currency}"
@@ -190,7 +190,7 @@
 							</div>
 							<!--end::Heading-->
 
-							<form th:action="@{/branches/accounts?code={code}(code=${vaults[2].branch.branchId})}"
+							<form th:action="@{/view360/branches/accounts?code={code}(code=${vaults[2].branch.branchId})}"
 								method="post" class="row">
 								<div class="col-md-4">
 									<input type="hidden" name="currency" th:value="${vaults[2].currency}"

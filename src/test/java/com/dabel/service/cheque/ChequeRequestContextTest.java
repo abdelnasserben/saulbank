@@ -18,13 +18,13 @@ class ChequeRequestContextTest {
     @Test
     void shouldSetChequeRequestContextOfSavingAccount() {
         ChequeRequest expected = chequeRequestContext.setContext("SAVING");
-        assertThat(expected.getType()).isEqualTo(AccountType.SAVING);
+        assertThat(expected.getAccountType()).isEqualTo(AccountType.SAVING);
     }
 
     @Test
     void shouldSetChequeRequestContextOfBusinessAccount() {
         ChequeRequest expected = chequeRequestContext.setContext("BUSINESS");
-        assertThat(expected.getType()).isEqualTo(AccountType.BUSINESS);
+        assertThat(expected.getAccountType()).isEqualTo(AccountType.BUSINESS);
     }
 
     @Test

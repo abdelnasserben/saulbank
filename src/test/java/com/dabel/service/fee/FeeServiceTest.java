@@ -35,7 +35,7 @@ class FeeServiceTest {
 
 
     private void saveLedger(LedgerType ledgerType) {
-        accountService.save(LedgerDto.builder()
+        accountService.saveLedger(LedgerDto.builder()
                 .ledgerType(ledgerType.name())
                 .account(AccountDto.builder()
                         .accountName("Ledger")
@@ -58,7 +58,7 @@ class FeeServiceTest {
                 .status("1")
                 .build());
 
-        accountDto = accountService.save(AccountDto.builder()
+        accountDto = accountService.saveAccount(AccountDto.builder()
                 .accountName("John Doe")
                 .accountNumber("123456789")
                 .currency("KMF")
@@ -78,7 +78,7 @@ class FeeServiceTest {
 
         //when
         feeService.apply(accountDto, LedgerType.WITHDRAW, fee);
-        AccountDto expected = accountService.findByNumber("123456789");
+        AccountDto expected = accountService.findAccountByNumber("123456789");
 
         //then
         assertThat(expected.getBalance()).isEqualTo(4800);
@@ -92,7 +92,7 @@ class FeeServiceTest {
 
         //when
         feeService.apply(accountDto, LedgerType.TRANSFER, fee);
-        AccountDto expected = accountService.findByNumber("123456789");
+        AccountDto expected = accountService.findAccountByNumber("123456789");
 
         //then
         assertThat(expected.getBalance()).isEqualTo(4475);
@@ -106,7 +106,7 @@ class FeeServiceTest {
 
         //when
         feeService.apply(accountDto, LedgerType.LOAN, fee);
-        AccountDto expected = accountService.findByNumber("123456789");
+        AccountDto expected = accountService.findAccountByNumber("123456789");
 
         //then
         assertThat(expected.getBalance()).isEqualTo(4400);
@@ -120,7 +120,7 @@ class FeeServiceTest {
 
         //when
         feeService.apply(accountDto, LedgerType.LOAN, fee);
-        AccountDto expected = accountService.findByNumber("123456789");
+        AccountDto expected = accountService.findAccountByNumber("123456789");
 
         //then
         assertThat(expected.getBalance()).isEqualTo(4700);
@@ -134,7 +134,7 @@ class FeeServiceTest {
 
         //when
         feeService.apply(accountDto, LedgerType.LOAN, fee);
-        AccountDto expected = accountService.findByNumber("123456789");
+        AccountDto expected = accountService.findAccountByNumber("123456789");
 
         //then
         assertThat(expected.getBalance()).isEqualTo(4575);

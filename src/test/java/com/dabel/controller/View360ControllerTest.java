@@ -100,7 +100,7 @@ class View360ControllerTest {
         //then
         mockMvc.perform(get(Web.Endpoint.VIEW360_VAULT_GL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId())))
+                        .param("code", String.valueOf(branchFacadeService.getAll().get(0).getBranchId())))
                 .andExpect(model().attributeExists("vaults"))
                 .andExpect(model().attributeExists("ledgers"));
     }
@@ -111,7 +111,7 @@ class View360ControllerTest {
         createBranch(new double[]{100, 200, 300});
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId()));
+        params.add("code", String.valueOf(branchFacadeService.getAll().get(0).getBranchId()));
         params.add("currency", "KMF");
         params.add("amount", "-500");
         params.add("operationType", "credit");
@@ -130,7 +130,7 @@ class View360ControllerTest {
         createBranch(new double[]{100, 200, 300});
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId()));
+        params.add("code", String.valueOf(branchFacadeService.getAll().get(0).getBranchId()));
         params.add("currency", "KMF");
         params.add("amount", "500");
         params.add("operationType", "credit");
@@ -149,7 +149,7 @@ class View360ControllerTest {
         createBranch(new double[]{100, 200, 300});
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("code", String.valueOf(branchFacadeService.findAll().get(0).getBranchId()));
+        params.add("code", String.valueOf(branchFacadeService.getAll().get(0).getBranchId()));
         params.add("currency", "KMF");
         params.add("amount", "500");
         params.add("operationType", "debit");

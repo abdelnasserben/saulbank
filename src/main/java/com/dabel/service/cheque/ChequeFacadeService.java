@@ -60,7 +60,7 @@ public class ChequeFacadeService {
     public void sendRequest(PostChequeRequestDto postChequeRequestDto) {
 
         CustomerDto customerDto = customerService.findByIdentity(postChequeRequestDto.getCustomerIdentityNumber());
-        TrunkDto trunkDto = accountService.findTrunk(customerDto, postChequeRequestDto.getAccountNumber());
+        TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, postChequeRequestDto.getAccountNumber());
         ChequeRequestDto chequeRequestDto = ChequeRequestDto.builder()
                 .trunk(trunkDto)
                 .branch(userService.getAuthenticated().getBranch())
@@ -79,31 +79,11 @@ public class ChequeFacadeService {
     }
 
     public void activateCheque(Long chequeId) {
-
-        ChequeDto chequeDto = chequeService.findById(chequeId);
-
-        if(Helper.isActiveStatedObject(chequeDto))
-            throw new IllegalOperationException("Cheque already active");
-
-        chequeDto.setStatus(Status.ACTIVE.code());
-        chequeDto.setFailureReason("Activation");
-        chequeDto.setUpdatedBy(Helper.getAuthenticated().getName());
-
-        chequeService.save(chequeDto);
+        updateChequeStatus(chequeId, Status.ACTIVE, "Activation");
     }
 
     public void deactivateCheque(Long chequeId, String remarks) {
-
-        ChequeDto chequeDto = chequeService.findById(chequeId);
-
-        if(!Helper.isActiveStatedObject(chequeDto))
-            throw new IllegalOperationException("Unable to deactivate an inactive cheque");
-
-        chequeDto.setStatus(Status.INACTIVE.code());
-        chequeDto.setFailureReason(remarks);
-        chequeDto.setUpdatedBy(Helper.getAuthenticated().getName());
-
-        chequeService.save(chequeDto);
+        updateChequeStatus(chequeId, Status.INACTIVE, remarks);
     }
 
     public ChequeDto findChequeByNumber(String chequeNumber) {
@@ -113,25 +93,64 @@ public class ChequeFacadeService {
     public TransactionDto initPay(PostChequeDto postChequeDto) {
 
         ChequeDto chequeDto = chequeService.findByChequeNumber(postChequeDto.getChequeNumber());
+        validateActiveCheque(chequeDto);
 
-        if(!Helper.isActiveStatedObject(chequeDto))
-            throw new IllegalOperationException("Cheque must be active");
+        //TODO: Retrieve the receiver account
+        AccountDto receiverAccount = accountService.findAccountByNumber(postChequeDto.getBeneficiaryAccountNumber());
 
-        AccountDto receiverAccount = accountService.findByNumber(postChequeDto.getBeneficiaryAccountNumber());
+        //TODO: Retrieve cheque account and customer details
+        AccountDto initiatorAccount = chequeDto.getTrunk().getAccount();
+        String customerIdentity = chequeDto.getTrunk().getCustomer().getIdentityNumber();
+        String customerFullName = chequeDto.getTrunk().getCustomer().getFirstName() + " " + chequeDto.getTrunk().getCustomer().getLastName();
 
+        //TODO: Construct and return the transaction
         return TransactionDto.builder()
-                .initiatorAccount(chequeDto.getTrunk().getAccount())
+                .initiatorAccount(initiatorAccount)
                 .receiverAccount(receiverAccount)
                 .transactionType(TransactionType.CHEQUE_PAYMENT.name())
-                .currency(chequeDto.getTrunk().getAccount().getCurrency())
+                .currency(initiatorAccount.getCurrency())
                 .amount(postChequeDto.getAmount())
-                .customerIdentity(chequeDto.getTrunk().getCustomer().getIdentityNumber())
-                .customerFullName(chequeDto.getTrunk().getCustomer().getFirstName() + " " + chequeDto.getTrunk().getCustomer().getLastName())
+                .customerIdentity(customerIdentity)
+                .customerFullName(customerFullName)
                 .reason(postChequeDto.getReason())
                 .sourceType(SourceType.CHEQUE.name())
                 .sourceValue(chequeDto.getChequeNumber())
                 .branch(userService.getAuthenticated().getBranch())
                 .initiatedBy(Helper.getAuthenticated().getName())
                 .build();
+    }
+
+    private void validateActiveCheque(ChequeDto chequeDto) {
+        if (!Helper.isActiveStatedObject(chequeDto)) {
+            throw new IllegalOperationException("Cheque must be active.");
+        }
+    }
+
+    /**
+     * Updates the status of a cheque based on the requested action.
+     *
+     * @param chequeId The ID of the cheque to update.
+     * @param newStatus The target status for the cheque, either ACTIVE or INACTIVE.
+     * @param reason The reason for the status update.
+     * @throws IllegalOperationException if attempting to activate an already active cheque
+     *                                   or deactivate an inactive cheque.
+     */
+    private void updateChequeStatus(Long chequeId, Status newStatus, String reason) {
+        ChequeDto chequeDto = chequeService.findById(chequeId);
+        boolean isCurrentlyActive = Helper.isActiveStatedObject(chequeDto);
+
+        //TODO: Check the current status against the target status
+        if (newStatus == Status.ACTIVE && isCurrentlyActive) {
+            throw new IllegalOperationException("Cheque already active, cannot activate again.");
+        } else if (newStatus == Status.INACTIVE && !isCurrentlyActive) {
+            throw new IllegalOperationException("Cheque is inactive, cannot deactivate again.");
+        }
+
+
+        chequeDto.setStatus(newStatus.code());
+        chequeDto.setFailureReason(reason);
+        chequeDto.setUpdatedBy(Helper.getAuthenticated().getName());
+
+        chequeService.save(chequeDto);
     }
 }
