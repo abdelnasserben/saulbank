@@ -71,12 +71,13 @@ public class CustomerController implements PageTitleConfig {
 
     @PostMapping(value = Web.Endpoint.CUSTOMER_ADD)
     public String processAddCustomer(Model model, @Valid CustomerDto customerDto,
+                                     BindingResult bindingResult,
                                      @RequestParam String accountName,
                                      @RequestParam AccountType accountType,
                                      @RequestParam AccountProfile accountProfile,
                                      @RequestParam MultipartFile avatar,
                                      @RequestParam MultipartFile signature,
-                                     BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+                                     RedirectAttributes redirectAttributes) {
 
         if(bindingResult.hasErrors()) {
             configPageTitle(model, Web.Menu.Customer.ADD);
