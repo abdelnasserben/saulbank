@@ -21,6 +21,7 @@ public class ChequeRequest {
     private Trunk trunk;
 
     private String failureReason;
+    private double applicationFees;
     private String status;
     private String initiatedBy;
     private String updatedBy;

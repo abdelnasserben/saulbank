@@ -94,7 +94,7 @@
 
 										<!--end::Text-->
 										<div class="fw-bold fs-6 text-gray-800"
-											th:text="${transaction.amount + ' ' + transaction.currency}">600 000 KMF
+											th:text="${@appSpEL.formatAmount(transaction.amount) + ' ' + transaction.currency}">600 000 KMF
 										</div>
 										<!--end::Text-->
 									</div>
@@ -300,7 +300,7 @@
 								</div>
 
 								<div class="fw-bold text-gray-600  fs-7"
-									th:text="${transaction.amount + ' ' + transaction.currency}">600 000 KMF</div>
+									th:text="${@appSpEL.formatAmount(transaction.amount) + ' ' + transaction.currency}">600 000 KMF</div>
 							</div>
 							<!--end::Item-->
 

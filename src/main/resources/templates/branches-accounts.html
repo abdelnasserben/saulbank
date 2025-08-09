@@ -51,7 +51,7 @@
 						<!--begin::Card body-->
 						<div class="card-body p-9">
 							<!--begin::Heading-->
-							<div class="fs-2hx fw-bold" th:text="${vaults[0].currency + ' ' + vaults[0].balance}">KMF
+							<div class="fs-2hx fw-bold" th:text="${vaults[0].currency + ' ' + @appSpEL.formatAmount(vaults[0].balance)}">KMF
 								3,290.00</div>
 							<div class="fs-6 d-flex justify-content-between mb-7">
 								<div class="fs-4 fw-semibold text-gray-400">Vault <span
@@ -112,7 +112,7 @@
 					<div class="card  h-100">
 						<div class="card-body p-9">
 							<!--begin::Heading-->
-							<div class="fs-2hx fw-bold" th:text="${vaults[1].currency + ' ' + vaults[1].balance}">€
+							<div class="fs-2hx fw-bold" th:text="${vaults[1].currency + ' ' + @appSpEL.formatAmount(vaults[1].balance)}">€
 								-3,290.00</div>
 							<div class="fs-6 d-flex justify-content-between mb-7">
 								<div class="fs-4 fw-semibold text-gray-400">Vault <span
@@ -174,7 +174,7 @@
 					<div class="card  h-100">
 						<div class="card-body p-9">
 							<!--begin::Heading-->
-							<div class="fs-2hx fw-bold" th:text="${vaults[2].currency + ' ' + vaults[2].balance}">$ 0.00
+							<div class="fs-2hx fw-bold" th:text="${vaults[2].currency + ' ' + @appSpEL.formatAmount(vaults[2].balance)}">$ 0.00
 							</div>
 							<div class="fs-6 d-flex justify-content-between mb-7">
 								<div class="fs-4 fw-semibold text-gray-400">Vault <span
@@ -264,7 +264,7 @@
 								<tr th:each="ledger: ${ledgers}">
 									<td th:text="${ledger.account.accountName}">GL Withdraw Fees Branch 1</td>
 									<td th:text="${ledger.account.accountNumber}">000147820522</td>
-									<td th:text="${'KMF ' + ledger.account.balance}">KMF 792.00</td>
+									<td th:text="${'KMF ' + @appSpEL.formatAmount(ledger.account.balance)}">KMF 792.00</td>
 									<td>
 										<!--begin::Menu-->
 										<button type="button"

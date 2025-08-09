@@ -135,14 +135,14 @@
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-bold fs-6 text-gray-800" th:text="${loan.issuedAmount + ' KMF'}">
+										<div class="fw-bold fs-6 text-gray-800" th:text="${@appSpEL.formatAmount(loan.issuedAmount) + ' KMF'}">
 											600 000 KMF
 										</div>
 										<!--end::Text-->
 
 										<!--end::Description-->
 										<div class="fw-bold fs-7 text-gray-600">
-											Fees: <span th:text="${loan.applicationFees + ' KMF'}">500 0000
+											Fees: <span th:text="${@appSpEL.formatAmount(loan.applicationFees) + ' KMF'}">500 0000
 												KMF</span>
 										</div>
 										<!--end::Description-->
@@ -176,7 +176,7 @@
 
 										<!--end::Text-->
 										<div class="fw-bold fs-6 text-gray-800"
-											th:text="${loan.totalAmount + ' KMF'}">
+											th:text="${@appSpEL.formatAmount(loan.totalAmount) + ' KMF'}">
 											500 0000 KMF
 										</div>
 										<!--end::Text-->
@@ -323,11 +323,11 @@
 								</div>
 
 								<div class="fw-bold text-gray-600  fs-7">
-									Due amount: <span th:text="${loan.totalAmount + ' KMF'}">600 000
+									Due amount: <span th:text="${@appSpEL.formatAmount(loan.totalAmount) + ' KMF'}">600 000
 										KMF</span>
 								</div>
 								<div class="fw-bold text-gray-600  fs-7">
-									Remaining: <span th:text="${loan.account.balance + ' KMF'}">600
+									Remaining: <span th:text="${@appSpEL.formatAmount(loan.account.balance) + ' KMF'}">600
 										000 KMF</span>
 								</div>
 							</div>

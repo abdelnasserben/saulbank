@@ -169,7 +169,7 @@
 														fill="currentColor"></path>
 												</svg></span>
 											<!--end::Svg Icon-->
-											<div class="fs-2 fw-bolder" th:text="${totalBalance} + ' KMF'">175 600 KMF
+											<div class="fs-2 fw-bolder" th:text="${@appSpEL.formatAmount(totalBalance)} + ' KMF'">175 600 KMF
 											</div>
 										</div>
 										<!--end::Number-->
@@ -196,7 +196,7 @@
 														fill="currentColor"></path>
 												</svg></span>
 											<!--end::Svg Icon-->
-											<div class="fs-2 fw-bolder" th:text="${totalLoan} + ' KMF'">0 KMF</div>
+											<div class="fs-2 fw-bolder" th:text="${@appSpEL.formatAmount(totalLoan)} + ' KMF'">0 KMF</div>
 										</div>
 										<!--end::Number-->
 
@@ -488,6 +488,21 @@
 								<!--end::Col-->
 							</div>
 							<!--end::Input group-->
+							<!--begin::Input group-->
+							<div class="row mb-7">
+								<!--begin::Label-->
+								<label class="col-lg-4 fw-bold text-muted">Created At</label>
+								<!--end::Label-->
+
+								<!--begin::Col-->
+								<div class="col-lg-8 fv-row">
+									<span class="fw-bold text-gray-800 fs-6"
+										  th:text="${#temporals.format(customer.createdAt, 'yyyy-MM-dd')}">12 Sep
+										1995</span>
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Input group-->
 
 						</div>
 						<!--end::Tab panel-->
@@ -730,7 +745,7 @@
 										<td th:text="${trunk.account.accountName}">Mark Smith</td>
 										<td th:text="${trunk.account.accountNumber}">54710015231</td>
 										<td th:text="${trunk.account.accountType}">Saving</td>
-										<td th:text="${trunk.account.balance + ' ' + trunk.account.currency}">3 000 KMF
+										<td th:text="${@appSpEL.formatAmount(trunk.account.balance) + ' ' + trunk.account.currency}">3 000 KMF
 										</td>
 										<td th:text="${trunk.account.accountProfile}">Personal</td>
 										<td th:text="${trunk.membership}">Owner</td>
@@ -1005,7 +1020,7 @@
 											th:text="${transaction.transactionType == 'DEPOSIT' ? transaction.receiverAccount.accountNumber : transaction.initiatorAccount.accountNumber}">
 											0071001997</td>
 										<td th:text="${transaction.currency}">KMF</td>
-										<td th:text="${transaction.amount}">65000</td>
+										<td th:text="${@appSpEL.formatAmount(transaction.amount)}">65000</td>
 										<td>
 											<img th:unless="${!#lists.contains({'VISA', 'MASTERCARD'}, transaction.sourceType)}"
 												th:src="${transaction.sourceType == 'Visa'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"
@@ -1094,9 +1109,9 @@
 												th:href="@{/exchanges/{id}(id=${exchange.exchangeId})}"
 												class="text-hover-primary text-gray-600 mb-1">25874</a>
 										</td>
-										<td th:text="${exchange.purchaseCurrency + ' ' + exchange.purchaseAmount}"
+										<td th:text="${exchange.purchaseCurrency + ' ' + @appSpEL.formatAmount(exchange.purchaseAmount)}"
 											class="text-success">KMF 20</td>
-										<td th:text="${exchange.saleCurrency + ' ' + exchange.saleAmount}"
+										<td th:text="${exchange.saleCurrency + ' ' + @appSpEL.formatAmount(exchange.saleAmount)}"
 											class="text-danger">EUR
 											65000</td>
 
@@ -1174,8 +1189,8 @@
 												class="text-gray-800 text-hover-primary mb-1">Gold</a>
 										</td>
 										<td th:text="${loan.account.accountNumber}">0071001997</td>
-										<td th:text="${loan.totalAmount + ' KMF'}">500 0000 KMF</td>
-										<td th:text="${loan.account.balance + ' KMF'}">500 0000 KMF</td>
+										<td th:text="${@appSpEL.formatAmount(loan.totalAmount) + ' KMF'}">500 0000 KMF</td>
+										<td th:text="${@appSpEL.formatAmount(loan.account.balance) + ' KMF'}">500 0000 KMF</td>
 										<td class="pe-0">
 											<div th:text="${loan.status}"
 												th:class="${'badge badge-light-' + @appSpEL.statusColor(loan.status)}">

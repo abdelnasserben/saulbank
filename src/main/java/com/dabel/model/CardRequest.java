@@ -22,6 +22,7 @@ public class CardRequest {
 
     private String cardType;
     private String failureReason;
+    private double applicationFees;
     private String status;
     private String initiatedBy;
     private String updatedBy;

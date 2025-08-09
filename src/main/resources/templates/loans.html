@@ -69,7 +69,7 @@
 									class="text-gray-800 text-hover-primary mb-1">Gold</a>
 							</td>
 							<td th:text="${loan.borrower.identityNumber}">NBE456789</td>
-							<td th:text="${loan.issuedAmount + ' KMF'}">500 0000 KMF</td>
+							<td th:text="${@appSpEL.formatAmount(loan.issuedAmount) + ' KMF'}">500 0000 KMF</td>
 							<td><span th:text="${loan.status}"
 									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(loan.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
 							</td>

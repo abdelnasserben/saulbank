@@ -83,7 +83,7 @@ public class CardRequestOperationService implements EvaluableOperation<CardReque
     private void applyCardRequestFee(CardRequestDto cardRequestDto) {
         Fee fee = new Fee(
                 cardRequestDto.getBranch(),
-                BankFees.Basic.CARD_REQUEST,
+                cardRequestDto.getApplicationFees(),
                 "Card application request"
         );
         feeService.apply(cardRequestDto.getTrunk().getAccount(), LedgerType.CARD_REQUEST, fee);

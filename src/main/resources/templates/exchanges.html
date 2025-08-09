@@ -67,9 +67,9 @@
 									th:href="@{/exchanges/{id}(id=${exchange.exchangeId})}"
 									class="text-hover-primary text-gray-600 mb-1">25874</a>
 							</td>
-							<td th:text="${exchange.purchaseCurrency + ' ' + exchange.purchaseAmount}"
+							<td th:text="${exchange.purchaseCurrency + ' ' + @appSpEL.formatAmount(exchange.purchaseAmount)}"
 								class="text-success">KMF 20</td>
-							<td th:text="${exchange.saleCurrency + ' ' + exchange.saleAmount}" class="text-info">EUR
+							<td th:text="${exchange.saleCurrency + ' ' + @appSpEL.formatAmount(exchange.saleAmount)}" class="text-info">EUR
 								65000</td>
 
 							<td>

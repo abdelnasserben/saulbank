@@ -75,7 +75,7 @@
 									th:text="${loanRequest.borrower.firstName + ' ' + loanRequest.borrower.lastName + ' | ' + loanRequest.borrower.identityNumber}"
 									class="text-gray-800 text-hover-primary mb-1">John Doe | NBE145782</a>
 							</td>
-							<td th:text="${loanRequest.requestedAmount + ' KMF'}">575 0000 KMF</td>
+							<td th:text="${@appSpEL.formatAmount(loanRequest.requestedAmount) + ' KMF'}">575 0000 KMF</td>
 							<td><span th:text="${loanRequest.status}"
 									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(loanRequest.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
 							</td>

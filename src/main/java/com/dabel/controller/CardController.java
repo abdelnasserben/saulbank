@@ -4,6 +4,7 @@ import com.dabel.app.CardExpirationDateUtils;
 import com.dabel.app.Helper;
 import com.dabel.app.StatedObjectFormatter;
 import com.dabel.app.web.PageTitleConfig;
+import com.dabel.constant.BankFees;
 import com.dabel.constant.Status;
 import com.dabel.constant.Web;
 import com.dabel.dto.*;
@@ -111,6 +112,7 @@ public class CardController implements PageTitleConfig {
         CardRequestDto requestDto = CardRequestDto.builder()
                 .cardType(postCardRequestDto.getCardType())
                 .trunk(trunk)
+                .applicationFees(BankFees.Basic.CARD_REQUEST)
                 .branch(userService.getAuthenticated().getBranch())
                 .build();
         cardFacadeService.initCardRequest(requestDto);

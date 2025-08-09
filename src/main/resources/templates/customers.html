@@ -54,7 +54,6 @@
 							<th class="min-w-125px">Mobile Number</th>
 							<th class="min-w-125px">Address</th>
 							<th class="min-w-50px">Status</th>
-							<th class="min-w-125px">Created Date</th>
 						</tr>
 					</thead>
 					<tbody class="fw-semibold text-gray-600">
@@ -73,8 +72,6 @@
 							<td th:text="${customer.address}">Ndzaouze Mitsamiouli</td>
 							<td><span th:text="${customer.status}"
 									th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(customer.status) + ' fw-bold px-4 py-3'}">ACTIVE</span>
-							</td>
-							<td th:text="${#temporals.format(customer.createdAt, 'yyyy-MM-dd HH:mm')}">2024-12-25 08:55
 							</td>
 						</tr>
 					</tbody>

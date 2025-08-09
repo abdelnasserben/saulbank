@@ -144,14 +144,14 @@ public class CustomerController implements PageTitleConfig {
         configPageTitle(model, "Customer Details");
         model.addAttribute("customer", StatedObjectFormatter.format(customerDto));
         model.addAttribute("trunks", customerAccounts);
-        model.addAttribute("totalBalance", Helper.formatCurrency(totalBalance));
+        model.addAttribute("totalBalance", totalBalance);
         model.addAttribute("cards", StatedObjectFormatter.format(customerCards));
         model.addAttribute("notifyNoActiveCreditCards", notifyNoActiveCreditCards);
         model.addAttribute("transactions", StatedObjectFormatter.format(lastTenCustomerTransactions));
         model.addAttribute("completionRate", customerFacadeService.getCompletionRate(customerDto));
         model.addAttribute("exchanges", StatedObjectFormatter.format(lastTenCustomerExchanges));
         model.addAttribute("loans", StatedObjectFormatter.format(customerLoans));
-        model.addAttribute("totalLoan", Helper.formatCurrency(totalLoan));
+        model.addAttribute("totalLoan", totalLoan);
 
         return Web.View.CUSTOMER_DETAILS;
     }

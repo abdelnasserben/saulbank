@@ -15,4 +15,5 @@ public class CardRequestDto extends BasicDto {
     private TrunkDto trunk;
     private String cardType;
     private String failureReason;
+    private double applicationFees;
 }

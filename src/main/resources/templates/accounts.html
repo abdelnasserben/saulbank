@@ -69,7 +69,7 @@
 									class="text-gray-800 text-hover-primary mb-1">54710015231</a>
 							</td>
 							<td th:text="${trunk.account.accountType}">Saving</td>
-							<td th:text="${trunk.account.balance + ' ' + trunk.account.currency}">3 000 KMF
+							<td th:text="${@appSpEL.formatAmount(trunk.account.balance) + ' ' + trunk.account.currency}">3 000 KMF
 							</td>
 							<td th:text="${trunk.account.accountProfile}">Personal</td>
 							<td th:text="${trunk.membership}">Owner</td>

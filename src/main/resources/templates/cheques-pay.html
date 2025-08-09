@@ -1,116 +1,159 @@
 <div th:replace="~{fragments/header}"></div>
 
-<!--begin::Content-->
 <div id="kt_app_content" class="app-content flex-column-fluid">
-	<!--begin::Content container-->
 	<div id="kt_app_content_container" class="app-container container-fluid">
-
 		<div th:replace="~{fragments/success-error-alert}"></div>
 
-
 		<form method="post" th:object="${postChequeDto}" th:action="@{/cheques/pay}">
-			<div class="mb-3 fv-row col-lg-2">
-				<label class="required form-label">Cheque</label>
-				<input type="text" th:field="*{chequeNumber}" class="form-control"
-					th:classappend="${#fields.hasErrors('chequeNumber')} ? 'is-invalid' : ''"
-					placeholder="Cheque number" id="inputChequeNumber">
-				<div class="invalid-feedback" th:errors="*{chequeNumber}"></div>
+
+			<!-- Cheque Number -->
+			<div class="row mb-7">
+				<label class="col-12 col-lg-2 required form-label">Cheque</label>
+				<div class="col-12 col-md-6 col-lg-4">
+					<input type="text"
+						   th:field="*{chequeNumber}"
+						   class="form-control"
+						   th:classappend="${#fields.hasErrors('chequeNumber')} ? 'is-invalid' : ''"
+						   placeholder="Cheque number"
+						   id="inputChequeNumber">
+					<div class="invalid-feedback" th:errors="*{chequeNumber}"></div>
+				</div>
 			</div>
 
 			<div class="separator separator-dashed mb-10"></div>
 
+			<!-- Cheque Owner -->
 			<div class="row mb-7">
-				<label class="col-lg-2 col-form-label fw-bold fs-6">Cheque Owner</label>
-				<div class="col-lg-10">
+				<label class="col-12 col-lg-2 col-form-label fw-bold fs-6">Cheque Owner</label>
+				<div class="col-12 col-lg-10">
 					<div class="row">
-						<div class="col-lg-5 mb-4">
-							<label class="form-label fs-7" for="">Account Number</label>
-							<input type="text" class="form-control" id="chequeOwnerAccountNumber"
-								placeholder="Account Number" disabled>
-						</div>
-						<div class="col-lg-5 mb-4">
-							<label class="form-label fs-7" for="">Account Name</label>
-							<input type="text" class="form-control" id="chequeOwnerAccountName"
-								placeholder="Account name" disabled>
-						</div>
-					</div>
 
-					<div class="row">
-						<div class="col-lg-5 mb-4">
-							<label class="form-label fs-7" for="">Customer Identity</label>
-							<input type="text" class="form-control" id="chequeOwnerCustomerIdentity"
-								placeholder="Customer Identity" disabled>
+						<div class="col-12 col-md-6 col-lg-5 mb-4">
+							<label class="form-label fs-7">Account Number</label>
+							<input type="text"
+								   class="form-control"
+								   id="chequeOwnerAccountNumber"
+								   placeholder="Account Number"
+								   disabled>
 						</div>
-						<div class="col-lg-5 mb-4">
-							<label class="form-label fs-7" for="">Customer Fullname</label>
-							<input type="text" class="form-control" id="chequeOwnerCustomerFullName"
-								placeholder="Customer full name" disabled>
-						</div>
-					</div>
 
-					<div class="row">
-						<div class="col-auto col-lg-1 mb-4">
-							<label class="form-label fs-7" for="">Currency</label>
-							<input type="text" class="form-control" value="KMF" disabled>
+						<div class="col-12 col-md-6 col-lg-5 mb-4">
+							<label class="form-label fs-7">Account Name</label>
+							<input type="text"
+								   class="form-control"
+								   id="chequeOwnerAccountName"
+								   placeholder="Account name"
+								   disabled>
 						</div>
-						<div class="col col-lg-4 mb-4">
+
+						<div class="col-12 col-md-6 col-lg-5 mb-4">
+							<label class="form-label fs-7">Customer Identity</label>
+							<input type="text"
+								   class="form-control"
+								   id="chequeOwnerCustomerIdentity"
+								   placeholder="Customer Identity"
+								   disabled>
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-5 mb-4">
+							<label class="form-label fs-7">Customer Fullname</label>
+							<input type="text"
+								   class="form-control"
+								   id="chequeOwnerCustomerFullName"
+								   placeholder="Customer full name"
+								   disabled>
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-4 mb-4">
 							<label class="form-label fs-7" for="chequeOwnerAccountBalance">Available Balance</label>
-							<input type="number" id="chequeOwnerAccountBalance" class="form-control mb-2"
-								placeholder="0.0" disabled />
+							<input type="text"
+								   id="chequeOwnerAccountBalance"
+								   class="form-control mb-2"
+								   placeholder="0.0"
+								   disabled>
 						</div>
-						<div class="col-lg-3 mb-4">
-							<img id="chequeOwnerInputSignature" th:src="@{/assets/svg/blank-image.svg}" height="100"
-								alt="Customer Signature" style="background-size: cover;">
+
+						<div class="col-12 col-md-6 col-lg-1 mb-4">
+							<label class="form-label fs-7">Currency</label>
+							<input type="text"
+								   class="form-control"
+								   value="KMF"
+								   disabled>
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3 mb-4 text-center">
+							<img id="chequeOwnerInputSignature"
+								 th:src="@{/assets/svg/blank-image.svg}"
+								 height="100"
+								 alt="Customer Signature"
+								 style="background-size: cover;">
 						</div>
 					</div>
 				</div>
 			</div>
 
+			<!-- Amount -->
 			<div class="row mb-7">
-				<label class="col-lg-2 col-form-label required fw-bold fs-6">Amount</label>
-				<div class="col-lg-10">
-					<div class="row">
-						<div class="col-1">
-							<input type="text" class="form-control" value="KMF" disabled>
+				<label class="col-12 col-lg-2 col-form-label required fw-bold fs-6">Amount</label>
+				<div class="col-12 col-lg-10">
+					<div class="row align-items-end">
+						<div class="col-12 col-md-6 col-lg-1 mb-2">
+							<input type="text"
+								   class="form-control"
+								   value="KMF"
+								   disabled>
 						</div>
-						<div class="col col-md-4">
-							<input type="number" th:field="*{amount}" class="form-control mb-2"
-								th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid' : ''" step=".01"
-								placeholder="0.00" />
+						<div class="col-12 col-md-6 col-lg-4 mb-2">
+							<input type="number"
+								   th:field="*{amount}"
+								   class="form-control"
+								   th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid' : ''"
+								   step=".01"
+								   placeholder="0.00">
 							<div class="invalid-feedback" th:errors="*{amount}"></div>
 						</div>
 					</div>
 				</div>
 			</div>
 
+			<!-- Beneficiary -->
 			<div class="row mb-7">
-				<label class="col-lg-2 col-form-label required fw-bold fs-6">Beneficiary</label>
-				<div class="col-lg-10">
+				<label class="col-12 col-lg-2 col-form-label required fw-bold fs-6">Beneficiary</label>
+				<div class="col-12 col-lg-10">
 					<div class="row">
-						<div class="col-lg-5 mb-4">
+						<div class="col-12 col-md-6 col-lg-5 mb-4">
 							<label class="form-label fs-7" for="chequeBeneficiaryAccountNumber">Account Number</label>
-							<input type="text" th:field="*{beneficiaryAccountNumber}" class="form-control"
-								th:classappend="${#fields.hasErrors('beneficiaryAccountNumber')} ? 'is-invalid' : ''"
-								placeholder="Account Number" id="chequeBeneficiaryAccountNumber">
+							<input type="text"
+								   th:field="*{beneficiaryAccountNumber}"
+								   class="form-control"
+								   th:classappend="${#fields.hasErrors('beneficiaryAccountNumber')} ? 'is-invalid' : ''"
+								   placeholder="Account Number"
+								   id="chequeBeneficiaryAccountNumber">
 							<div class="invalid-feedback" th:errors="*{beneficiaryAccountNumber}"></div>
 						</div>
-						<div class="col-lg-5 mb-4">
-							<label class="form-label fs-7" for="">Account Name</label>
-							<input type="text" class="form-control" id="chequeBeneficiaryAccountName"
-								placeholder="Account name" disabled>
+						<div class="col-12 col-md-6 col-lg-5 mb-4">
+							<label class="form-label fs-7">Account Name</label>
+							<input type="text"
+								   class="form-control"
+								   id="chequeBeneficiaryAccountName"
+								   placeholder="Account name"
+								   disabled>
 						</div>
 					</div>
 				</div>
 			</div>
 
+			<!-- Remarks -->
 			<div class="row mb-7">
-				<label class="col-lg-2 col-form-label required fw-bold fs-6">Remarks</label>
-				<div class="col-lg-10">
+				<label class="col-12 col-lg-2 col-form-label required fw-bold fs-6">Remarks</label>
+				<div class="col-12 col-lg-10">
 					<div class="row">
-						<div class="col-lg-10">
-							<textarea th:field="*{reason}" class="form-control"
-								th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''"
-								id="exampleFormControlTextarea1" rows="5"></textarea>
+						<div class="col-12 col-md-10 mb-4">
+              <textarea th:field="*{reason}"
+						class="form-control"
+						th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''"
+						id="exampleFormControlTextarea1"
+						rows="5"></textarea>
 							<div class="invalid-feedback" th:errors="*{reason}"></div>
 						</div>
 					</div>
@@ -120,8 +163,6 @@
 			<button type="submit" class="btn btn-primary">Init Payment</button>
 		</form>
 	</div>
-	<!--end::Content container-->
 </div>
-<!--end::Content-->
 
 <div th:replace="~{fragments/footer}"></div>

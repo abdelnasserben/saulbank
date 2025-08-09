@@ -99,7 +99,8 @@
 										<!--end::Label-->
 
 										<!--end::Text-->
-										<div class="fw-bold fs-6 text-gray-800">
+										<div class="fw-bold fs-6 text-gray-800"
+											 th:text="${@appSpEL.formatAmount(requestDto.applicationFees) + ' KMF'}">
 											500 KMF
 										</div>
 										<!--end::Text-->
@@ -329,7 +330,7 @@
 						<!--end::Label-->
 
 						<input type="text" class="form-control" placeholder="Account number" th:field="*{accountNumber}"
-							th:value="${requestDto.trunk.account.accountNumber}" disabled />
+							th:placeholder="${requestDto.trunk.account.accountNumber}" disabled />
 					</div>
 					<!--end::Input group-->
 

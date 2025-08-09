@@ -1,9 +1,7 @@
 package com.dabel.service.cheque;
 
 import com.dabel.app.Helper;
-import com.dabel.constant.SourceType;
-import com.dabel.constant.Status;
-import com.dabel.constant.TransactionType;
+import com.dabel.constant.*;
 import com.dabel.dto.*;
 import com.dabel.exception.IllegalOperationException;
 import com.dabel.service.account.AccountService;
@@ -61,11 +59,16 @@ public class ChequeFacadeService {
 
         CustomerDto customerDto = customerService.findByIdentity(postChequeRequestDto.getCustomerIdentityNumber());
         TrunkDto trunkDto = accountService.findTrunkByCustomerAndAccountNumber(customerDto, postChequeRequestDto.getAccountNumber());
+
+        AccountType accountType = AccountType.valueOf(trunkDto.getAccount().getAccountType());
+        double applicationFees = accountType.equals(AccountType.BUSINESS) ? BankFees.Basic.BUSINESS_CHEQUE : BankFees.Basic.SAVING_CHEQUE;
+
         ChequeRequestDto chequeRequestDto = ChequeRequestDto.builder()
                 .trunk(trunkDto)
+                .applicationFees(applicationFees)
                 .branch(userService.getAuthenticated().getBranch())
                 .build();
-        chequeRequestContext.setContext(trunkDto.getAccount().getAccountType()).init(chequeRequestDto);
+        chequeRequestContext.setContext(accountType.name()).init(chequeRequestDto);
     }
 
     public void approveRequest(Long requestId) {

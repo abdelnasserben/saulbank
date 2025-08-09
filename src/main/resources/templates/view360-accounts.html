@@ -42,7 +42,7 @@
                             <td th:text="${account.accountName}">Mark Smith</td>
                             <td th:text="${account.accountNumber}">54710015231</td>
                             <td th:text="${account.accountType}">Saving</td>
-                            <td th:text="${account.balance + ' ' + account.currency}">3 000 KMF</td>
+                            <td th:text="${@appSpEL.formatAmount(account.balance) + ' ' + account.currency}">3 000 KMF</td>
                             <td th:text="${account.accountProfile}">Personal</td>
                             <td class="pe-0">
                                 <div th:text="${account.status}"

@@ -11,7 +11,7 @@
 		<form class="form" th:action="@{/loans/request}" method="post" th:object="${loanRequestDto}">
 
 			<div class="row mb-6">
-				<div class="col-md-1">
+				<div class="col-md-2">
 					<label class="required form-label">Loan Type</label>
 					<select th:field="*{loanType}" class="form-select mb-3" data-control="select2"
 						data-hide-search="true" data-placeholder="Select an option"
@@ -48,7 +48,7 @@
 			</div>
 
 			<div class="row mb-6">
-				<div class="col-md-1">
+				<div class="col-md-2">
 					<label class="required form-label">Currency </label>
 					<input type="text" class="form-control" value="KMF" disabled>
 				</div>
@@ -84,24 +84,30 @@
 					</div>
 					<!--end::Input group-->
 				</div>
-				<div class="col-md-3">
-					<label class="required form-label">Application Fees</label>
-					<input type="number" th:field="*{applicationFees}" class="form-control mb-2" step=".01"
-						placeholder="0.00"
-						th:classappend="${#fields.hasErrors('applicationFees')} ? 'is-invalid' : ''" />
-					<div class="invalid-feedback" th:errors="*{applicationFees}"></div>
-				</div>
-				<div class="col-md-2">
-					<label class="form-label">Total Due</label>
-					<input type="number" name="" class="form-control mb-2" placeholder="0.0" id="loanTotalDue"
-						disabled />
+				<div class="col-md-10">
+					<div class="row">
+						<div class="col-md-5">
+							<label class="required form-label">Application Fees</label>
+							<input type="number" th:field="*{applicationFees}" class="form-control mb-2" step=".01"
+								   placeholder="0.00"
+								   th:classappend="${#fields.hasErrors('applicationFees')} ? 'is-invalid' : ''" />
+							<div class="invalid-feedback" th:errors="*{applicationFees}"></div>
+						</div>
+						<div class="col-md-5">
+							<label class="form-label">Total Due</label>
+							<input type="text" name="" class="form-control mb-2" placeholder="0.0" id="loanTotalDue"
+								   disabled />
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-5 mb-6">
-				<label for="exampleFormControlTextarea1" class="form-label required fw-bold fs-6">Remarks</label>
-				<textarea th:field="*{reason}" class="form-control" id="exampleFormControlTextarea1" rows="3"
-					th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''"></textarea>
-				<div class="invalid-feedback" th:errors="*{reason}"></div>
+			<div class="row">
+				<div class="col-md-7 mb-6">
+					<label for="exampleFormControlTextarea1" class="form-label required fw-bold fs-6">Remarks</label>
+					<textarea th:field="*{reason}" class="form-control" id="exampleFormControlTextarea1" rows="3"
+							  th:classappend="${#fields.hasErrors('reason')} ? 'is-invalid' : ''"></textarea>
+					<div class="invalid-feedback" th:errors="*{reason}"></div>
+				</div>
 			</div>
 
 

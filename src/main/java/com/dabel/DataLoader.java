@@ -47,12 +47,12 @@ public class DataLoader {
             branchFacadeService.create(BranchDto.builder()
                     .branchName("HQ")
                     .branchAddress("Moroni, Place de la France")
-                    .build(), new double[]{5000, 3000, 1000});
+                    .build(), new double[]{50000000, 300000, 100000});
 
             branchFacadeService.create(BranchDto.builder()
                     .branchName("MUTS")
                     .branchAddress("Mutsamudu, Chitsangani")
-                    .build(), new double[]{2500, 1800, 1000});
+                    .build(), new double[]{25000000, 180000, 100000});
 
             BranchDto savedBranch1 = branchFacadeService.getAll().get(0);
             BranchDto savedBranch2 = branchFacadeService.getAll().get(1);

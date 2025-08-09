@@ -75,7 +75,7 @@
                                 th:text="${transaction.transactionType == 'DEPOSIT' ? transaction.receiverAccount.accountNumber : transaction.initiatorAccount.accountNumber}">
                             0071001997</td>
                         <td th:text="${transaction.currency}">KMF</td>
-                        <td th:text="${transaction.amount}">65000</td>
+                        <td th:text="${@appSpEL.formatAmount(transaction.amount)}">65000</td>
                         <td>
                             <img th:unless="${!#lists.contains({'VISA', 'MASTERCARD'}, transaction.sourceType)}"
                                  th:src="${transaction.sourceType == 'VISA'} ? '/img/svg/card-logos/visa.svg' : '/img/svg/card-logos/mastercard.svg'"

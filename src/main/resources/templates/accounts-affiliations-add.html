@@ -36,24 +36,28 @@
 						<!--begin::Details content-->
 						<div class="pb-5 fs-6">
 							<!--begin::Details item-->
-							<div class="fw-bold mt-5">#ID</div>
-							<div class="text-gray-600" th:text="${trunk.account.accountId}">45453423</div>
+							<div class="row mt-5">
+								<div class="col-4 fw-bold">Number</div>
+								<div class="col-8 text-gray-600" th:text="${trunk.account.accountNumber}">0071589756</div>
+							</div>
 							<!--begin::Details item-->
 							<!--begin::Details item-->
-							<div class="fw-bold mt-5">Number</div>
-							<div class="text-gray-600" th:text="${trunk.account.accountNumber}">0071589756</div>
+							<div class="row mt-5">
+								<div class="col-4 fw-bold">Name</div>
+								<div class="col-8 text-gray-600" th:text="${trunk.account.accountName}">John Doe</div>
+							</div>
 							<!--begin::Details item-->
 							<!--begin::Details item-->
-							<div class="fw-bold mt-5">Name</div>
-							<div class="text-gray-600" th:text="${trunk.account.accountName}">John Doe</div>
+							<div class="row mt-5">
+								<div class="col-4 fw-bold">Type</div>
+								<div class="col-8 text-gray-600" th:text="${trunk.account.accountType}">BUSINESS</div>
+							</div>
 							<!--begin::Details item-->
 							<!--begin::Details item-->
-							<div class="fw-bold mt-5">Type</div>
-							<div class="text-gray-600" th:text="${trunk.account.accountType}">BUSINESS</div>
-							<!--begin::Details item-->
-							<!--begin::Details item-->
-							<div class="fw-bold mt-5">Profile</div>
-							<div class="text-gray-600" th:text="${trunk.account.accountProfile}">PERSONNAL</div>
+							<div class="row mt-5">
+								<div class="col-4 fw-bold">Profile</div>
+								<div class="col-8 text-gray-600" th:text="${trunk.account.accountProfile}">PERSONNAL</div>
+							</div>
 							<!--begin::Details item-->
 						</div>
 						<!--end::Details content-->
@@ -195,7 +199,7 @@
 									<div class="row">
 										<!--begin::Col-->
 										<div class="col-lg-4 fv-row">
-											<select th:field="*{gender}" class="form-select form-select-solid fw-bold"
+											<select th:field="*{gender}" class="form-select form-select-solid mb-3 fw-bold"
 												th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid' : ''"
 												data-control="select2" data-hide-search="true"
 												data-placeholder="Select an option">
@@ -296,7 +300,7 @@
 										<!--begin::Col-->
 										<div class="col-lg-6 fv-row">
 											<input type="email" th:field="*{email}"
-												class="form-control form-control-solid" placeholder="Address Email"
+												class="form-control form-control-solid mb-3" placeholder="Address Email"
 												th:value="${customer.email}" />
 										</div>
 										<!--end::Col-->
@@ -326,7 +330,7 @@
 									<div class="row">
 										<div class="col-lg-4">
 											<select th:field="*{residence}"
-												class="form-select form-select-solid fw-bold" data-control="select2"
+												class="form-select form-select-solid mb-3 fw-bold" data-control="select2"
 												data-placeholder="Residence" data-allow-clear="true">
 												<option value=""></option>
 												<option th:each="country: ${@appSpEL.countries}" th:text="${country}"
@@ -338,7 +342,7 @@
 										</div>
 										<div class="col-lg-4">
 											<input type="text" th:field="*{address}"
-												class="form-control form-control-solid" placeholder="Address"
+												class="form-control form-control-solid mb-3" placeholder="Address"
 												th:value="${customer.address}" />
 										</div>
 										<div class="col-lg-4">

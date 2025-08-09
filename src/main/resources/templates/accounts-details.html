@@ -145,7 +145,7 @@
 
                                         <!--end::Text-->
                                         <div class="fw-bold fs-6 text-gray-800"
-                                            th:text="${trunk.account.balance + ' ' + trunk.account.currency}">123</div>
+                                            th:text="${@appSpEL.formatAmount(trunk.account.balance) + ' ' + trunk.account.currency}">123</div>
                                         <!--end::Text-->
                                     </div>
                                     <!--end::Col-->
@@ -246,7 +246,7 @@
                                     <p class="mb-1">Acc. Number : <span
                                             th:text="${trunk.account.accountName}">0071001997</span></p>
                                     <p class="mb-1">Balance : <span
-                                            th:text="${trunk.account.balance + ' ' + trunk.account.currency}">John
+                                            th:text="${@appSpEL.formatAmount(trunk.account.balance) + ' ' + trunk.account.currency}">John
                                             Doe</span>
                                     </p>
                                     <p class="mb-1">Acc. Profile : <span

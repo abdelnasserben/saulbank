@@ -8246,13 +8246,33 @@ function ajaxCustomerAccountsInfo(inputIdentityNumber, selectInputForAccounts) {
         $.ajax({
             url: "http://localhost:8080/rest/customer/accounts/" + $(this).val()
         })
-        .done(function (data) {
-            selectInput.append(data.map(option =>
-                $('<option>', { value: option, text: option })
-            ));
-        })
-        .fail(() => selectInput.empty());
+            .done(function (data) {
+                selectInput.append(data.map(option =>
+                    $('<option>', { value: option, text: option })
+                ));
+            })
+            .fail(() => selectInput.empty());
     });
+}
+
+/**
+ * Formatte un nombre (ou une chaîne numérique) en montant avec :
+ * Montant formaté, ex. "2 557 898.00" ou "1 234.50"
+ */
+function formatAmount(value) {
+    // forcer en nombre
+    const n = typeof value === 'number'
+        ? value
+        : Number(String(value).replace(',', '.'));
+    if (isNaN(n)) return '';
+
+    // forcer exactement 2 décimales et splitter
+    const [intPart, decPart] = n.toFixed(2).split('.');
+
+    // insérer un espace tous les 3 chiffres côté entier
+    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+    return `${formattedInt},${decPart}`;
 }
 
 function ajaxAccountInfo(inputNumber, inputName, inputBalance) {
@@ -8260,14 +8280,14 @@ function ajaxAccountInfo(inputNumber, inputName, inputBalance) {
         $.ajax({
             url: "http://localhost:8080/rest/account/" + $(inputNumber).val()
         })
-        .done(data => {
-            $(inputName).val(data.accountName);
-            $(inputBalance).val(parseFloat(data.balance) || "0.0");
-        })
-        .fail(() => {
-            $(inputName).val("");
-            $(inputBalance).val("0.0");
-        });
+            .done(data => {
+                $(inputName).val(data.accountName);
+                $(inputBalance).val(formatAmount(data.balance));
+            })
+            .fail(() => {
+                $(inputName).val("");
+                $(inputBalance).val("0.00");
+            });
     });
 }
 
@@ -8278,12 +8298,12 @@ function ajaxBaseCurrency(inputCurrency1, inputCurrency2, inputAmount, inputConv
             url: "http://localhost:8080/rest/baseCurrencyInfo/" + $(inputCurrency1).val() + '-' + $(inputCurrency2).val() + '-' + $(inputAmount).val()
         })
             .done(function (data) {
-                $(inputConversionRate).val(parseFloat(data[0]));
-                $(inputBaseTotalAmount).val(parseFloat(data[1]));
+                $(inputConversionRate).val(formatAmount(data[0]));
+                $(inputBaseTotalAmount).val(formatAmount(data[1]));
             })
             .fail(function () {
-                $(inputConversionRate).val("0.0");
-                $(inputBaseTotalAmount).val("0.0");
+                $(inputConversionRate).val("0.00");
+                $(inputBaseTotalAmount).val("0.00");
             });
     });
 }
@@ -8365,7 +8385,7 @@ if (loanType) {
             url: "http://localhost:8080/rest/loanTotalDue/" + $(issuedAmount).val() + '-' + $(interestRate).val()
 
         }).done(function (data) {
-            $(totalDue).val(parseFloat(data));
+            $(totalDue).val(formatAmount(data));
         }).fail(function () {
             $(totalDue).val("0.0");
         });
@@ -8418,7 +8438,7 @@ if (inputChequeNumber) {
             }).done(function (data) {
                 $('#chequeOwnerAccountNumber').val(data.trunk.account.accountNumber);
                 $('#chequeOwnerAccountName').val(data.trunk.account.accountName);
-                $('#chequeOwnerAccountBalance').val(parseFloat(data.trunk.account.balance));
+                $('#chequeOwnerAccountBalance').val(formatAmount(data.trunk.account.balance));
 
                 $('#chequeOwnerCustomerIdentity').val(data.trunk.customer.identityNumber);
                 $('#chequeOwnerCustomerFullName').val(data.trunk.customer.firstName + ' ' + data.trunk.customer.lastName);

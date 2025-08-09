@@ -94,7 +94,13 @@ public class ExchangeOperationService implements EvaluableOperation<ExchangeDto>
     private void applyExchangeUpdates(ExchangeDto exchangeDto, String status, String failureReason) {
         exchangeDto.setStatus(status);
         exchangeDto.setFailureReason(failureReason);
-        exchangeDto.setUpdatedBy(Helper.getAuthenticated().getName());
+
+        String operator = Helper.getAuthenticated().getName();
+        if(exchangeDto.getExchangeId() != null)
+            exchangeDto.setUpdatedBy(operator);
+        else
+            exchangeDto.setInitiatedBy(operator);
+
         exchangeService.save(exchangeDto);
     }
 }

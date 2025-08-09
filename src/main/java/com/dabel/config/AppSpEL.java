@@ -6,9 +6,12 @@ import com.dabel.dto.TrunkDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Component
@@ -70,5 +73,15 @@ public final class AppSpEL {
 
     public static String elapsedTime(LocalDateTime dateTime) {
         return Optional.ofNullable(dateTime).map(Helper::elapsedTime).orElse("");
+    }
+
+    public static String formatAmount(double value) {
+
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        symbols.setGroupingSeparator(' ');
+        symbols.setDecimalSeparator(',');
+
+        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
+        return df.format(value);
     }
 }
