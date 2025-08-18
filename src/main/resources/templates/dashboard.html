@@ -2,13 +2,474 @@
 
 <!--begin::Content-->
 <div id="kt_app_content" class="app-content flex-column-fluid">
-	<!--begin::Content container-->
 	<div id="kt_app_content_container" class="app-container container-fluid">
 
-		<p>Bienvenue, <span th:text="${authenticatedUser.firstName}">Nom</span>!</p>
+		<div class="row gx-6 gx-xl-9 mb-5">
 
+			<!-- Card 1 - Transactions daily statistics -->
+			<div class="col-lg-6 col-xxl-4 mb-5 mb-xl-10">
+				<div class="card card-flush h-100">
+					<div class="card-header pt-5">
+						<div class="card-title d-flex flex-column">
+							<div class="d-flex align-items-center">
+								<span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">KMF</span>
+								<span th:text="${@appSpEL.formatAmount(todayTransactionTotalKmf)}"
+									class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">0,00</span>
+								<span class="badge badge-light-success fs-base">
+									<i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1"></i>
+									<span th:text="${transactionPercentLabel}">0.0%</span>
+								</span>
+							</div>
+							<span class="text-gray-500 pt-1 fw-semibold fs-6">Daily Transactions</span>
+						</div>
+					</div>
+
+					<div class="card-body pt-9 pb-7 d-flex align-items-center">
+						<div class="d-flex flex-center me-5 pt-2">
+							<div id="transactionsChart" style="width:120px;height:120px;"></div>
+						</div>
+
+						<div class="d-flex flex-column content-justify-center w-100">
+							<div class="d-flex fs-6 fw-semibold align-items-center">
+								<div class="bullet w-8px h-6px rounded-2 bg-primary me-3"></div>
+								<div class="text-gray-500 flex-grow-1 me-4">Deposits</div>
+								<div th:text="${@appSpEL.formatAmount(depositTodayKmf)}"
+									class="fw-bolder text-gray-700 text-xxl-end">0</div>
+							</div>
+
+							<div class="d-flex fs-6 fw-semibold align-items-center my-3">
+								<div class="bullet w-8px h-6px rounded-2 bg-danger me-3"></div>
+								<div class="text-gray-500 flex-grow-1 me-4">Withdrawals</div>
+								<div th:text="${@appSpEL.formatAmount(withdrawTodayKmf)}"
+									class="fw-bolder text-gray-700 text-xxl-end">0</div>
+							</div>
+
+							<div class="d-flex fs-6 fw-semibold align-items-center">
+								<div class="bullet w-8px h-6px rounded-2 bg-success me-3"></div>
+								<div class="text-gray-500 flex-grow-1 me-4">Transfers</div>
+								<div th:text="${@appSpEL.formatAmount(transferTodayKmf)}"
+									class="fw-bolder text-gray-700 text-xxl-end">0</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 2 : Exchanges Performance -->
+			<div class="col-lg-6 col-xxl-4 mb-5 mb-xl-10">
+				<div class="card card-flush h-100">
+					<div class="card-header pt-5">
+						<h3 class="card-title align-items-start flex-column">
+							<span class="card-label fw-bold text-gray-900">Exchanges Performance</span>
+							<span class="text-gray-500 mt-1 fw-semibold fs-6">For all currencies</span>
+						</h3>
+
+						<div class="card-toolbar">
+							<ul class="nav" id="exchangeCurrencyTabs" role="tablist">
+								<li class="nav-item" th:each="cur,iterStat : ${exchangeCurrencies}">
+									<a class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light fw-bold px-3 me-1"
+										th:classappend="${iterStat.index == 0} ? ' active' : ''"
+										th:id="'tab_'+${iterStat.index}" th:href="'#exchange_tab_'+${iterStat.index}"
+										data-bs-toggle="tab" role="tab" th:text="${cur}">KMF</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="card-body pt-6">
+						<div class="tab-content">
+							<div class="tab-pane fade" th:each="cur,iterStat : ${exchangeCurrencies}"
+								th:classappend="${iterStat.index == 0} ? ' active show' : ''"
+								th:id="'exchange_tab_'+${iterStat.index}" role="tabpanel">
+
+								<div style="width: 100%; height: 210px;">
+									<div th:attr="id='exchange_chart_'+${iterStat.index}"
+										style="width:100%;height:100%;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 3 : Customers preview & App -->
+			<div class="col-lg-6 col-xxl-4 mb-5 mb-xl-10">
+				<div class="card card-flush mb-5">
+					<div class="card-header py-5">
+						<h3 class="card-title align-items-start flex-column">
+							<span class="card-label fw-bold text-gray-900">Our Customers</span>
+							<span class="text-gray-500 mt-1 fw-semibold fs-6"
+								th:text="${totalCustomers + ' newly added customers'}">3 newly
+								added customers</span>
+						</h3>
+					</div>
+					<div class="card-body p-9">
+						<!-- Avatar group -->
+						<div class="symbol-group symbol-hover mb-9">
+							<div th:each="c,iter : ${customersPreview}" class="symbol symbol-35px symbol-circle"
+								data-bs-toggle="tooltip" th:attr="aria-label=${c.firstName + ' ' + c.lastName}, 
+								data-bs-original-title=${c.firstName + ' ' + c.lastName}" data-kt-initialized="1">
+								<img alt="Pic" th:src="@{${'/assets/avatars/' + c.profilePicture}}">
+							</div>
+							<a th:href="@{/customers}" class="symbol symbol-35px symbol-circle"><span
+									class="symbol-label bg-dark text-gray-300 fs-8 fw-bold"
+									th:text="'+' + ${totalCustomers - customersPreview.size()}">+0</span></a>
+						</div>
+
+						<div class="d-flex">
+							<a th:href="@{/customers}" class="btn btn-primary btn-sm me-3">All
+								Customers</a>
+							<a th:href="@{/customers/add}" class="btn btn-light btn-sm">Add
+								New</a>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body d-flex flex-column flex-center">
+						<div class="mb-2">
+							<h1 class="fw-semibold text-gray-800 text-center lh-lg">
+								Have you tried <br> our new
+								<span class="fw-bolder"> App ?</span>
+							</h1>
+						</div>
+						<div class="text-center mb-1">
+							<a class="btn btn-sm btn-primary" href="">
+								Download </a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 4 : Daily Earning fees -->
+			<div class="col-lg-6 col-xxl-4 mb-5 mb-xl-10">
+				<div class="card card-flush">
+					<div class="card-header pt-5">
+						<div class="card-title d-flex flex-column">
+							<div class="d-flex align-items-center">
+								<span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">KMF</span>
+								<span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2"
+									th:text="${@appSpEL.formatAmount(totalCommissionToday)}">0,00</span>
+							</div>
+							<span class="text-gray-500 pt-1 fw-semibold fs-6">Daily Earning
+								Fees</span>
+						</div>
+					</div>
+					<div class="card-body p-9">
+						<div class="fs-6 d-flex justify-content-between mb-4">
+							<div class="fw-semibold">Withdrawals</div>
+							<div class="d-flex fw-bold">
+								<span th:text="${@appSpEL.formatAmount(commissionWithdrawToday)}">0</span>
+							</div>
+						</div>
+
+						<div class="separator separator-dashed"></div>
+
+						<div class="fs-6 d-flex justify-content-between my-4">
+							<div class="fw-semibold">Transfers</div>
+							<div class="d-flex fw-bold">
+								<span th:text="${@appSpEL.formatAmount(commissionTransferToday)}">0</span>
+							</div>
+						</div>
+
+						<div class="separator separator-dashed"></div>
+
+						<div class="fs-6 d-flex justify-content-between my-4">
+							<div class="fw-semibold">Loans</div>
+							<div class="d-flex fw-bold">
+								<span th:text="${@appSpEL.formatAmount(commissionLoanToday)}">0</span>
+							</div>
+						</div>
+
+						<div class="separator separator-dashed"></div>
+
+						<div class="fs-6 d-flex justify-content-between my-4">
+							<div class="fw-semibold">Cards</div>
+							<div class="d-flex fw-bold">
+								<span th:text="${@appSpEL.formatAmount(commissionCardToday)}">0</span>
+							</div>
+						</div>
+
+						<div class="separator separator-dashed"></div>
+
+						<div class="fs-6 d-flex justify-content-between mt-4">
+							<div class="fw-semibold">Cheques</div>
+							<div class="d-flex fw-bold">
+								<span th:text="${@appSpEL.formatAmount(commissionChequeToday)}">0</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="card card-flush h-xl-100">
+					<div class="card-header pt-7">
+						<h3 class="card-title align-items-start flex-column">
+							<span class="card-label fw-bold text-gray-800">Pending
+								Operations</span>
+						</h3>
+					</div>
+
+					<div class="card-body pt-2">
+						<div class="table-responsive">
+							<table class="table align-middle table-row-dashed fs-6 gy-3" id="kt_datatable_table">
+								<colgroup>
+									<col style="width: 100px;">
+									<col style="width: 125px;">
+									<col style="width: 100px;">
+									<col style="width: 100.562px;">
+									<col style="width: 34px;">
+								</colgroup>
+								<thead>
+									<tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase gs-0" role="row">
+										<th class="min-w-125px">Operation</th>
+										<th class="min-w-100px">Created At</th>
+										<th class="min-w-75px">Status</th>
+										<th class="min-w-100px">Operator</th>
+									</tr>
+								</thead>
+
+								<tbody class="fw-bold text-gray-600" th:if="${pendingOperations != null}">
+									<tr th:each="op : ${pendingOperations}">
+										<td>
+											<a th:href="${op.url}" class="text-gray-600 text-hover-primary"
+												th:text="${op.operationType}">Transaction</a>
+										</td>
+										<td th:text="${@appSpEL.elapsedTime(op.createdAt)}">7 min ago
+										</td>
+										<td>
+											<span
+												th:class="${'badge badge-sm badge-light-' + @appSpEL.statusColor(op.status) + ' py-3 px-4 fs-7'}"
+												th:text="${op.status}">Pending</span>
+										</td>
+										<td th:text="${op.operator}">John Doe</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<!--end::Content container-->
 </div>
 <!--end::Content-->
+
+<!-- ApexCharts CDN -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@4.4.0/dist/apexcharts.min.js"></script>
+
+<script th:inline="javascript">
+	(() => {
+		// --- utilitaires ---
+		function debounce(fn, wait = 150) {
+			let t;
+			return (...args) => {
+				clearTimeout(t);
+				t = setTimeout(() => fn(...args), wait);
+			};
+		}
+
+		// --- Formats monétaires (centralisés) ---
+		const currencyFormatters = {
+			KMF: new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'KMF', maximumFractionDigits: 0 }),
+			EUR: new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }),
+			USD: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
+		};
+		const { KMF: kmfFmt, EUR: eurFmt, USD: usdFmt } = currencyFormatters;
+
+		// --- Transactions stats  ---
+		const depositTodayKmf = [[${ depositTodayKmf }]];
+		const withdrawTodayKmf = [[${ withdrawTodayKmf }]];
+		const transferTodayKmf = [[${ transferTodayKmf }]];
+
+		const transactionsChartOptions = {
+			chart: {
+				type: 'donut',
+				width: '100%',
+				height: '100%',
+				toolbar: { show: false }
+			},
+			series: [depositTodayKmf, withdrawTodayKmf, transferTodayKmf],
+			labels: ['Deposits', 'Withdrawals', 'Transfers'],
+			legend: { show: false },
+			colors: ['#3E97FF', '#F1416C', '#50CD89'],
+			dataLabels: { enabled: false },
+			tooltip: { y: { formatter: val => kmfFmt.format(val) } },
+			stroke: { width: 0 }
+		};
+
+		// --- Exchanges stats ---
+		const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+		const boughtKMF = [[${ boughtMonthExchangesKMF }]];
+		const soldKMF = [[${ soldMonthExchangesKMF }]];
+
+		const boughtEUR = [[${ boughtMonthExchangesEUR }]];
+		const soldEUR = [[${ soldMonthExchangesEUR }]];
+
+		const boughtUSD = [[${ boughtMonthExchangesUSD }]];
+		const soldUSD = [[${ soldMonthExchangesUSD }]];
+
+		// --- Factory pour options de graphique ligne ---
+		function createLineOptions({ formatter, series = defaultSeries, categories = monthLabels, showLegend = false } = {}) {
+			return {
+				chart: {
+					type: 'line',
+					toolbar: { show: false },
+					zoom: { enabled: false },
+					animations: { enabled: true }
+				},
+				series: JSON.parse(JSON.stringify(series)),
+				xaxis: { categories, tooltip: { enabled: false } },
+				yaxis: {
+					labels: { formatter: val => formatter.format(Math.round(val)) }
+				},
+				stroke: { curve: 'smooth', width: 3 },
+				markers: { size: 4 },
+				tooltip: { y: { formatter: val => formatter.format(Math.round(val)) } },
+				legend: { show: !!showLegend },
+				dataLabels: { enabled: false }
+			};
+		}
+
+
+		// --- mapping sélecteur -> options (inclut transactions donut) ---
+		const chartsConfig = {
+			'#transactionsChart': transactionsChartOptions,
+			'#exchange_chart_0': createLineOptions({
+				formatter: kmfFmt, series: [
+					{ name: 'Bought', data: boughtKMF },
+					{ name: 'Sold', data: soldKMF }
+				]
+			}),
+			'#exchange_chart_1': createLineOptions({
+				formatter: eurFmt, series: [
+					{ name: 'Bought', data: boughtEUR },
+					{ name: 'Sold', data: soldEUR }
+				]
+			}),
+			'#exchange_chart_2': createLineOptions({
+				formatter: usdFmt, series: [
+					{ name: 'Bought', data: boughtUSD },
+					{ name: 'Sold', data: soldUSD }
+				]
+			})
+		};
+
+		// container pour les instances ApexCharts
+		const chartsInstances = {};
+
+		// observe les changements de taille d'un élément et resize le chart correspondant
+		const resizeObservers = {};
+		function observeResize(selector) {
+			const el = document.querySelector(selector);
+			if (!el) return;
+			// observe le parent visible (souvent l'élément qui change de largeur)
+			const target = el.parentElement || el;
+			if (!target) return;
+
+			// si déjà observé, return
+			if (resizeObservers[selector]) return;
+
+			const ro = new ResizeObserver(debounce(() => {
+				const chart = chartsInstances[selector];
+				if (chart && typeof chart.resize === 'function') {
+					try {
+						chart.resize();
+					} catch (e) {
+						// fallback : render complet si resize échoue
+						chart.render();
+					}
+				}
+			}, 100));
+			ro.observe(target);
+			resizeObservers[selector] = ro;
+		}
+
+		// crée ou redimensionne un chart donné
+		function ensureChart(selector) {
+			const el = document.querySelector(selector);
+			if (!el) return null;
+
+			if (!chartsInstances[selector]) {
+				const options = chartsConfig[selector];
+				if (!options) {
+					console.warn('ApexCharts: pas d\'options pour', selector);
+					return null;
+				}
+				chartsInstances[selector] = new ApexCharts(el, options);
+				chartsInstances[selector].render();
+				// commence à observer les changements de taille pour ce chart
+				observeResize(selector);
+				return chartsInstances[selector];
+			}
+
+			// si déjà créé : resize léger
+			try {
+				chartsInstances[selector].resize();
+			} catch (e) {
+				chartsInstances[selector].render();
+			}
+			return chartsInstances[selector];
+		}
+
+		// Init au chargement : charts visibles / tab-pane actif
+		document.addEventListener('DOMContentLoaded', () => {
+			const activePane = document.querySelector('.tab-pane.active');
+
+			Object.keys(chartsConfig).forEach(selector => {
+				const el = document.querySelector(selector);
+				if (!el) return;
+
+				// si dans le tab actif -> init
+				if (activePane && activePane.contains(el)) {
+					ensureChart(selector);
+				} else if (!activePane && el.offsetParent !== null) {
+					// si pas de .active trouvé, crée les charts déjà visibles
+					ensureChart(selector);
+				} else if (selector === '#transactionsChart') {
+					// transactionsChart : s'il est présent dans un div normal, on l'initialise toujours (il n'est pas dans un tab)
+					ensureChart(selector);
+				}
+			});
+		});
+
+		// Lazy-init + resize on tab shown (Bootstrap 5)
+		document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
+			tab.addEventListener('shown.bs.tab', (event) => {
+				const targetSelector = event.target.getAttribute('data-bs-target') || event.target.getAttribute('href');
+				if (!targetSelector) return;
+				const targetPane = document.querySelector(targetSelector);
+				if (!targetPane) return;
+
+				// after DOM stabilized
+				requestAnimationFrame(() => {
+					setTimeout(() => {
+						Object.keys(chartsConfig).forEach(selector => {
+							const el = document.querySelector(selector);
+							if (el && targetPane.contains(el)) ensureChart(selector);
+						});
+					}, 0);
+				});
+			});
+		});
+
+		// resize global (fallback) : redimensionne tous les charts connus (debounced)
+		window.addEventListener('resize', debounce(() => {
+			Object.keys(chartsInstances).forEach(sel => {
+				const c = chartsInstances[sel];
+				if (c && typeof c.resize === 'function') {
+					try { c.resize(); } catch (e) { c.render(); }
+				}
+			});
+		}, 150));
+
+		// Expose (optionnel) pour debug via console : window._charts = chartsInstances;
+		window._charts = chartsInstances;
+	})();
+</script>
+
+
+
+
 <div th:replace="~{fragments/footer}"></div>
