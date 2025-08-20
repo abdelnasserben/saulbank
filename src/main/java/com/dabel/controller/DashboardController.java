@@ -82,7 +82,9 @@ public class DashboardController implements PageTitleConfig {
         }
 
         for (ExchangeDto ex : exchanges) {
-            java.time.LocalDateTime created = ex.getCreatedAt();
+            if(!ex.getStatus().equalsIgnoreCase(Status.APPROVED.code())) continue;
+
+            LocalDateTime created = ex.getCreatedAt();
             if (created == null || created.getYear() != currentYear) continue;
 
             int monthIndex = created.getMonthValue() - 1;
